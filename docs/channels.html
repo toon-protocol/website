@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payment channels · TOON Protocol docs</title>
+<meta name="description" content="Opening without gas, who pays what, the watermark, leaving.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' rx='40' fill='%230b0d12'/%3E%3Cg fill='none' stroke='%23e6e9ef' stroke-width='14'%3E%3Cpath d='M40 40h140M40 80h100M40 120h60v60M70 180v-100h70M140 110v70'/%3E%3C/g%3E%3Crect x='150' y='150' width='30' height='30' fill='%237dd3fc'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 220 220" width="26" height="26" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+<g><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 12 h80 M12 28 h64 M12 44 h48 v48 M28 92 v-64 h48 M44 76 v-32 M60 92 v-32 M92 28 v64 h-32" class="ln"/>
+<rect x="78" y="78" width="14" height="14" class="dot"/></g>
+<g transform="translate(116,0)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M92 12 h-80 v80 h80 v-64 h-64 v48 h48 v-32 h-32" class="ln"/></g>
+<g transform="translate(0,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 92 v-80 h80 v80 h-64 v-48 h48 v32 h-32" class="ln"/></g>
+<g transform="translate(116,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 12 v80 M28 92 v-80 h64 M44 28 h48 M28 44 h48 v48 M92 60 h-32 v32" class="ln"/>
+<rect x="12" y="78" width="14" height="14" class="dot"/></g>
+</svg><span class="name">TOON Protocol</span></a>
+    <nav aria-label="Primary">
+      <a class="hide-s" href="../index.html#how">How it works</a>
+      <a href="../docs/index.html" class="active">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
+      <a class="button primary" href="../docs/run-a-node.html">Run a node</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap docs">
+  <details class="mobilenav">
+    <summary>Docs</summary>
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="concepts.html">Concepts</a>
+    </div>
+    <div class="group">
+      <h4>Operators</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html" class="active">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+    </div>
+  </details>
+  <aside class="sidebar" aria-label="Docs">
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="concepts.html">Concepts</a>
+    </div>
+    <div class="group">
+      <h4>Operators</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html" class="active">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+    </div>
+  </aside>
+  <main class="doc">
+    <p class="eyebrow">Callers</p>
+    <h1>Payment channels</h1>
+    <p class="lede">Opening without gas, who pays what, the watermark, leaving.</p>
+<p>A <strong>payment channel</strong> is an x402 <code>batch-settlement</code> channel: a deposit this client locks on chain, payable to one connector, that lets it pay that connector many times while touching the chain only to open, top up and leave. It is the only way the client pays.</p>
+
+<ul>
+  <li><strong>Base:</strong> x402's own <code>x402BatchSettlement</code> contract.</li>
+  <li><strong>Solana:</strong> the Solana Foundation's <code>payment-channels</code> program.</li>
+</ul>
+
+<p>A channel is one-way, payer to connector. Requests are paid by <strong>vouchers</strong> signed against the channel. A voucher states the channel's <strong>cumulative</strong> total, so each one supersedes the last: losing one costs nothing, and replaying one gains nothing. Signing a voucher costs no gas. Opening a channel costs no native gas either. Leaving a channel does.</p>
+
+<h2 id="a-route-priced-at-zero-needs-no-channel"><a class="anchor" href="#a-route-priced-at-zero-needs-no-channel">A route priced at zero needs no channel</a></h2>
+
+<p>Not every route costs money. A connector states a free route explicitly with <code>price = 0</code>; a route is never <em>silently</em> free. A free route runs no claim gate, so an unpaid request to it is simply routed. The client opens no channel, signs no voucher and touches no chain to use one, and <code>send()</code> returns a result with no <code>claim</code> rather than a zero-valued one.</p>
+
+<pre><span class="k">const</span> answer = <span class="k">await</span> client.send(<span class="s">'g.toon.relay.ephemeral'</span>, { body: <span class="s">'hello'</span> });
+answer.fulfilled;      <span class="c">// true: the app answered</span>
+answer.claim;          <span class="c">// undefined: nothing was paid, so there is no receipt</span></pre>
+
+<h2 id="where-the-terms-come-from"><a class="anchor" href="#where-the-terms-come-from">Where the terms come from</a></h2>
+
+<p>Every fact needed to open a channel comes from the node's own self-description, which the client reads from <code>GET /ilp</code>, never from a preset: the network (CAIP-2), the token, the connector's receiving address, the withdrawal delay, and on Solana also the sponsor key, the minimum deposit and the sponsor endpoint. A 402 greeting carries the same facts in <code>accepts[]</code>, priced for the route.</p>
+
+<pre><span class="k">const</span> description = <span class="k">await</span> client.describe();
+console.log(description.batchSettlements);   <span class="c">// one entry per chain the node is paid on</span></pre>
+
+<h2 id="opening-costs-no-gas"><a class="anchor" href="#opening-costs-no-gas">Opening costs no gas</a></h2>
+
+<p>The first paid <code>send()</code> opens a channel by itself, unless <code>autoOpenChannel</code> is <code>false</code>. You can also open one explicitly with <code>npx toon channel open --deposit 1000000</code> or <code>client.channel.open()</code>.</p>
+
+<ul>
+  <li><strong>Base.</strong> The client signs a deposit authorization. An x402 <strong>facilitator</strong> submits it and pays the gas, so a wallet holding USDC and no ETH can open a channel. The facilitator is, in order: your <code>facilitatorUrl</code> (or <code>--facilitator</code>); the one the connector names in its terms, since the seller pays the gas as a cost of the sale; the devnet's own, <code>onboard.devnet.toonprotocol.dev</code>, on Base Sepolia only.</li>
+  <li><strong>Solana.</strong> The client builds and signs the <code>open</code>, then posts it to the <code>sponsorEndpoint</code> the node publishes. The connector co-signs as fee payer, submits it, and pays the fee and the rent. The payer's USDC token account must already exist and hold the deposit, and the deposit must be at least the node's <code>minDeposit</code>. A refusal throws <code>SponsorRefusedError</code>, carrying the node's own reason.</li>
+  <li><strong>Any ERC-20.</strong> A connector names how its token moves: <code>eip3009</code> for USDC-style tokens, <code>permit2</code> for any other ERC-20. For Permit2 the facilitator sponsors the one-time approval where it can, and otherwise your own ETH pays for it.</li>
+</ul>
+
+<h2 id="who-pays-the-gas"><a class="anchor" href="#who-pays-the-gas">Who pays the gas</a></h2>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Step</th><th>Who pays</th></tr></thead>
+<tbody>
+<tr><td>Base deposit or top-up</td><td>The facilitator the connector names, at the seller's expense; or you, with <code>--deposit-gas self</code> from your own ETH, contacting no facilitator at all.</td></tr>
+<tr><td>Permit2 approval (once, non-USDC tokens)</td><td>The facilitator if it sponsors approvals for that token; otherwise your own ETH.</td></tr>
+<tr><td>Solana open</td><td>The connector: the transaction fee and the rent.</td></tr>
+<tr><td>Every voucher</td><td>Nobody. A signature.</td></tr>
+<tr><td>Landing vouchers on chain</td><td>The connector, in batches.</td></tr>
+<tr><td>Leaving the channel</td><td>You: Base Sepolia ETH or devnet SOL, the only time you need native gas.</td></tr>
+</tbody></table></div>
+
+<p><code>--deposit-gas</code> (<code>depositGas</code>) picks <code>auto</code> (the facilitator, else your own ETH), <code>facilitator</code> or <code>self</code>. Under <code>auto</code>, a deposit the facilitator refused is sent directly with the same single-use authorization, so it can never land twice.</p>
+
+<h2 id="paying-from-the-channel"><a class="anchor" href="#paying-from-the-channel">Paying from the channel</a></h2>
+
+<p>Each paid packet carries one voucher, inside ILP, stating the new cumulative total. The connector accepts it only if it strictly exceeds the last voucher it accepted on that channel by at least the route's charge; otherwise it answers <code>F03</code> and the client reprices from the watermark the refusal names. A voucher above what the channel holds is also <code>F03</code>: top up and send again. The library tops up on its own when a channel runs low; the CLI never does anything on chain as a side effect.</p>
+
+<h2 id="the-watermark-and-why-the-store-must-be-durable"><a class="anchor" href="#the-watermark-and-why-the-store-must-be-durable">The watermark, and why the store must be durable</a></h2>
+
+<p>The connector remembers the highest cumulative amount it has accepted on each channel. Your side has to remember the same figure, plus the channel's config, which the chain never gives back. Both live in the <strong>channel store</strong>: <code>~/.toon/channels.json</code> for the CLI, <code>channelStore</code> for the library. A client that lost its store asks <code>POST /ilp/claim-state</code>, an owner-authenticated read that cannot be replayed as a payment, and resumes from the connector's figure.</p>
+
+<div class="callout warn">Without the channel's config you cannot leave the channel, and its deposit stays locked on chain. Keep the store, back it up, and never share one store between two processes paying the same connector.</div>
+
+<h2 id="leaving"><a class="anchor" href="#leaving">Leaving</a></h2>
+
+<ul>
+  <li><strong>Base.</strong> <code>initiateWithdraw</code>, then after the channel's <code>withdrawDelay</code> (one day by default on TOON nodes) <code>finalizeWithdraw</code>. The connector watches for the first and lands its latest voucher at once, so what comes back to you is the deposit minus everything you signed for.</li>
+  <li><strong>Solana.</strong> <code>request_close</code>, then after the grace period your withdrawal. The connector lands its latest voucher inside the grace period, distributes, and reclaims its rent.</li>
+</ul>
+
+<p>Both steps need native gas from your own wallet. The CLI's <code>channel</code> subcommands drive them; the <a href="https://github.com/toon-protocol/toon-client/blob/main/docs/channels.md">full channels document</a> on GitHub has the exact commands, what the channel id is derived from, and the recovery procedure for a store that was lost.</p>
+
+<p class="source">Written from <code>toon-client/docs/channels.md</code> and <code>connector/docs/operators/x402-batch-settlement.md</code>.</p>
+
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="pay-a-node.html"><small>Previous</small>Pay a node</a><a class="next" href="cli.html"><small>Next</small>CLI reference</a></nav>
+  </main>
+  <aside class="toc" aria-label="On this page"><h4>On this page</h4>
+  <a href="#a-route-priced-at-zero-needs-no-channel">A route priced at zero needs no channel</a>
+  <a href="#where-the-terms-come-from">Where the terms come from</a>
+  <a href="#opening-costs-no-gas">Opening costs no gas</a>
+  <a href="#who-pays-the-gas">Who pays the gas</a>
+  <a href="#paying-from-the-channel">Paying from the channel</a>
+  <a href="#the-watermark-and-why-the-store-must-be-durable">The watermark, and why the store must be durable</a>
+  <a href="#leaving">Leaving</a>
+</aside>
+</div>
+<footer>
+  <div class="wrap">
+    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write</span>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a href="https://discord.gg/PxzjbtXg9Q">Discord</a>
+      <a href="https://x.com/toonprotocol">X</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

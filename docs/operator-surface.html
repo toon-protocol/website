@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The operator surface · TOON Protocol docs</title>
+<meta name="description" content="Reads, signed writes, the dashboard, and operating it.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' rx='40' fill='%230b0d12'/%3E%3Cg fill='none' stroke='%23e6e9ef' stroke-width='14'%3E%3Cpath d='M40 40h140M40 80h100M40 120h60v60M70 180v-100h70M140 110v70'/%3E%3C/g%3E%3Crect x='150' y='150' width='30' height='30' fill='%237dd3fc'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 220 220" width="26" height="26" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+<g><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 12 h80 M12 28 h64 M12 44 h48 v48 M28 92 v-64 h48 M44 76 v-32 M60 92 v-32 M92 28 v64 h-32" class="ln"/>
+<rect x="78" y="78" width="14" height="14" class="dot"/></g>
+<g transform="translate(116,0)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M92 12 h-80 v80 h80 v-64 h-64 v48 h48 v-32 h-32" class="ln"/></g>
+<g transform="translate(0,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 92 v-80 h80 v80 h-64 v-48 h48 v32 h-32" class="ln"/></g>
+<g transform="translate(116,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 12 v80 M28 92 v-80 h64 M44 28 h48 M28 44 h48 v48 M92 60 h-32 v32" class="ln"/>
+<rect x="12" y="78" width="14" height="14" class="dot"/></g>
+</svg><span class="name">TOON Protocol</span></a>
+    <nav aria-label="Primary">
+      <a class="hide-s" href="../index.html#how">How it works</a>
+      <a href="../docs/index.html" class="active">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
+      <a class="button primary" href="../docs/run-a-node.html">Run a node</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap docs">
+  <details class="mobilenav">
+    <summary>Docs</summary>
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="concepts.html">Concepts</a>
+    </div>
+    <div class="group">
+      <h4>Operators</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering.html">Peer with another node</a>
+      <a href="operator-surface.html" class="active">The operator surface</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+    </div>
+  </details>
+  <aside class="sidebar" aria-label="Docs">
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="concepts.html">Concepts</a>
+    </div>
+    <div class="group">
+      <h4>Operators</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering.html">Peer with another node</a>
+      <a href="operator-surface.html" class="active">The operator surface</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+    </div>
+  </aside>
+  <main class="doc">
+    <p class="eyebrow">Operators</p>
+    <h1>The operator surface</h1>
+    <p class="lede">Reads, signed writes, the dashboard, and operating it.</p>
+<p>How you inspect a running node and how you move its money. It mounts <strong>only</strong> when <code>[operator]</code> is configured, and merges onto <code>client_edge_addr</code>: there is no second port and no second listener.</p>
+
+<div class="codeblock"><div class="bar"><span>connector.toml</span></div>
+<pre>[operator]
+bearer_token_file = <span class="s">"/app/data/operator-bearer-token"</span>
+write_keys_file   = <span class="s">"/app/data/operator-write-keys"</span></pre></div>
+
+<p>Each setting is exactly one of a literal or a path. The file forms are the deployed forms, because a fleet's config files are committed to a public repository and a literal cannot be.</p>
+
+<h2 id="read-and-write-are-different-authorities"><a class="anchor" href="#read-and-write-are-different-authorities">Read and write are different authorities</a></h2>
+
+<ul>
+  <li><strong>Reads</strong> take <code>Authorization: Bearer &lt;token&gt;</code> and nothing more.</li>
+  <li><strong>Writes</strong> take an RFC 9421 HTTP Message Signature from an ed25519 key on <code>write_keys</code>, with the body bound by an RFC 9530 <code>Content-Digest</code>.</li>
+  <li><strong>A bearer token is never sufficient to move value.</strong> Read authority must not confer write authority.</li>
+  <li><strong>Every write is attributable and individually revocable.</strong> A shared secret is neither.</li>
+  <li><strong>An accepted write cannot be replayed.</strong> Signatures carry <code>created</code> and <code>expires</code>, and an accepted signature is remembered until its own expiry.</li>
+  <li><strong>A surface with neither half authenticated refuses to start.</strong></li>
+</ul>
+
+<p><code>write_keys</code> holds only <strong>public</strong> halves. The private half lives with whoever is calling and never on the node.</p>
+
+<h2 id="reads"><a class="anchor" href="#reads">Reads</a></h2>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Endpoint</th><th>Answers</th></tr></thead>
+<tbody>
+<tr><td><code>GET /peers</code></td><td>The peerings this node holds, config and runtime alike.</td></tr>
+<tr><td><code>GET /routes</code></td><td>The full routing table, with each row's source.</td></tr>
+<tr><td><code>GET /routes/leased</code></td><td>TTL-bound pushed routes that lapse on their own.</td></tr>
+<tr><td><code>GET /routes/peers</code></td><td>The durable runtime peer-route table.</td></tr>
+<tr><td><code>GET /channels</code></td><td>Every channel this node knows, with deposits and status.</td></tr>
+<tr><td><code>GET /claims</code></td><td>The claim journal: what you have been paid, and by whom.</td></tr>
+<tr><td><code>GET /identity</code></td><td>This node's operator-facing identity.</td></tr>
+<tr><td><code>GET /audit-log</code></td><td>Every accepted write, with the key that made it.</td></tr>
+<tr><td><code>GET /metrics</code></td><td>Prometheus text: <code>toon_packets_total</code>, <code>toon_packets_rejected_total</code>, <code>toon_fees_earned_total</code>, <code>toon_settlement_total</code>.</td></tr>
+</tbody></table></div>
+
+<p>There is no unauthenticated metrics path and no dedicated health route. What a container healthcheck probes is <code>GET /ilp/identity</code> on the client edge, which is free and answers only once the config loaded, every settlement backend connected and the router is serving.</p>
+
+<h2 id="writes"><a class="anchor" href="#writes">Writes</a></h2>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Endpoint</th><th>Does</th></tr></thead>
+<tbody>
+<tr><td><code>POST /packets</code></td><td>Originate a packet from this node.</td></tr>
+<tr><td><code>POST /peers</code></td><td>Establish a peering from a URL. <code>DELETE /peers/:id</code> removes it.</td></tr>
+<tr><td><code>POST /routes/peers</code></td><td>Write a durable runtime route. <code>DELETE /routes/peers/:prefix</code> removes it.</td></tr>
+<tr><td><code>POST /routes/leased</code></td><td>Push a TTL-bound route that lapses on its own.</td></tr>
+<tr><td><code>POST /channels</code></td><td>Open an <strong>outbound</strong> x402 channel toward a counterparty, on its published terms.</td></tr>
+<tr><td><code>POST /channels/:id/fund</code></td><td>Top up an outbound channel by an increment.</td></tr>
+<tr><td><code>POST /channels/:id/withdraw</code></td><td>Start a withdrawal (EVM) or close (Solana); call again once due to finish.</td></tr>
+<tr><td><code>POST /channels/:id/land</code></td><td>Land the latest voucher held on an <strong>inbound</strong> channel now.</td></tr>
+</tbody></table></div>
+
+<p>The watchers land your inbound vouchers on their own; <code>land</code> is the lever for planned maintenance. <code>POST /channels</code> journals the channel before it spends, so a retry after an error resumes that channel rather than opening a second. Channel operations answer <code>503</code> when no settlement backend is configured. Runtime peers and routes survive a restart, and are refused outright when they would collide with a row the config file owns.</p>
+
+<h2 id="signing-a-write"><a class="anchor" href="#signing-a-write">Signing a write</a></h2>
+
+<p>The signature covers exactly three components, <code>@method</code>, <code>@path</code> and <code>content-digest</code>, with <code>alg="ed25519"</code> and <code>keyid</code> set to the signer's own public key in hex. <a href="https://github.com/toon-protocol/connector/blob/main/docs/operators/sign-write.sh"><code>sign-write.sh</code></a> is the shipped signer: <code>bash</code> and <code>openssl</code>, no other dependency.</p>
+
+<pre>docs/operators/sign-write.sh -k operator-write.key -X POST -p /peers \
+    -b "$BODY" -u https://your-node.example</pre>
+
+<p>Omit <code>-u</code> and it prints only the three headers, for a caller assembling its own request. <a href="https://github.com/toon-protocol/connector/blob/main/docs/operators/signing-a-write.md">Signing a write</a> is the worked example.</p>
+
+<h2 id="the-dashboard"><a class="anchor" href="#the-dashboard">The dashboard</a></h2>
+
+<p><code>GET /dashboard</code> is the operator's own view of all of the above on one page the node serves: packet traffic and rejects by code, fees earned, inbound and outbound claims, peerings and channels, every route with its source, and the audit log. It needs no token to load, because it holds nothing. Paste the bearer token in and it reads; paste an operator key in and it can peer, write a runtime route or lease one, signing each write in your browser. The key stays in the tab's memory, never stored, never sent. Reach it the way you reach <code>/metrics</code> on that box: on a fleet, an SSH tunnel to <code>client_edge_addr</code>.</p>
+
+<h2 id="operating-it"><a class="anchor" href="#operating-it">Operating it</a></h2>
+
+<p><strong>Logs</strong> are structured JSON on stdout. Every line emitted while handling a packet carries the same <code>correlation_id</code>, and because that value is invariant across hops, the same id appears in every connector that handled it. <code>RUST_LOG=debug</code> for more.</p>
+
+<p><strong>Releases.</strong> A release builds the image, cuts a dated handle and opens a GitHub Release. It does not deploy: a node repository pins the connector image it runs, by release handle, in its own deploy bundle. Because the binary and a box's mounted TOML are a matched pair in both directions, <strong>adding a required config key is a breaking deploy</strong>: land the config first, then bump the pin.</p>
+
+<p><strong>Devnet and mainnet.</strong> Devnet settles on Base Sepolia and Solana devnet, with test funds from the <a href="https://faucet.devnet.toonprotocol.dev">devnet faucet</a>. The live node that serves toon.ar.io settles on Base mainnet and Solana mainnet-beta. The connector repository's own production tier is a named, empty tier: no fleet machine, no fleet key.</p>
+
+<p class="source">Written from <code>connector/docs/guide/operator-surface.md</code> and <code>operations.md</code>. The rules are numbered in <code>docs/protocol/operator-spec.md</code>.</p>
+
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="peering.html"><small>Previous</small>Peer with another node</a><a class="next" href="pay-a-node.html"><small>Next</small>Pay a node</a></nav>
+  </main>
+  <aside class="toc" aria-label="On this page"><h4>On this page</h4>
+  <a href="#read-and-write-are-different-authorities">Read and write are different authorities</a>
+  <a href="#reads">Reads</a>
+  <a href="#writes">Writes</a>
+  <a href="#signing-a-write">Signing a write</a>
+  <a href="#the-dashboard">The dashboard</a>
+  <a href="#operating-it">Operating it</a>
+</aside>
+</div>
+<footer>
+  <div class="wrap">
+    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write</span>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a href="https://discord.gg/PxzjbtXg9Q">Discord</a>
+      <a href="https://x.com/toonprotocol">X</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

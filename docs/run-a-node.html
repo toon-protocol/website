@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run a node · TOON Protocol docs</title>
+<meta name="description" content="One image, one TOML file, one command.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' rx='40' fill='%230b0d12'/%3E%3Cg fill='none' stroke='%23e6e9ef' stroke-width='14'%3E%3Cpath d='M40 40h140M40 80h100M40 120h60v60M70 180v-100h70M140 110v70'/%3E%3C/g%3E%3Crect x='150' y='150' width='30' height='30' fill='%237dd3fc'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 220 220" width="26" height="26" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+<g><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 12 h80 M12 28 h64 M12 44 h48 v48 M28 92 v-64 h48 M44 76 v-32 M60 92 v-32 M92 28 v64 h-32" class="ln"/>
+<rect x="78" y="78" width="14" height="14" class="dot"/></g>
+<g transform="translate(116,0)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M92 12 h-80 v80 h80 v-64 h-64 v48 h48 v-32 h-32" class="ln"/></g>
+<g transform="translate(0,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 92 v-80 h80 v80 h-64 v-48 h48 v32 h-32" class="ln"/></g>
+<g transform="translate(116,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 12 v80 M28 92 v-80 h64 M44 28 h48 M28 44 h48 v48 M92 60 h-32 v32" class="ln"/>
+<rect x="12" y="78" width="14" height="14" class="dot"/></g>
+</svg><span class="name">TOON Protocol</span></a>
+    <nav aria-label="Primary">
+      <a class="hide-s" href="../index.html#how">How it works</a>
+      <a href="../docs/index.html" class="active">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
+      <a class="button primary" href="../docs/run-a-node.html">Run a node</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap docs">
+  <details class="mobilenav">
+    <summary>Docs</summary>
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="concepts.html">Concepts</a>
+    </div>
+    <div class="group">
+      <h4>Operators</h4>
+      <a href="run-a-node.html" class="active">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+    </div>
+  </details>
+  <aside class="sidebar" aria-label="Docs">
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="concepts.html">Concepts</a>
+    </div>
+    <div class="group">
+      <h4>Operators</h4>
+      <a href="run-a-node.html" class="active">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+    </div>
+  </aside>
+  <main class="doc">
+    <p class="eyebrow">Operators</p>
+    <h1>Run a node</h1>
+    <p class="lede">One image, one TOML file, one command.</p>
+<p>The connector is one static binary that reads one TOML file. The published Docker image is how it is meant to be deployed.</p>
+
+<ol class="steps">
+  <li><b>01</b><strong>Pull it</strong>Pin a release handle and generate the node's identity key.</li>
+  <li><b>02</b><strong>Price a route</strong>Point a prefix at your app with a price in the token's smallest unit.</li>
+  <li><b>03</b><strong>Start it</strong><code>docker compose up -d</code>, then ask the node what it is with <code>GET /ilp</code>.</li>
+</ol>
+
+<h2 id="with-docker"><a class="anchor" href="#with-docker">With Docker</a></h2>
+
+<p>Pin a <strong>release handle</strong>, <code>rust-&lt;handle&gt;</code>, a UTC date and that day's ordinal. Handles are immutable and never moved. <code>rust-sha-&lt;short-sha&gt;</code> pins an exact commit and is equally immutable. <code>rust-main</code> floats on every green build of <code>main</code>: fine for a scratch trial, never for a deployment.</p>
+
+<div class="codeblock"><div class="bar"><span>The shell</span><span>connector 2026.09.29.1</span></div>
+<pre>docker pull ghcr.io/toon-protocol/connector:rust-2026.09.29.1
+mkdir -p node/config node/data &amp;&amp; cd node
+openssl rand -hex 32 &gt; data/signer.key &amp;&amp; chmod 600 data/signer.key</pre></div>
+
+<div class="callout"><strong>The published image is <code>linux/amd64</code> only.</strong> On Apple Silicon or any other arm64 host, pull with <code>--platform linux/amd64</code> and add <code>platform: linux/amd64</code> next to <code>image:</code> in the compose file.</div>
+
+<p>The image runs as uid <code>10001</code> and creates <code>/app/state</code> owned by that uid, so a fresh named volume inherits the ownership. A host bind mount arrives root-owned and the connector refuses to start.</p>
+
+<div class="codeblock"><div class="bar"><span>compose.yml</span></div>
+<pre>services:
+  connector:
+    image: ghcr.io/toon-protocol/connector:rust-2026.09.29.1
+    command: ['/app/config/connector.toml']
+    volumes:
+      - ./config/connector.toml:/app/config/connector.toml:ro
+      - ./data:/app/data:ro
+      <span class="c"># A NAMED volume, not a bind mount.</span>
+      - connector-state:/app/state
+    ports:
+      <span class="c"># Loopback to begin with. Put a TLS-terminating reverse proxy</span>
+      <span class="c"># in front of it before it faces the world.</span>
+      - '127.0.0.1:3000:3000'
+    restart: unless-stopped
+    healthcheck:
+      <span class="c"># Free and unauthenticated. Answering means the config loaded,</span>
+      <span class="c"># every settlement backend connected, and the router is serving.</span>
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:3000/ilp/identity']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  quotes:
+    image: your-quotes-app:latest
+  search:
+    image: your-search-app:latest
+
+volumes:
+  connector-state:</pre></div>
+
+<pre>docker compose up -d</pre>
+
+<h2 id="from-source"><a class="anchor" href="#from-source">From source</a></h2>
+
+<p>For changing the connector rather than running it. Rust stable:</p>
+
+<pre>git clone https://github.com/toon-protocol/connector.git
+cd connector &amp;&amp; cargo build --workspace
+./target/debug/connector path/to/connector.toml</pre>
+
+<p>Paths in the config are then yours, not the image's: <code>state_dir = "./state"</code>, <code>key_file = "./signer.key"</code>. The repository's <a href="https://github.com/toon-protocol/connector/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> has the test gate and the chain binaries it needs.</p>
+
+<h2 id="the-config"><a class="anchor" href="#the-config">The config</a></h2>
+
+<p><code>price</code> is a whole number of the <strong>smallest unit</strong> of the token you settle in, the way a card terminal counts in cents, never in dollars. How many units make one token is the token's <code>decimals</code>. USDC has 6, so 1,000,000 units are one USDC:</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>price</th><th>In USDC</th><th>Which is</th></tr></thead>
+<tbody>
+<tr><td><code>1000</code></td><td>0.001</td><td>a tenth of a cent</td></tr>
+<tr><td><code>100000</code></td><td>0.10</td><td>ten cents</td></tr>
+<tr><td><code>1000000</code></td><td>1.00</td><td>one dollar</td></tr>
+</tbody></table></div>
+
+<div class="codeblock"><div class="bar"><span>connector.toml</span></div>
+<pre>client_edge_addr = <span class="s">"0.0.0.0:3000"</span>
+state_dir        = <span class="s">"/app/state"</span>
+
+[signer]
+key_file = <span class="s">"/app/data/signer.key"</span>   <span class="c"># 32 raw bytes, or 64 hex characters</span>
+
+<span class="c"># One route per thing you serve. Longest matching prefix wins.</span>
+[[routes]]
+prefix      = <span class="s">"g.example.quotes"</span>
+handler_url = <span class="s">"http://quotes:8080/"</span>
+price       = <span class="g">1000</span>                       <span class="c"># 0.001 USDC per request</span>
+
+[[routes]]
+prefix      = <span class="s">"g.example.search"</span>
+handler_url = <span class="s">"http://search:8080/"</span>
+price       = <span class="g">2500</span>                       <span class="c"># 0.0025 USDC</span>
+
+<span class="c"># Same app, deeper prefix, different price. This wins over g.example.search</span>
+<span class="c"># for g.example.search.bulk because it matches more labels.</span>
+[[routes]]
+prefix      = <span class="s">"g.example.search.bulk"</span>
+handler_url = <span class="s">"http://search:8080/bulk/"</span>
+price       = <span class="g">10000</span>                      <span class="c"># 0.01 USDC, a cent</span>
+
+<span class="c"># Price by size when your own costs grow with the payload: storage, uploads,</span>
+<span class="c"># anything you pay an upstream by the byte for. The charge for one packet is</span>
+<span class="c"># base + per_kib × ceil(payload_size / 1024). Both figures are published.</span>
+[[routes]]
+prefix      = <span class="s">"g.example.store"</span>
+handler_url = <span class="s">"http://store:8080/"</span>
+price       = { base = <span class="g">1000</span>, per_kib = <span class="g">30</span> }   <span class="c"># 0.001 USDC + 0.00003 per KiB</span></pre></div>
+
+<p>Then ask the node what it is:</p>
+
+<pre>curl http://localhost:3000/ilp</pre>
+
+<p>That free, unauthenticated <code>GET</code> returns the node's <strong>self-description</strong>: its addresses, endpoints, identity key and settlement facts. A connector answers; it never announces. It is also the whole of what another operator needs to <a href="peering.html">peer with you</a>, once <code>[node]</code> and <code>peer_expose</code> are set. This minimal config's own self-description has no endpoints and nothing to dial.</p>
+
+<div class="callout warn">
+<p><strong>One TOML file, read once, immutable for the process lifetime.</strong> There is no environment-variable layer; the only variable read is <code>RUST_LOG</code>. An unknown key is a hard load failure and a removed key is refused by name, so a stale config says so at boot instead of quietly doing nothing.</p>
+<p><strong>Every key is a path, never a value.</strong> No inline keys, no mnemonic, nowhere to smuggle one through.</p>
+<p><strong><code>state_dir</code> is where this node records which claims it has already been paid.</strong> In a container it must be a mounted volume. A watermark that dies with the container hands every payer their spent claims back as free service.</p>
+</div>
+
+<h2 id="before-it-faces-the-world"><a class="anchor" href="#before-it-faces-the-world">Before it faces the world</a></h2>
+
+<p>Put a TLS-terminating reverse proxy in front of the client edge. A TOON node refuses plaintext peers, and every deployed config should publish <code>https://</code> and <code>wss://</code> endpoints only. The node has no second port: the client edge, the peer listeners and the <a href="operator-surface.html">operator surface</a> all merge onto <code>client_edge_addr</code>.</p>
+
+<p>A route with a price is only half of being paid. The next two pages are the other half: <a href="put-your-app-behind-it.html">what your app sees</a>, and <a href="get-paid.html">the settlement block</a> that lets anyone actually pay you.</p>
+
+<p class="source">Written from <code>connector/docs/guide/run-a-node.md</code>. The release handle is the connector's latest GitHub release.</p>
+
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="concepts.html"><small>Previous</small>Concepts</a><a class="next" href="put-your-app-behind-it.html"><small>Next</small>Put your app behind it</a></nav>
+  </main>
+  <aside class="toc" aria-label="On this page"><h4>On this page</h4>
+  <a href="#with-docker">With Docker</a>
+  <a href="#from-source">From source</a>
+  <a href="#the-config">The config</a>
+  <a href="#before-it-faces-the-world">Before it faces the world</a>
+</aside>
+</div>
+<footer>
+  <div class="wrap">
+    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write</span>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a href="https://discord.gg/PxzjbtXg9Q">Discord</a>
+      <a href="https://x.com/toonprotocol">X</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

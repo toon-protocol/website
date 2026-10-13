@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hidden services · TOON Protocol docs</title>
+<meta name="description" content="Paying a node that lives at a .anyone address.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' rx='40' fill='%230b0d12'/%3E%3Cg fill='none' stroke='%23e6e9ef' stroke-width='14'%3E%3Cpath d='M40 40h140M40 80h100M40 120h60v60M70 180v-100h70M140 110v70'/%3E%3C/g%3E%3Crect x='150' y='150' width='30' height='30' fill='%237dd3fc'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 220 220" width="26" height="26" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+<g><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 12 h80 M12 28 h64 M12 44 h48 v48 M28 92 v-64 h48 M44 76 v-32 M60 92 v-32 M92 28 v64 h-32" class="ln"/>
+<rect x="78" y="78" width="14" height="14" class="dot"/></g>
+<g transform="translate(116,0)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M92 12 h-80 v80 h80 v-64 h-64 v48 h48 v-32 h-32" class="ln"/></g>
+<g transform="translate(0,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 92 v-80 h80 v80 h-64 v-48 h48 v32 h-32" class="ln"/></g>
+<g transform="translate(116,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 12 v80 M28 92 v-80 h64 M44 28 h48 M28 44 h48 v48 M92 60 h-32 v32" class="ln"/>
+<rect x="12" y="78" width="14" height="14" class="dot"/></g>
+</svg><span class="name">TOON Protocol</span></a>
+    <nav aria-label="Primary">
+      <a class="hide-s" href="../index.html#how">How it works</a>
+      <a href="../docs/index.html" class="active">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
+      <a class="button primary" href="../docs/run-a-node.html">Run a node</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap docs">
+  <details class="mobilenav">
+    <summary>Docs</summary>
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="concepts.html">Concepts</a>
+    </div>
+    <div class="group">
+      <h4>Operators</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+      <a href="hidden-services.html" class="active">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+    </div>
+  </details>
+  <aside class="sidebar" aria-label="Docs">
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="concepts.html">Concepts</a>
+    </div>
+    <div class="group">
+      <h4>Operators</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+      <a href="hidden-services.html" class="active">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+    </div>
+  </aside>
+  <main class="doc">
+    <p class="eyebrow">Callers</p>
+    <h1>Hidden services</h1>
+    <p class="lede">Paying a node that lives at a .anyone address.</p>
+<p>A connector is ordinarily a clearnet host. It can also be a <strong>hidden service</strong>: a node reachable only inside the <a href="https://anyone.io">Anyone Protocol</a> overlay, at a <code>.anyone</code> address that public DNS cannot resolve and no certificate authority can certify. Every <a href="spaceturtle.html">spaceturtle</a> node is one, and so is the <a href="https://github.com/toon-protocol/anytoon">anytoon</a> credentials issuer.</p>
+
+<p>Paying such a node needs one extra thing: a running <code>anon</code> daemon, and its SOCKS5h port.</p>
+
+<pre>  you ──► anon (SOCKS5h) ──► the overlay ──► connector.anyone ──► app
+              ▲
+              └── chain RPC goes here too, not around it</pre>
+
+<p>Nothing else changes. Sealing, pricing, vouchers, channels and refusals are identical; the packet does not know what carried it.</p>
+
+<h2 id="from-the-cli"><a class="anchor" href="#from-the-cli">From the CLI</a></h2>
+
+<p>Nothing, if you let it: point <code>toon</code> at a <code>.anyone</code> address and it starts a daemon for you.</p>
+
+<pre>export TOON_CONNECTOR=http://&lt;address&gt;.anyone
+npx toon describe</pre>
+
+<div class="codeblock"><div class="bar"><span>stderr</span></div>
+<pre>toon: http://&lt;address&gt;.anyone is a hidden service; starting a local anon daemon
+toon: downloading anon-live-linux-amd64.zip (v0.4.10.2)…
+toon: verified; extracting
+toon: starting anon v0.4.10.2 on 127.0.0.1:41337 (…/anon)
+toon: anon is listening; building circuits on demand
+toon: proxying through socks5h://127.0.0.1:41337</pre></div>
+
+<p>Every line of that goes to stderr, never stdout, so <code>--json</code> output stays exactly one parseable document. Already running your own daemon? Name it, and nothing is downloaded and no process is spawned:</p>
+
+<pre>npx toon send --socks socks5h://127.0.0.1:9050 --body 'hello'
+export TOON_SOCKS=socks5h://127.0.0.1:9050     <span class="c"># same thing, for every command</span></pre>
+
+<p>A clearnet connector starts no daemon and downloads nothing.</p>
+
+<h2 id="the-managed-daemon"><a class="anchor" href="#the-managed-daemon">The managed daemon</a></h2>
+
+<p>An operator is entitled to know what would run on their machine.</p>
+
+<div class="tablewrap"><table>
+<tbody>
+<tr><td><strong>Release</strong></td><td><code>v0.4.10.2</code>, pinned, on the stable <code>live</code> channel.</td></tr>
+<tr><td><strong>Platforms</strong></td><td><code>linux-x64</code>, <code>linux-arm64</code>, <code>darwin-x64</code>, <code>darwin-arm64</code>, <code>win32-x64</code>.</td></tr>
+<tr><td><strong>Verification</strong></td><td>sha256 against a checksum recorded in the client's repository, checked <strong>before</strong> the binary is ever executed. A platform with no pinned checksum is refused, not downloaded and trusted.</td></tr>
+<tr><td><strong>Cache</strong></td><td><code>$XDG_CACHE_HOME/toon/anon/&lt;version&gt;/</code>, falling back to <code>~/.toon/anon/&lt;version&gt;/</code>. Keyed by version, so a new pin never silently reuses an old binary.</td></tr>
+</tbody></table></div>
+
+<h2 id="what-a-hidden-service-does-and-does-not-buy"><a class="anchor" href="#what-a-hidden-service-does-and-does-not-buy">What a hidden service does and does not buy</a></h2>
+
+<p>A hidden-service endpoint hides <strong>where the node is reachable</strong>, and nothing else. The chain still sees the channel's deposit and settlement, and the voucher still names the paying key. A node at a <code>.anyone</code> address needs no domain, no public IP and no open port, which is why spaceturtle can run one from a laptop behind a home router.</p>
+
+<h2 id="running-one"><a class="anchor" href="#running-one">Running one</a></h2>
+
+<p>On the node's side, the connector publishes its <code>.anyone</code> address as its endpoint and reaches onion peers through its own <code>socks_proxy</code>. The connector repository's <a href="https://github.com/toon-protocol/connector/blob/main/docs/operators/onion-endpoint-bringup.md">onion endpoint bring-up</a> is the operator runbook, and <a href="spaceturtle.html">spaceturtle</a> does all of it for you.</p>
+
+<p class="source">Written from <code>toon-client/docs/hidden-service.md</code> and <code>anytoon/README.md</code>.</p>
+
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="errors.html"><small>Previous</small>Errors and reject codes</a><a class="next" href="spaceturtle.html"><small>Next</small>spaceturtle</a></nav>
+  </main>
+  <aside class="toc" aria-label="On this page"><h4>On this page</h4>
+  <a href="#from-the-cli">From the CLI</a>
+  <a href="#the-managed-daemon">The managed daemon</a>
+  <a href="#what-a-hidden-service-does-and-does-not-buy">What a hidden service does and does not buy</a>
+  <a href="#running-one">Running one</a>
+</aside>
+</div>
+<footer>
+  <div class="wrap">
+    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write</span>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a href="https://discord.gg/PxzjbtXg9Q">Discord</a>
+      <a href="https://x.com/toonprotocol">X</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

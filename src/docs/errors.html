@@ -1,0 +1,71 @@
+<p><strong>A refusal is returned, never thrown.</strong> <code>send()</code> resolves with <code>fulfilled: false</code> for anything the network refused: a bad voucher, a route that does not exist, a carriage the route will not accept. Everything the client <em>throws</em> happened before the packet went out, or on chain. A thrown error means you have a configuration or a wallet to fix; a returned refusal means the network answered, and the answer was no.</p>
+
+<pre><span class="k">const</span> answer = <span class="k">await</span> client.send(<span class="s">'g.toon.store'</span>, { body: <span class="s">'hello'</span> });
+<span class="k">if</span> (!answer.fulfilled) {
+  answer.code;             <span class="c">// 'F03', 'F01', 'PAYMENT_REQUIRED', 'TRANSPORT_REQUIRED', …</span>
+  answer.message;          <span class="c">// diagnostic text. Never branch on it; branch on the code.</span>
+  answer.refusedBy;        <span class="c">// 'destination' | 'path' | 'edge'</span>
+  answer.accumulatedCost;  <span class="c">// what the path costs, when the connector stated it</span>
+}</pre>
+
+<h2>Who refused</h2>
+
+<div class="tablewrap"><table>
+<thead><tr><th><code>refusedBy</code></th><th>What it means</th></tr></thead>
+<tbody>
+<tr><td><code>destination</code></td><td>The reject came back <strong>sealed</strong>. Only the terminating connector holds the secret to seal one, so this is proof the destination itself said no.</td></tr>
+<tr><td><code>path</code></td><td>The reject arrived in plaintext. That identifies nobody: a hop short of the termination refused, or the termination could not open the wrap.</td></tr>
+<tr><td><code>edge</code></td><td>The connector you are attached to refused before routing at all: a greeting, or a wrong carriage.</td></tr>
+</tbody></table></div>
+
+<p>Sealed identifies the destination; unsealed identifies nobody. Do not read a plaintext reject as an accusation against any particular node.</p>
+
+<h2>Reject codes</h2>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Code</th><th>Means</th><th>You do</th></tr></thead>
+<tbody>
+<tr><td><code>F00</code></td><td>Bad request: the envelope's <code>target</code> escaped the route's handler path (an absolute path, a <code>..</code> segment, a scheme or an authority).</td><td>Fix <code>target</code>. It is resolved <em>beneath</em> the handler; <code>''</code> and <code>'/'</code> both mean the handler itself.</td></tr>
+<tr><td><code>F01</code></td><td>A malformed voucher, one that does not verify, or a claim of a retired kind.</td><td>If it persists, run <code>claim-state</code> and compare the connector's figure with <code>channel status</code>. A figure ahead of yours usually means a lost channel store.</td></tr>
+<tr><td><code>F02</code></td><td>No route to that destination, including "no route over <em>this</em> carriage".</td><td>Check the destination against <code>describe()</code>. If it carries <code>requiredTransport</code>, send over that carriage.</td></tr>
+<tr><td><code>F03</code></td><td>The voucher <strong>did not advance</strong> the connector's watermark by the route's price, or its cumulative amount exceeded the channel's deposit, or the declared <code>amount</code> exceeded the price on a forwarded route.</td><td>Underpayment: <code>accumulatedCost</code> <strong>is the route's price</strong>; pay that. Over deposit: top up and send again. Forwarded route: send exactly the price.</td></tr>
+<tr><td><code>F06</code></td><td>No voucher was attached, on the BTP carriage. This is the greeting: the route's terms instead of the work.</td><td>Open or fund a channel, then send with a voucher.</td></tr>
+<tr><td><code>T00</code></td><td>The connector hit an internal error. Temporary.</td><td>Retry with backoff.</td></tr>
+<tr><td><code>T01</code></td><td>A peer on the path is unreachable. Temporary.</td><td>Retry with backoff. The packet is fine; the path currently is not.</td></tr>
+<tr><td><code>T04</code></td><td>The packet exceeds the cap a connector will forward to one peer in a single packet. Never carried, never split.</td><td>The reject's message states the cap. Send a smaller packet; this is the only way the cap is published.</td></tr>
+<tr><td><code>T05</code></td><td>Rate limited.</td><td>Back off. On a probe this is the per-channel probe limit.</td></tr>
+<tr><td><code>R00</code></td><td>The packet expired before it arrived.</td><td>Retry. Persistent expiry means a slow path or a clock well out of step.</td></tr>
+</tbody></table></div>
+
+<p><code>accumulatedCost</code> rides beside the packet, only on a REJECT. It is one figure: every hop's flat fee plus the price of the route that terminated, never a breakdown. It is <code>0</code> when nothing was traversed and nothing terminated.</p>
+
+<h2>Client-side codes</h2>
+
+<p>Two <code>code</code> values do not come from the wire. They are refusals the client names when the connector answered with a greeting rather than a packet:</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Code</th><th>Means</th><th>You do</th></tr></thead>
+<tbody>
+<tr><td><code>PAYMENT_REQUIRED</code></td><td>The connector answered the route's terms instead of the work: HTTP <code>402</code>, or <code>F06</code> over BTP. <code>answer.terms</code> carries the price and the x402 channels it accepts.</td><td>Open or fund a channel on one of the offered chains.</td></tr>
+<tr><td><code>TRANSPORT_REQUIRED</code></td><td>The route does not accept the carriage you used. <code>answer.terms.requiredTransport</code> names the one it does.</td><td>Resend with <code>transport: 'btp'</code>, or leave <code>auto</code> against a node that publishes the pin on the route.</td></tr>
+</tbody></table></div>
+
+<h2>HTTP statuses</h2>
+
+<p>An ILP-level outcome is always HTTP <code>200</code>, whether the packet fulfilled or was rejected. A non-2xx is a transport-level failure and never carries a packet body.</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Status</th><th>Means</th><th>You do</th></tr></thead>
+<tbody>
+<tr><td><code>400</code></td><td>The body was not a decodable PREPARE, or was oversized.</td><td>A bug in whatever formed the packet, or an encoder that is not TOON's dialect.</td></tr>
+<tr><td><code>401</code></td><td>An <code>ILP-Peer-Id</code> was presented and did not authenticate.</td><td>Drop the peer id, or fix the credential. Anonymous payers need neither: the voucher identifies you.</td></tr>
+<tr><td><code>402</code></td><td>Unpaid request to a priced route, or a request over a carriage the route refuses. The body is the terms document.</td><td>Pay, or switch carriage.</td></tr>
+<tr><td><code>403</code></td><td>A probe from a sender with no channel the connector recognizes, or over the probe rate limit.</td><td>Open and use a channel first. Probing is free traversal, gated on having paid before.</td></tr>
+<tr><td><code>413</code></td><td>The body exceeded the 2 MiB limit.</td><td>Send less. There is no configuration knob for this on the connector.</td></tr>
+</tbody></table></div>
+
+<h2>Errors the client throws</h2>
+
+<p>All of them extend <code>ToonClientError</code>, which carries a stable <code>code</code> string. Branch on the class or on <code>code</code>, never on the message. <code>ConfigError</code> (<code>CONFIG</code>) is the one you will meet first: a missing required field, no facilitator for a Base network with no default, or no x402 channel offered on the chain asked for. <code>NetworkError</code> is an edge that could not be asked; <code>SponsorRefusedError</code> carries a Solana node's own reason for refusing an open. The <a href="https://github.com/toon-protocol/toon-client/blob/main/docs/errors.md">full table</a> on GitHub lists every class.</p>
+
+<p class="source">Written from <code>toon-client/docs/errors.md</code>.</p>

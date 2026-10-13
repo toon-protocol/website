@@ -59,7 +59,7 @@ p { margin:0; }
 .site-header nav .button { padding:0.45rem 0.9rem; font-size:0.88rem; }
 @media (max-width:860px) { .site-header nav a.hide-m { display:none; } }
 @media (max-width:520px) { .wrap { padding:0 1rem; } .site-header nav { gap:0.8rem; }
-  .site-header nav a.hide-s { display:none; } .brand { font-size:0.95rem; } }
+  .site-header nav a.hide-s { display:none; } .brand .name { display:none; } .site-header nav .button { padding:0.45rem 0.7rem; } }
 body { overflow-x:clip; }
 
 /* buttons */
@@ -270,17 +270,17 @@ footer { border-top:1px solid var(--line); padding:3rem 0 2.5rem; font-size:0.9r
         <path d="M12 12 v80 M28 92 v-80 h64 M44 28 h48 M28 44 h48 v48 M92 60 h-32 v32" class="ln"/>
         <rect x="12" y="78" width="14" height="14" class="dot"/></g>
       </svg>
-      TOON Protocol
+      <span class="name">TOON Protocol</span>
     </a>
     <nav aria-label="Primary">
       <a href="#how" class="hide-m">How it works</a>
       <a href="#run" class="hide-m">Run a node</a>
       <a href="#pay" class="hide-m">Pay</a>
-      <a href="#apps" class="hide-m">Apps</a>
       <a href="#pricing" class="hide-m">Pricing</a>
       <a href="#faq" class="hide-m">FAQ</a>
-      <a class="hide-s" href="https://github.com/toon-protocol/connector/blob/main/README.md">Docs</a>
-      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a href="docs/index.html">Docs</a>
+      <a href="ecosystem/index.html">Ecosystem</a>
+      <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
       <a class="button primary" href="#run">Run a node</a>
     </nav>
   </div>
@@ -298,7 +298,7 @@ footer { border-top:1px solid var(--line); padding:3rem 0 2.5rem; font-size:0.9r
       <div class="cta">
         <a class="button primary" href="#run">Run a node in three steps
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-        <a class="button ghost" href="#pay">Pay a node from code</a>
+        <a class="button ghost" href="docs/index.html">Read the docs</a>
       </div>
       <div class="trust">
         <span>MIT licensed</span>
@@ -472,8 +472,8 @@ price       = <span class="g">1000</span>      <span class="c"># 0.001 USDC per 
     <p class="prose" style="margin-top:1.5rem">Before it faces the world, put a TLS proxy in front of it: a TOON node refuses plaintext peers. The <a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/run-a-node.md">operator guide</a> covers that, the settlement block, and <a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/peering.md">peering</a> with a second node.</p>
 
     <div class="cta">
-      <a class="button primary" href="https://github.com/toon-protocol/connector/blob/main/docs/guide/run-a-node.md">Read the operator guide</a>
-      <a class="button ghost" href="https://github.com/toon-protocol/spaceturtle">Or let an agent run it for you: spaceturtle</a>
+      <a class="button primary" href="docs/run-a-node.html">Read the operator guide</a>
+      <a class="button ghost" href="docs/spaceturtle.html">Or let an agent run it for you: spaceturtle</a>
     </div>
   </div>
 </section>
@@ -580,7 +580,7 @@ price       = <span class="g">1000</span>      <span class="c"># 0.001 USDC per 
       <span><i style="background:#6b7486"></i>Anyone network</span>
       <span class="dev">Base Sepolia · Solana devnet</span>
     </div>
-    <p class="prose" style="margin-top:1rem; font-size:0.9rem">The live node settles on Base mainnet and Solana mainnet. On EVM the channel contract is x402's <code>x402BatchSettlement</code>, one address the x402 Foundation has deployed on Base, Arbitrum, Polygon, Optimism, Avalanche, Celo, Linea, Unichain, Monad and World Chain; on Solana it is the Solana Foundation's <code>payment-channels</code> program. TOON deploys no contract of its own.</p>
+    <p class="prose" style="margin-top:1rem; font-size:0.9rem">The <a href="ecosystem/index.html">ecosystem page</a> lists every app, client and rail, with what each is used for. The live node settles on Base mainnet and Solana mainnet. On EVM the channel contract is x402's <code>x402BatchSettlement</code>, one address the x402 Foundation has deployed on Base, Arbitrum, Polygon, Optimism, Avalanche, Celo, Linea, Unichain, Monad and World Chain; on Solana it is the Solana Foundation's <code>payment-channels</code> program. TOON deploys no contract of its own.</p>
   </div>
 </section>
 
@@ -1028,8 +1028,8 @@ price       = <span class="g">1000</span>      <span class="c"># 0.001 USDC per 
     <h2>Put a price on it.</h2>
     <p>One Docker image, four lines of TOML, and your app is paid per request. The guide takes about ten minutes.</p>
     <div class="cta">
-      <a class="button primary" href="https://github.com/toon-protocol/connector/blob/main/docs/guide/run-a-node.md">Run a node</a>
-      <a class="button ghost" href="https://www.npmjs.com/package/@toon-protocol/client">Install the client</a>
+      <a class="button primary" href="docs/run-a-node.html">Run a node</a>
+      <a class="button ghost" href="docs/pay-a-node.html">Pay a node</a>
       <a class="button ghost" href="https://discord.gg/PxzjbtXg9Q">Join the Discord</a>
     </div>
   </div>
@@ -1045,13 +1045,14 @@ price       = <span class="g">1000</span>      <span class="c"># 0.001 USDC per 
         <p>Value, routed. A paid reverse proxy and Interledger connector that settles on x402 channels. MIT licensed. Built for machines that pay each other thousands of times a day.</p>
       </div>
       <div>
-        <h4>Build</h4>
+        <h4>Docs</h4>
         <ul>
-          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/run-a-node.md">Run a node</a></li>
-          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/put-your-app-behind-it.md">Put your app behind it</a></li>
-          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/get-paid.md">Get paid</a></li>
-          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/peering.md">Peer with a node</a></li>
-          <li><a href="https://www.npmjs.com/package/@toon-protocol/client">Client on npm</a></li>
+          <li><a href="docs/index.html">Overview</a></li>
+          <li><a href="docs/run-a-node.html">Run a node</a></li>
+          <li><a href="docs/put-your-app-behind-it.html">Put your app behind it</a></li>
+          <li><a href="docs/get-paid.html">Get paid</a></li>
+          <li><a href="docs/pay-a-node.html">Pay a node</a></li>
+          <li><a href="docs/protocol.html">Protocol and specs</a></li>
         </ul>
       </div>
       <div>
@@ -1065,8 +1066,9 @@ price       = <span class="g">1000</span>      <span class="c"># 0.001 USDC per 
         </ul>
       </div>
       <div>
-        <h4>Apps</h4>
+        <h4>Ecosystem</h4>
         <ul>
+          <li><a href="ecosystem/index.html">Apps, clients and rails</a></li>
           <li><a href="https://github.com/toon-protocol/connector">connector</a></li>
           <li><a href="https://github.com/toon-protocol/relay">relay</a></li>
           <li><a href="https://github.com/toon-protocol/store">store</a></li>

@@ -1,0 +1,128 @@
+<p>The connector is one static binary that reads one TOML file. The published Docker image is how it is meant to be deployed.</p>
+
+<ol class="steps">
+  <li><b>01</b><strong>Pull it</strong>Pin a release handle and generate the node's identity key.</li>
+  <li><b>02</b><strong>Price a route</strong>Point a prefix at your app with a price in the token's smallest unit.</li>
+  <li><b>03</b><strong>Start it</strong><code>docker compose up -d</code>, then ask the node what it is with <code>GET /ilp</code>.</li>
+</ol>
+
+<h2>With Docker</h2>
+
+<p>Pin a <strong>release handle</strong>, <code>rust-&lt;handle&gt;</code>, a UTC date and that day's ordinal. Handles are immutable and never moved. <code>rust-sha-&lt;short-sha&gt;</code> pins an exact commit and is equally immutable. <code>rust-main</code> floats on every green build of <code>main</code>: fine for a scratch trial, never for a deployment.</p>
+
+<div class="codeblock"><div class="bar"><span>The shell</span><span>connector 2026.09.29.1</span></div>
+<pre>docker pull ghcr.io/toon-protocol/connector:rust-2026.09.29.1
+mkdir -p node/config node/data &amp;&amp; cd node
+openssl rand -hex 32 &gt; data/signer.key &amp;&amp; chmod 600 data/signer.key</pre></div>
+
+<div class="callout"><strong>The published image is <code>linux/amd64</code> only.</strong> On Apple Silicon or any other arm64 host, pull with <code>--platform linux/amd64</code> and add <code>platform: linux/amd64</code> next to <code>image:</code> in the compose file.</div>
+
+<p>The image runs as uid <code>10001</code> and creates <code>/app/state</code> owned by that uid, so a fresh named volume inherits the ownership. A host bind mount arrives root-owned and the connector refuses to start.</p>
+
+<div class="codeblock"><div class="bar"><span>compose.yml</span></div>
+<pre>services:
+  connector:
+    image: ghcr.io/toon-protocol/connector:rust-2026.09.29.1
+    command: ['/app/config/connector.toml']
+    volumes:
+      - ./config/connector.toml:/app/config/connector.toml:ro
+      - ./data:/app/data:ro
+      <span class="c"># A NAMED volume, not a bind mount.</span>
+      - connector-state:/app/state
+    ports:
+      <span class="c"># Loopback to begin with. Put a TLS-terminating reverse proxy</span>
+      <span class="c"># in front of it before it faces the world.</span>
+      - '127.0.0.1:3000:3000'
+    restart: unless-stopped
+    healthcheck:
+      <span class="c"># Free and unauthenticated. Answering means the config loaded,</span>
+      <span class="c"># every settlement backend connected, and the router is serving.</span>
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:3000/ilp/identity']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  quotes:
+    image: your-quotes-app:latest
+  search:
+    image: your-search-app:latest
+
+volumes:
+  connector-state:</pre></div>
+
+<pre>docker compose up -d</pre>
+
+<h2>From source</h2>
+
+<p>For changing the connector rather than running it. Rust stable:</p>
+
+<pre>git clone https://github.com/toon-protocol/connector.git
+cd connector &amp;&amp; cargo build --workspace
+./target/debug/connector path/to/connector.toml</pre>
+
+<p>Paths in the config are then yours, not the image's: <code>state_dir = "./state"</code>, <code>key_file = "./signer.key"</code>. The repository's <a href="https://github.com/toon-protocol/connector/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> has the test gate and the chain binaries it needs.</p>
+
+<h2>The config</h2>
+
+<p><code>price</code> is a whole number of the <strong>smallest unit</strong> of the token you settle in, the way a card terminal counts in cents, never in dollars. How many units make one token is the token's <code>decimals</code>. USDC has 6, so 1,000,000 units are one USDC:</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>price</th><th>In USDC</th><th>Which is</th></tr></thead>
+<tbody>
+<tr><td><code>1000</code></td><td>0.001</td><td>a tenth of a cent</td></tr>
+<tr><td><code>100000</code></td><td>0.10</td><td>ten cents</td></tr>
+<tr><td><code>1000000</code></td><td>1.00</td><td>one dollar</td></tr>
+</tbody></table></div>
+
+<div class="codeblock"><div class="bar"><span>connector.toml</span></div>
+<pre>client_edge_addr = <span class="s">"0.0.0.0:3000"</span>
+state_dir        = <span class="s">"/app/state"</span>
+
+[signer]
+key_file = <span class="s">"/app/data/signer.key"</span>   <span class="c"># 32 raw bytes, or 64 hex characters</span>
+
+<span class="c"># One route per thing you serve. Longest matching prefix wins.</span>
+[[routes]]
+prefix      = <span class="s">"g.example.quotes"</span>
+handler_url = <span class="s">"http://quotes:8080/"</span>
+price       = <span class="g">1000</span>                       <span class="c"># 0.001 USDC per request</span>
+
+[[routes]]
+prefix      = <span class="s">"g.example.search"</span>
+handler_url = <span class="s">"http://search:8080/"</span>
+price       = <span class="g">2500</span>                       <span class="c"># 0.0025 USDC</span>
+
+<span class="c"># Same app, deeper prefix, different price. This wins over g.example.search</span>
+<span class="c"># for g.example.search.bulk because it matches more labels.</span>
+[[routes]]
+prefix      = <span class="s">"g.example.search.bulk"</span>
+handler_url = <span class="s">"http://search:8080/bulk/"</span>
+price       = <span class="g">10000</span>                      <span class="c"># 0.01 USDC, a cent</span>
+
+<span class="c"># Price by size when your own costs grow with the payload: storage, uploads,</span>
+<span class="c"># anything you pay an upstream by the byte for. The charge for one packet is</span>
+<span class="c"># base + per_kib × ceil(payload_size / 1024). Both figures are published.</span>
+[[routes]]
+prefix      = <span class="s">"g.example.store"</span>
+handler_url = <span class="s">"http://store:8080/"</span>
+price       = { base = <span class="g">1000</span>, per_kib = <span class="g">30</span> }   <span class="c"># 0.001 USDC + 0.00003 per KiB</span></pre></div>
+
+<p>Then ask the node what it is:</p>
+
+<pre>curl http://localhost:3000/ilp</pre>
+
+<p>That free, unauthenticated <code>GET</code> returns the node's <strong>self-description</strong>: its addresses, endpoints, identity key and settlement facts. A connector answers; it never announces. It is also the whole of what another operator needs to <a href="peering.html">peer with you</a>, once <code>[node]</code> and <code>peer_expose</code> are set. This minimal config's own self-description has no endpoints and nothing to dial.</p>
+
+<div class="callout warn">
+<p><strong>One TOML file, read once, immutable for the process lifetime.</strong> There is no environment-variable layer; the only variable read is <code>RUST_LOG</code>. An unknown key is a hard load failure and a removed key is refused by name, so a stale config says so at boot instead of quietly doing nothing.</p>
+<p><strong>Every key is a path, never a value.</strong> No inline keys, no mnemonic, nowhere to smuggle one through.</p>
+<p><strong><code>state_dir</code> is where this node records which claims it has already been paid.</strong> In a container it must be a mounted volume. A watermark that dies with the container hands every payer their spent claims back as free service.</p>
+</div>
+
+<h2>Before it faces the world</h2>
+
+<p>Put a TLS-terminating reverse proxy in front of the client edge. A TOON node refuses plaintext peers, and every deployed config should publish <code>https://</code> and <code>wss://</code> endpoints only. The node has no second port: the client edge, the peer listeners and the <a href="operator-surface.html">operator surface</a> all merge onto <code>client_edge_addr</code>.</p>
+
+<p>A route with a price is only half of being paid. The next two pages are the other half: <a href="put-your-app-behind-it.html">what your app sees</a>, and <a href="get-paid.html">the settlement block</a> that lets anyone actually pay you.</p>
+
+<p class="source">Written from <code>connector/docs/guide/run-a-node.md</code>. The release handle is the connector's latest GitHub release.</p>

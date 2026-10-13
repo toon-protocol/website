@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pay a node · TOON Protocol docs</title>
+<meta name="description" content="From nothing to a paid request, with the CLI and the library.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' rx='40' fill='%230b0d12'/%3E%3Cg fill='none' stroke='%23e6e9ef' stroke-width='14'%3E%3Cpath d='M40 40h140M40 80h100M40 120h60v60M70 180v-100h70M140 110v70'/%3E%3C/g%3E%3Crect x='150' y='150' width='30' height='30' fill='%237dd3fc'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 220 220" width="26" height="26" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+<g><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 12 h80 M12 28 h64 M12 44 h48 v48 M28 92 v-64 h48 M44 76 v-32 M60 92 v-32 M92 28 v64 h-32" class="ln"/>
+<rect x="78" y="78" width="14" height="14" class="dot"/></g>
+<g transform="translate(116,0)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M92 12 h-80 v80 h80 v-64 h-64 v48 h48 v-32 h-32" class="ln"/></g>
+<g transform="translate(0,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 92 v-80 h80 v80 h-64 v-48 h48 v32 h-32" class="ln"/></g>
+<g transform="translate(116,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+<path d="M12 12 v80 M28 92 v-80 h64 M44 28 h48 M28 44 h48 v48 M92 60 h-32 v32" class="ln"/>
+<rect x="12" y="78" width="14" height="14" class="dot"/></g>
+</svg><span class="name">TOON Protocol</span></a>
+    <nav aria-label="Primary">
+      <a class="hide-s" href="../index.html#how">How it works</a>
+      <a href="../docs/index.html" class="active">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
+      <a class="button primary" href="../docs/run-a-node.html">Run a node</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap docs">
+  <details class="mobilenav">
+    <summary>Docs</summary>
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="concepts.html">Concepts</a>
+    </div>
+    <div class="group">
+      <h4>Operators</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html" class="active">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+    </div>
+  </details>
+  <aside class="sidebar" aria-label="Docs">
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="concepts.html">Concepts</a>
+    </div>
+    <div class="group">
+      <h4>Operators</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html" class="active">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+    </div>
+  </aside>
+  <main class="doc">
+    <p class="eyebrow">Callers</p>
+    <h1>Pay a node</h1>
+    <p class="lede">From nothing to a paid request, with the CLI and the library.</p>
+<p>From nothing to a paid request against the public devnet, and back again after a restart. Every step is given twice: once as the <code>toon</code> CLI, once as the library. You need Node.js 22 or newer. Nothing else: no local chain, no node of your own.</p>
+
+<p>You will make a wallet, fill it with devnet USDC, deposit some of it into an x402 payment channel on chain, and then buy one HTTP request from an app behind a connector. The channel is the slow, onchain part and you do it once, with no native gas. Requests after that are signatures, not transactions.</p>
+
+<p>The node used throughout is the devnet store, <code>https://proxy.ario.devnet.toonprotocol.dev</code>, which serves the route <code>g.toon.store</code> at 1000 base units (0.001 USDC) plus 10 per kibibyte. The <a href="devnet.html">devnet reference</a> has the full table.</p>
+
+<pre>npm install @toon-protocol/client</pre>
+
+<p>The <code>toon</code> CLI ships in the same package; <code>npx toon</code> runs it without a global install.</p>
+
+<h2 id="step-1-a-wallet"><a class="anchor" href="#step-1-a-wallet">Step 1: a wallet</a></h2>
+
+<p>One BIP-39 phrase derives both chain keys: an EVM key at <code>m/44'/60'/0'/0/0</code> and a Solana key at <code>m/44'/501'/0'/0'</code>. The EVM half is on the standard path, so the same phrase typed into an ordinary wallet shows you the same address.</p>
+
+<pre>npx toon init
+npx toon identity</pre>
+
+<p><code>init</code> writes an encrypted keystore at <code>~/.toon/keystore.json</code>, scrypt and AES-256-GCM, mode <code>0600</code>, and prints the phrase once for you to write down. It is not stored anywhere else.</p>
+
+<div class="codeblock"><div class="bar"><span>TypeScript</span></div>
+<pre><span class="k">import</span> { ToonClient } <span class="k">from</span> <span class="s">'@toon-protocol/client'</span>;
+
+<span class="k">const</span> client = <span class="k">await</span> ToonClient.create({
+  connector: <span class="s">'https://proxy.ario.devnet.toonprotocol.dev'</span>,
+  mnemonic: process.env.TOON_MNEMONIC,
+  channelStore: <span class="s">`${process.env.HOME}/.toon/channels.json`</span>,
+});
+
+console.log(client.identity.evmAddress);
+console.log(client.identity.solanaPublicKey);</pre></div>
+
+<p><code>ToonClient.create</code> reads the node's self-description, derives your keys, picks a chain and opens the channel store. It sends no transaction and spends nothing.</p>
+
+<h2 id="step-2-funds"><a class="anchor" href="#step-2-funds">Step 2: funds</a></h2>
+
+<p>A channel is funded in <strong>USDC</strong>, and every request is paid in it. That is all you need: opening a channel costs no native gas. On Base an x402 facilitator relays the deposit and pays for it; on Solana the connector sponsors the open. Native gas (Base Sepolia ETH, devnet SOL) is needed only later, to <em>leave</em> a channel.</p>
+
+<pre>npx toon faucet
+npx toon balances</pre>
+
+<pre><span class="k">await</span> client.wallet.faucet(<span class="s">'evm'</span>);
+console.log(<span class="k">await</span> client.wallet.balances());</pre>
+
+<h2 id="step-3-a-channel"><a class="anchor" href="#step-3-a-channel">Step 3: a channel</a></h2>
+
+<p>A payment channel is an x402 <code>batch-settlement</code> channel: a deposit you lock on chain, payable to this one connector, that you then pay from many times while touching the chain only to open, top up and leave. The first paid request opens one on its own in the library, but the CLI never does that as a side effect, so open it explicitly:</p>
+
+<pre>npx toon channel open --deposit 100000</pre>
+
+<p>100000 base units is 0.10 USDC, in the token's base units, never in wei. At 1000 base units per request that is a hundred requests before the channel needs a top-up, which a library client does on its own.</p>
+
+<pre><span class="k">const</span> channel = <span class="k">await</span> client.channel.open();   <span class="c">// opens with `deposit`, default 100000n</span>
+console.log(channel.channel.channelId, channel.depositTotal);</pre>
+
+<p>Both are idempotent: against a connector you already hold an open channel with, they return it rather than opening a second one. Adding more later: <code>npx toon channel deposit 100000</code> or <code>client.channel.deposit(100_000n)</code>.</p>
+
+<h2 id="step-4-one-paid-request"><a class="anchor" href="#step-4-one-paid-request">Step 4: one paid request</a></h2>
+
+<pre>npx toon send --body 'hello'</pre>
+
+<pre><span class="k">const</span> answer = <span class="k">await</span> client.send({
+  method: <span class="s">'POST'</span>,
+  headers: { <span class="s">'content-type'</span>: <span class="s">'text/plain'</span> },
+  body: <span class="s">'hello'</span>,
+});</pre>
+
+<p>No route appears in either, and that is deliberate: you configured a <strong>URL</strong>, and the node's own <code>GET /ilp</code> says what to address it as. Name a destination, <code>client.send('g.toon.relay.store', …)</code>, only when you want a route the node <em>forwards</em> rather than the one it terminates.</p>
+
+<p>Behind that one call: the client reads the route's price, seals your request to the connector's identity key, signs a voucher advancing the channel by that price, and sends both as one packet. <a href="protocol.html">Protocol and specs</a> walks the wire.</p>
+
+<h2 id="step-5-reading-the-result"><a class="anchor" href="#step-5-reading-the-result">Step 5: reading the result</a></h2>
+
+<p><code>send</code> returns an outcome. It does not throw on a refusal: a refusal is an answer about the network, and everything this client <em>does</em> throw happened before the packet went out or on chain.</p>
+
+<pre><span class="k">if</span> (answer.fulfilled) {
+  answer.status;              <span class="c">// the app's own HTTP status</span>
+  answer.headers;             <span class="c">// [name, value][], in order</span>
+  answer.text();              <span class="c">// the body, as UTF-8</span>
+  answer.json();              <span class="c">// the body, parsed</span>
+  answer.claim.amount;        <span class="c">// 1000n base units (0.001 USDC): what this cost</span>
+  answer.claim.cumulative;    <span class="c">// the channel's running total after this voucher</span>
+} <span class="k">else</span> {
+  answer.refusedBy;           <span class="c">// 'destination' | 'path' | 'edge'</span>
+  answer.code;                <span class="c">// 'F03', 'F01', 'PAYMENT_REQUIRED', …</span>
+  answer.message;
+  answer.accumulatedCost;     <span class="c">// what the path costs, when the connector said</span>
+}</pre>
+
+<p>A <code>404</code> from the app is a real, paid answer: it arrives on a FULFILL and costs exactly what a <code>200</code> costs. Only a refusal short of the app is <code>fulfilled: false</code>. The CLI prints one JSON document with <code>--json</code>, and exits <code>3</code> on a refusal:</p>
+
+<div class="codeblock"><div class="bar"><span>npx toon send g.toon.store --body 'hello' --json</span></div>
+<pre>{
+  "fulfilled": true,
+  "transport": "http",
+  "status": 200,
+  "headers": [["content-type", "application/octet-stream"], ["content-length", "34"]],
+  "body": "ZGVsaXZlcmVkIGJ5IHN0dWIgYXBwOiBqc29uIHBsZWFzZQ==",
+  "text": "delivered by stub app: json please",
+  "fulfillment": "jPo1IwR2rxlICypi1c48W5uW127WVkVf/IiEsMmut54=",
+  "claim": {
+    "channelId": "0xf5e0ecad66f856dc2a186635388804dfdbd241c690c27bfa7762250fbbb8af9b",
+    "chain": "evm",
+    "cumulative": "5000",
+    "amount": "1000"
+  }
+}</pre></div>
+
+<p><code>body</code> is base64 because a response is bytes; <code>text</code> is beside it when those bytes decode as UTF-8. Every amount is a decimal string, never a JSON number. The <code>claim</code> block is the receipt: which channel paid, what this request cost, and what the channel's cumulative total became. <code>fulfillment</code> is the proof the packet reached its intended receiver. Every code, and what to do about each, is in <a href="errors.html">Errors and reject codes</a>.</p>
+
+<h2 id="step-6-after-a-restart"><a class="anchor" href="#step-6-after-a-restart">Step 6: after a restart</a></h2>
+
+<p>A voucher states the channel's cumulative total, and the connector accepts it only if it advances the connector's own watermark. So a process has to remember two things across a restart: the channel's config, which the chain never gives back, and how far its vouchers have reached.</p>
+
+<p>The CLI persists both at <code>~/.toon/channels.json</code> by default. The library defaults to memory, which is almost never what you want: set <code>channelStore</code>, as the example above does. With it set, the next process resumes the same channel, sends no transaction, and locks no second deposit. Without it, every restart opens a fresh channel and strands a deposit in the old one.</p>
+
+<div class="callout warn"><strong>Never delete that file for a live channel.</strong> Without the config you cannot leave the channel, and its deposit stays locked on chain.</div>
+
+<p>To compare your side against the connector's:</p>
+
+<pre>npx toon claim-state</pre>
+
+<pre>console.log(<span class="k">await</span> client.claimState());</pre>
+
+<p>That is an owner-authenticated read, one signed challenge per channel, distinct from a voucher, so it can never be replayed as a payment. It works when the channel has run dry, which is exactly when you need it.</p>
+
+<h2 id="where-to-go-next"><a class="anchor" href="#where-to-go-next">Where to go next</a></h2>
+
+<ul>
+  <li><a href="channels.html">Payment channels</a>: opening without gas, who pays the gas, any-ERC-20 deposits, leaving, the watermark.</li>
+  <li><a href="cli.html">CLI reference</a>: every setting, the resolution order, exit codes.</li>
+  <li><a href="hidden-services.html">Hidden services</a>: paying a node at a <code>.anyone</code> address.</li>
+  <li><a href="https://github.com/toon-protocol/toon-client/blob/main/docs/api.md">Library API</a> on GitHub: every method, option and returned type.</li>
+</ul>
+
+<p class="source">Written from <code>toon-client/docs/getting-started.md</code> and <code>packages/client/README.md</code>.</p>
+
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="operator-surface.html"><small>Previous</small>The operator surface</a><a class="next" href="channels.html"><small>Next</small>Payment channels</a></nav>
+  </main>
+  <aside class="toc" aria-label="On this page"><h4>On this page</h4>
+  <a href="#step-1-a-wallet">Step 1: a wallet</a>
+  <a href="#step-2-funds">Step 2: funds</a>
+  <a href="#step-3-a-channel">Step 3: a channel</a>
+  <a href="#step-4-one-paid-request">Step 4: one paid request</a>
+  <a href="#step-5-reading-the-result">Step 5: reading the result</a>
+  <a href="#step-6-after-a-restart">Step 6: after a restart</a>
+  <a href="#where-to-go-next">Where to go next</a>
+</aside>
+</div>
+<footer>
+  <div class="wrap">
+    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write</span>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a href="https://discord.gg/PxzjbtXg9Q">Discord</a>
+      <a href="https://x.com/toonprotocol">X</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
