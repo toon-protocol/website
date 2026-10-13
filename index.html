@@ -1,0 +1,1096 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TOON Protocol · Value, routed. Pay-per-request for agents and APIs.</title>
+<meta name="description" content="Put a price on any HTTP endpoint and get paid per request, settled onchain on Base and Solana, without changing your app. No SDK, no API keys, no protocol fee.">
+<meta property="og:title" content="TOON Protocol · Value, routed.">
+<meta property="og:description" content="Put a price on any HTTP endpoint. Get paid per request, settled onchain, without changing your app.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toon.ar.io/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@toonprotocol">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' rx='40' fill='%230b0d12'/%3E%3Cg fill='none' stroke='%23e6e9ef' stroke-width='14'%3E%3Cpath d='M40 40h140M40 80h100M40 120h60v60M70 180v-100h70M140 110v70'/%3E%3C/g%3E%3Crect x='150' y='150' width='30' height='30' fill='%237dd3fc'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg:#0a0c10; --bg-raised:#11141b; --bg-sunken:#07080b; --bg-tint:#0e1420;
+  --ink:#e8ebf0; --ink-dim:#9aa3b2; --ink-faint:#6b7486; --line:#222836; --line-strong:#2f3747;
+  --accent:#7dd3fc; --accent-ink:#062330; --accent-soft:rgba(125,211,252,.12);
+  --gold:#e8c35a; --gold-soft:rgba(232,195,90,.14); --good:#4ade80; --good-soft:rgba(74,222,128,.12);
+  --radius:12px; --radius-sm:8px; --measure:66ch; color-scheme:dark;
+}
+@media (prefers-color-scheme: light) {
+  :root { --bg:#fbfcfe; --bg-raised:#ffffff; --bg-sunken:#f1f4f9; --bg-tint:#eef5fb;
+    --ink:#10141c; --ink-dim:#55607a; --ink-faint:#7c869b; --line:#dfe4ee; --line-strong:#c9d1df;
+    --accent:#0369a1; --accent-ink:#ffffff; --accent-soft:rgba(3,105,161,.09);
+    --gold:#9a6b00; --gold-soft:rgba(154,107,0,.10); --good:#15803d; --good-soft:rgba(21,128,61,.10);
+    color-scheme:light; }
+}
+* { box-sizing:border-box; }
+html, body { margin:0; padding:0; }
+html { scroll-behavior:smooth; scroll-padding-top:4.5rem; }
+body { background:var(--bg); color:var(--ink);
+  font:16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, Roboto, sans-serif;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+code, pre, kbd { font:0.88em/1.55 ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; }
+a { color:var(--accent); text-underline-offset:3px; }
+a:hover { text-decoration-thickness:2px; }
+h1, h2, h3, h4 { margin:0; font-weight:650; letter-spacing:-0.02em; line-height:1.15; }
+h2 { font-size:clamp(1.6rem, 3.2vw, 2.2rem); }
+h3 { font-size:1.05rem; }
+p { margin:0; }
+.wrap { width:100%; max-width:74rem; margin:0 auto; padding:0 1.5rem; }
+.sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+
+/* header */
+.site-header { position:sticky; top:0; z-index:20;
+  background:color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line); }
+.site-header .wrap { display:flex; align-items:center; justify-content:space-between; gap:1rem; height:3.6rem; }
+.brand { display:flex; align-items:center; gap:0.6rem; font-weight:650; letter-spacing:-0.01em;
+  color:var(--ink); text-decoration:none; white-space:nowrap; }
+.mark .sq { fill:var(--ink); }
+.mark .ln { stroke:var(--bg); stroke-width:9; fill:none; }
+.mark .dot { fill:var(--accent); }
+.site-header nav { display:flex; gap:1.15rem; font-size:0.92rem; align-items:center; }
+.site-header nav a { color:var(--ink-dim); text-decoration:none; }
+.site-header nav a:hover { color:var(--ink); }
+.site-header nav .button { padding:0.45rem 0.9rem; font-size:0.88rem; }
+@media (max-width:860px) { .site-header nav a.hide-m { display:none; } }
+@media (max-width:520px) { .wrap { padding:0 1rem; } .site-header nav { gap:0.8rem; }
+  .site-header nav a.hide-s { display:none; } .brand { font-size:0.95rem; } }
+body { overflow-x:clip; }
+
+/* buttons */
+.button { display:inline-flex; align-items:center; gap:0.45rem; padding:0.7rem 1.2rem;
+  border-radius:var(--radius-sm); font-weight:600; font-size:0.95rem; text-decoration:none;
+  border:1px solid transparent; white-space:nowrap; }
+.button.primary { background:var(--accent); color:var(--accent-ink); }
+.button.primary:hover { filter:brightness(1.08); text-decoration:none; }
+.button.ghost { border-color:var(--line-strong); color:var(--ink); background:transparent; }
+.button.ghost:hover { border-color:var(--accent); text-decoration:none; }
+.button svg { width:1em; height:1em; }
+
+/* sections */
+section { padding:5rem 0; }
+section + section { border-top:1px solid var(--line); }
+section.tint { background:var(--bg-tint); }
+.eyebrow { margin:0 0 0.8rem; font-size:0.76rem; font-weight:600; letter-spacing:0.1em;
+  text-transform:uppercase; color:var(--accent); }
+.lede { max-width:var(--measure); margin:1rem 0 0; font-size:1.12rem; color:var(--ink-dim); }
+.lede strong, .prose strong { color:var(--ink); font-weight:600; }
+.prose { max-width:var(--measure); color:var(--ink-dim); }
+.prose p + p { margin-top:0.9rem; }
+.section-head { max-width:46rem; margin-bottom:2.25rem; }
+.section-head p { margin-top:0.8rem; color:var(--ink-dim); font-size:1.05rem; }
+
+/* hero */
+.hero { padding:4.5rem 0 3.5rem; }
+.hero .wrap { display:grid; gap:3rem; grid-template-columns:minmax(0, 1.05fr) minmax(0, 1fr); align-items:center; }
+.hero h1 { font-size:clamp(2.6rem, 6.2vw, 4.4rem); line-height:1.02; letter-spacing:-0.035em; }
+.hero h1 span { color:var(--accent); }
+.hero .lede { font-size:1.2rem; }
+.cta { display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:1.9rem; }
+.trust { display:flex; flex-wrap:wrap; gap:0.5rem 1.2rem; margin-top:1.6rem; font-size:0.86rem; color:var(--ink-faint); }
+.trust span::before { content:"•"; margin-right:0.5rem; color:var(--good); }
+@media (max-width:900px) { .hero .wrap { grid-template-columns:1fr; } }
+
+/* diagram */
+.diagram { width:100%; height:auto; display:block; }
+.diagram .box { fill:var(--bg-raised); stroke:var(--line-strong); stroke-width:1.2; }
+.diagram .box.app { stroke:var(--good); }
+.diagram .box.node { stroke:var(--accent); }
+.diagram .t { fill:var(--ink); font:600 13px ui-sans-serif, system-ui, sans-serif; }
+.diagram .s { fill:var(--ink-dim); font:12px ui-sans-serif, system-ui, sans-serif; }
+.diagram .m { fill:var(--ink-dim); font:11.5px ui-monospace, Menlo, monospace; }
+.diagram .m.hi { fill:var(--gold); }
+.diagram .m.ok { fill:var(--good); }
+.diagram .m.ac { fill:var(--accent); }
+.diagram .arrow { stroke:var(--ink-dim); stroke-width:1.5; fill:none; marker-end:url(#ah); }
+.diagram .arrow.gold { stroke:var(--gold); }
+.diagram .arrow.dash { stroke-dasharray:4 4; }
+.diagram .pill { fill:var(--bg-sunken); stroke:var(--line); }
+.diagram .pill.gold { stroke:var(--gold); fill:var(--gold-soft); }
+.diagram .pill.chain { stroke:var(--accent); fill:var(--accent-soft); }
+.diagram .wire { stroke:var(--line-strong); stroke-width:1.2; fill:none; }
+.diagram .glow { fill:var(--accent-soft); }
+.diagram .chip { fill:var(--bg-raised); stroke:var(--line-strong); }
+.diagram .chip.on { stroke:var(--accent); }
+
+/* stat band */
+.stats { display:grid; gap:1px; grid-template-columns:repeat(4, 1fr); background:var(--line);
+  border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; }
+.stats div { background:var(--bg-raised); padding:1.4rem 1.5rem; }
+.stats b { display:block; font-size:2rem; font-weight:650; letter-spacing:-0.03em; line-height:1.1; }
+.stats b small { font-size:0.95rem; color:var(--ink-dim); font-weight:500; letter-spacing:0; margin-left:0.25rem; }
+.stats span { display:block; margin-top:0.35rem; font-size:0.9rem; color:var(--ink-dim); }
+@media (max-width:860px) { .stats { grid-template-columns:repeat(2, 1fr); } }
+
+/* cards */
+.cards { list-style:none; padding:0; margin:0; display:grid; gap:1rem;
+  grid-template-columns:repeat(auto-fit, minmax(17rem, 1fr)); }
+.cards li, .card { padding:1.35rem 1.4rem; background:var(--bg-raised); border:1px solid var(--line);
+  border-radius:var(--radius); color:var(--ink-dim); font-size:0.95rem; }
+.cards li h3 { color:var(--ink); margin-bottom:0.45rem; }
+.cards li .num { display:inline-flex; align-items:center; justify-content:center; width:1.7rem; height:1.7rem;
+  border-radius:50%; background:var(--accent-soft); color:var(--accent); font:600 0.8rem ui-monospace, monospace;
+  margin-bottom:0.9rem; }
+.cards li .ico { display:block; width:1.6rem; height:1.6rem; margin-bottom:0.9rem; color:var(--accent); }
+.cards.three { grid-template-columns:repeat(auto-fit, minmax(15rem, 1fr)); }
+
+/* code */
+pre { overflow-x:auto; margin:0; padding:1rem 1.15rem; background:var(--bg-sunken);
+  border:1px solid var(--line); border-radius:var(--radius); font-size:0.86rem; line-height:1.55; }
+:not(pre) > code { padding:0.1em 0.4em; background:var(--bg-sunken); border:1px solid var(--line);
+  border-radius:5px; font-size:0.86em; }
+pre .c { color:var(--ink-faint); }
+pre .k { color:var(--accent); font-weight:600; }
+pre .g { color:var(--gold); }
+pre .ok { color:var(--good); }
+pre .s { color:#c3e88d; }
+@media (prefers-color-scheme: light) { pre .s { color:#2f7d32; } }
+.codeblock { border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--bg-sunken); }
+.codeblock .bar { display:flex; justify-content:space-between; align-items:center; gap:1rem;
+  padding:0.55rem 1rem; border-bottom:1px solid var(--line); background:var(--bg-raised);
+  font:600 0.74rem ui-monospace, monospace; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-faint); }
+.codeblock .bar .tag { color:var(--good); text-transform:none; letter-spacing:0; font-weight:600; }
+.codeblock pre { border:0; border-radius:0; }
+
+/* two columns */
+.twocol { display:grid; gap:2.5rem; grid-template-columns:1fr 1fr; align-items:start; }
+.twocol.wide-left { grid-template-columns:1.1fr 0.9fr; }
+@media (max-width:900px) { .twocol, .twocol.wide-left { grid-template-columns:1fr; } }
+.stack { display:grid; gap:1rem; }
+
+/* steps */
+.steps { list-style:none; counter-reset:step; padding:0; margin:0 0 1.25rem; display:grid; gap:1rem;
+  grid-template-columns:repeat(auto-fit, minmax(15rem, 1fr)); }
+.steps li { counter-increment:step; padding:1.2rem 1.3rem; background:var(--bg-raised);
+  border:1px solid var(--line); border-radius:var(--radius); }
+.steps li::before { content:"0" counter(step); display:block;
+  font:600 0.76rem/1 ui-monospace, monospace; color:var(--accent); margin-bottom:0.7rem; letter-spacing:0.08em; }
+.steps h3 { margin-bottom:0.35rem; }
+.steps p { margin:0; font-size:0.93rem; color:var(--ink-dim); }
+
+/* badges */
+.badge { display:inline-flex; align-items:center; gap:0.4rem; padding:0.18rem 0.6rem; border-radius:999px;
+  font-size:0.74rem; font-weight:600; letter-spacing:0.02em; border:1px solid var(--line-strong); color:var(--ink-dim); }
+.badge.live { border-color:transparent; background:var(--good-soft); color:var(--good); }
+.badge.live::before { content:""; width:0.45rem; height:0.45rem; border-radius:50%; background:var(--good); }
+.badge.soon { background:var(--gold-soft); color:var(--gold); border-color:transparent; }
+.badge.src { background:var(--accent-soft); color:var(--accent); border-color:transparent; }
+
+/* apps grid */
+.apps { list-style:none; padding:0; margin:0; display:grid; gap:1rem;
+  grid-template-columns:repeat(auto-fill, minmax(17rem, 1fr)); }
+.apps li { padding:1.2rem 1.3rem; background:var(--bg-raised); border:1px solid var(--line); border-radius:var(--radius);
+  display:flex; flex-direction:column; gap:0.6rem; font-size:0.93rem; color:var(--ink-dim); }
+.apps li > p { margin:0; }
+.apps .top { display:flex; justify-content:space-between; align-items:center; gap:0.6rem; }
+.apps .top a { font-weight:650; color:var(--ink); text-decoration:none; font-size:1.02rem; }
+.apps .top a:hover { color:var(--accent); }
+.apps .price { margin-top:auto; padding-top:0.5rem; border-top:1px dashed var(--line); font-size:0.82rem; color:var(--ink-faint); }
+.apps .price b { color:var(--gold); font-weight:600; }
+
+/* rails strip */
+.rails { display:flex; flex-wrap:wrap; gap:0.6rem; margin-top:1.75rem; }
+.rails span { display:inline-flex; align-items:center; gap:0.5rem; padding:0.5rem 0.9rem; border-radius:999px;
+  border:1px solid var(--line-strong); background:var(--bg-raised); font-size:0.9rem; font-weight:600; color:var(--ink); }
+.rails span i { width:0.6rem; height:0.6rem; border-radius:50%; display:inline-block; }
+.rails .dev { color:var(--ink-dim); font-weight:500; border-style:dashed; }
+
+/* tables */
+table { width:100%; border-collapse:collapse; font-size:0.93rem; }
+.tablewrap { border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--bg-raised); }
+th, td { padding:0.8rem 1rem; text-align:left; vertical-align:top; border-top:1px solid var(--line); }
+thead th { border-top:0; background:var(--bg-sunken); font:600 0.74rem ui-sans-serif, system-ui, sans-serif;
+  letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faint); }
+td { color:var(--ink-dim); }
+td strong { color:var(--ink); font-weight:600; }
+td code { white-space:nowrap; }
+td.num { font-family:ui-monospace, Menlo, monospace; font-size:0.86rem; white-space:nowrap; }
+@media (max-width:700px) { .tablewrap { overflow-x:auto; } table { min-width:36rem; } }
+
+/* comparison */
+.compare td:first-child strong { display:block; }
+.compare td:first-child span { display:block; font-size:0.83rem; color:var(--ink-faint); margin-top:0.2rem; }
+.compare tr.toon td { background:var(--accent-soft); }
+
+/* receipts */
+.receipts { list-style:none; padding:0; margin:0; display:grid; gap:0.5rem; }
+.receipts li { display:grid; grid-template-columns:4.5rem 6.5rem 1fr auto; gap:1rem; align-items:center;
+  padding:0.7rem 1rem; background:var(--bg-raised); border:1px solid var(--line); border-radius:var(--radius-sm);
+  font-size:0.86rem; color:var(--ink-dim); }
+.receipts li b { color:var(--ink); font-weight:600; }
+.receipts li code { font-size:0.8rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; background:none; border:0; padding:0; }
+.receipts li.live { border-color:var(--good); }
+@media (max-width:700px) { .receipts li { grid-template-columns:1fr 1fr; } .receipts li code { grid-column:1 / -1; } }
+details { border:1px solid var(--line); border-radius:var(--radius); background:var(--bg-raised); }
+details summary { cursor:pointer; padding:0.9rem 1.15rem; font-weight:600; color:var(--ink); list-style:none; display:flex; justify-content:space-between; align-items:center; gap:1rem; }
+details summary::-webkit-details-marker { display:none; }
+details summary::after { content:"+"; color:var(--accent); font-weight:600; font-size:1.1rem; }
+details[open] summary::after { content:"−"; }
+details > *:not(summary) { padding:0 1.15rem 1rem; color:var(--ink-dim); font-size:0.95rem; }
+details > p { max-width:var(--measure); }
+details pre { margin:0 1.15rem 1.15rem; padding:1rem; }
+.faq { display:grid; gap:0.75rem; max-width:52rem; }
+
+/* footer */
+.cta-band { padding:4rem 0; border-top:1px solid var(--line); background:var(--bg-tint); text-align:center; }
+.cta-band h2 { font-size:clamp(1.6rem, 3.6vw, 2.4rem); }
+.cta-band p { margin:0.8rem auto 0; max-width:40rem; color:var(--ink-dim); font-size:1.05rem; }
+.cta-band .cta { justify-content:center; }
+footer { border-top:1px solid var(--line); padding:3rem 0 2.5rem; font-size:0.9rem; color:var(--ink-dim); }
+.footgrid { display:grid; gap:2rem; grid-template-columns:1.4fr repeat(4, 1fr); }
+.footgrid h4 { font-size:0.76rem; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:0.8rem; }
+.footgrid ul { list-style:none; padding:0; margin:0; display:grid; gap:0.45rem; }
+.footgrid a { color:var(--ink-dim); text-decoration:none; }
+.footgrid a:hover { color:var(--ink); }
+.footgrid .about p { margin-top:0.7rem; max-width:24rem; }
+.footbar { margin-top:2.5rem; padding-top:1.25rem; border-top:1px solid var(--line); display:flex; flex-wrap:wrap; gap:0.5rem 1.5rem; justify-content:space-between; font-size:0.82rem; color:var(--ink-faint); }
+@media (max-width:900px) { .footgrid { grid-template-columns:1fr 1fr; } }
+@media (max-width:520px) { .footgrid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="TOON Protocol, home">
+      <svg class="mark" viewBox="0 0 220 220" width="26" height="26" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <g><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+        <path d="M12 12 h80 M12 28 h64 M12 44 h48 v48 M28 92 v-64 h48 M44 76 v-32 M60 92 v-32 M92 28 v64 h-32" class="ln"/>
+        <rect x="78" y="78" width="14" height="14" class="dot"/></g>
+        <g transform="translate(116,0)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+        <path d="M92 12 h-80 v80 h80 v-64 h-64 v48 h48 v-32 h-32" class="ln"/></g>
+        <g transform="translate(0,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+        <path d="M12 92 v-80 h80 v80 h-64 v-48 h48 v32 h-32" class="ln"/></g>
+        <g transform="translate(116,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
+        <path d="M12 12 v80 M28 92 v-80 h64 M44 28 h48 M28 44 h48 v48 M92 60 h-32 v32" class="ln"/>
+        <rect x="12" y="78" width="14" height="14" class="dot"/></g>
+      </svg>
+      TOON Protocol
+    </a>
+    <nav aria-label="Primary">
+      <a href="#how" class="hide-m">How it works</a>
+      <a href="#run" class="hide-m">Run a node</a>
+      <a href="#pay" class="hide-m">Pay</a>
+      <a href="#apps" class="hide-m">Apps</a>
+      <a href="#pricing" class="hide-m">Pricing</a>
+      <a href="#faq" class="hide-m">FAQ</a>
+      <a class="hide-s" href="https://github.com/toon-protocol/connector/blob/main/README.md">Docs</a>
+      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a class="button primary" href="#run">Run a node</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Pay-per-request for agents, APIs and apps</p>
+      <h1>Value, <span>routed.</span></h1>
+      <p class="lede">Put a price on any HTTP endpoint. Get paid per request, settled onchain, <strong>without changing your app</strong>. The caller pays with a signed voucher. Your app sees a plain HTTP request.</p>
+      <div class="cta">
+        <a class="button primary" href="#run">Run a node in three steps
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        <a class="button ghost" href="#pay">Pay a node from code</a>
+      </div>
+      <div class="trust">
+        <span>MIT licensed</span>
+        <span>No protocol fee</span>
+        <span>Settles on Base and Solana</span>
+        <span>No SDK in your app</span>
+      </div>
+    </div>
+
+    <figure style="margin:0">
+      <svg class="diagram" viewBox="0 0 560 360" role="img" aria-labelledby="hero-d-title" xmlns="http://www.w3.org/2000/svg">
+        <title id="hero-d-title">A caller sends a request with a voucher to a TOON node. The node checks the voucher and forwards a plain HTTP request to the app. Vouchers settle in batches on an x402 channel on Base or Solana.</title>
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/>
+          </marker>
+        </defs>
+
+        <!-- glow behind node -->
+        <ellipse class="glow" cx="280" cy="150" rx="120" ry="80"/>
+
+        <!-- caller -->
+        <rect class="box" x="16" y="104" width="120" height="92" rx="12"/>
+        <text class="t" x="76" y="140" text-anchor="middle">Caller</text>
+        <text class="s" x="76" y="160" text-anchor="middle">an agent, a service,</text>
+        <text class="s" x="76" y="176" text-anchor="middle">a script</text>
+
+        <!-- node -->
+        <rect class="box node" x="208" y="92" width="144" height="116" rx="14"/>
+        <text class="t" x="280" y="128" text-anchor="middle">TOON node</text>
+        <text class="s" x="280" y="148" text-anchor="middle">checks the voucher</text>
+        <text class="s" x="280" y="164" text-anchor="middle">unseals the request</text>
+        <text class="s" x="280" y="180" text-anchor="middle">keeps the price</text>
+
+        <!-- app -->
+        <rect class="box app" x="424" y="104" width="120" height="92" rx="12"/>
+        <text class="t" x="484" y="140" text-anchor="middle">Your app</text>
+        <text class="s" x="484" y="160" text-anchor="middle">unchanged</text>
+        <text class="s" x="484" y="176" text-anchor="middle">no payment code</text>
+
+        <!-- request arrow caller -> node (paid) -->
+        <path class="arrow gold" d="M136 136 H206"/>
+        <rect class="pill gold" x="118" y="46" width="108" height="42" rx="8"/>
+        <text class="m hi" x="172" y="63" text-anchor="middle">POST /ilp</text>
+        <text class="m hi" x="172" y="79" text-anchor="middle">+ voucher 1,000</text>
+        <path class="wire" d="M172 88 V124"/>
+
+        <!-- 402 refusal arrow node -> caller (dashed) -->
+        <path class="arrow dash" d="M206 172 H138"/>
+        <rect class="pill" x="104" y="214" width="136" height="42" rx="8"/>
+        <text class="m" x="172" y="231" text-anchor="middle">402 Payment Required</text>
+        <text class="m" x="172" y="247" text-anchor="middle">amount: "1000"</text>
+        <path class="wire" d="M172 214 V176"/>
+
+        <!-- node -> app plain http -->
+        <path class="arrow ok" d="M352 136 H422" stroke="var(--good)"/>
+        <rect class="pill" x="336" y="46" width="104" height="42" rx="8"/>
+        <text class="m ok" x="388" y="63" text-anchor="middle">plain HTTP</text>
+        <text class="m ok" x="388" y="79" text-anchor="middle">already paid</text>
+        <path class="wire" d="M388 88 V124"/>
+
+        <!-- app -> node response, sealed back -->
+        <path class="arrow" d="M422 172 H354"/>
+        <text class="m" x="388" y="192" text-anchor="middle">200, sealed back</text>
+
+        <!-- settlement line -->
+        <path class="wire" d="M280 208 V264" stroke-dasharray="3 4"/>
+        <rect class="pill chain" x="150" y="264" width="260" height="60" rx="10"/>
+        <text class="t" x="280" y="287" text-anchor="middle" style="font-size:12.5px">x402 batch-settlement channel</text>
+        <text class="m ac" x="280" y="306" text-anchor="middle">Base · Solana · one tx settles thousands</text>
+
+        <!-- footnote -->
+        <text class="s" x="280" y="350" text-anchor="middle">A voucher is a signature, not a transaction. No gas per request, no block to wait for.</text>
+      </svg>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<section style="padding:0 0 4rem; border-top:0">
+  <div class="wrap">
+    <div class="stats" aria-label="Key numbers">
+      <div><b>$0.001</b><span>a real price for one request, as charged by the live node</span></div>
+      <div><b>0 <small>gas</small></b><span>per request. A voucher is a signature the node verifies offchain</span></div>
+      <div><b>1 <small>tx</small></b><span>settles thousands of requests, in batches, on contracts x402 already runs</span></div>
+      <div><b>0%</b><span>protocol fee. What the caller pays lands in your channel, minus nothing</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how" class="tint">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">How it works</p>
+      <h2>A paid reverse proxy. It terminates payment the way nginx terminates TLS.</h2>
+      <p>A TOON node sits in front of your HTTP app. You set a price per route. Every request that reaches your app has already been paid for.</p>
+    </div>
+
+    <div class="twocol wide-left">
+      <ul class="cards three">
+        <li>
+          <span class="num">1</span>
+          <h3>The refusal names the price</h3>
+          An unpaid request gets an x402 <code>402 Payment Required</code> with the exact amount, token, chain and address. A caller never guesses.
+        </li>
+        <li>
+          <span class="num">2</span>
+          <h3>The caller pays with a voucher</h3>
+          The caller opens an x402 payment channel once, then attaches a signed voucher to every request. No account, no card, no signup, no API key.
+        </li>
+        <li>
+          <span class="num">3</span>
+          <h3>The app gets plain HTTP</h3>
+          The node checks the voucher, unseals the request and forwards it. Your app does not change. <strong>No SDK, no invoices, no payment code.</strong>
+        </li>
+      </ul>
+
+      <div class="codeblock">
+        <div class="bar"><span>On the wire</span><span class="tag">x402 v2</span></div>
+<pre><span class="c"># an unpaid request to a priced route</span>
+<span class="k">POST</span> /ilp                  <span class="c">no voucher attached</span>
+<span class="g">402 Payment Required</span>
+{ "x402Version": 2,
+  "accepts": [{ "scheme":  <span class="s">"batch-settlement"</span>,
+               "network": <span class="s">"eip155:8453"</span>,
+               "amount":  <span class="s">"1000"</span>,
+               "payTo":   <span class="s">"0x…"</span> }] }
+
+<span class="c"># the same request, with a signed voucher</span>
+<span class="k">POST</span> /ilp                  <span class="c">voucher: 1,000 units</span>
+<span class="ok">200</span>                        <span class="c">your app's answer, sealed</span></pre>
+      </div>
+    </div>
+
+    <p class="prose" style="margin-top:2rem">It is built for machines that transact thousands of times a day: agents paying for inference, storage and relays; services metering each other; apps that want to charge per call without building billing. It is not a consumer checkout, and does not try to be.</p>
+  </div>
+</section>
+
+<!-- ============ RUN A NODE ============ -->
+<section id="run">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">For operators</p>
+      <h2>Run a node in three steps</h2>
+      <p>One binary, one config file, one command. There is no account to open, nobody to ask, and nothing to add to your app.</p>
+    </div>
+
+    <ol class="steps">
+      <li><h3>Pull it</h3><p>The connector ships as one Docker image. Pull it and generate the node's key with one line of <code>openssl</code>.</p></li>
+      <li><h3>Price a route</h3><p>Four lines of TOML point a price at your app. A settlement block names the token you want to be paid in; the guide has the addresses to copy.</p></li>
+      <li><h3>Start it</h3><p><code>docker compose up -d</code>. Your node answers <code>GET /ilp</code> with its price list and starts collecting.</p></li>
+    </ol>
+
+    <div class="twocol">
+      <div class="codeblock">
+        <div class="bar"><span>The shell</span><span>connector 2026.09.29.1</span></div>
+<pre>docker pull ghcr.io/toon-protocol/connector:rust-2026.09.29.1
+openssl rand -hex 32 &gt; data/signer.key
+docker compose up -d</pre>
+      </div>
+      <div class="codeblock">
+        <div class="bar"><span>connector.toml</span><span>one route</span></div>
+<pre>[[routes]]
+prefix      = <span class="s">"g.example.app"</span>
+handler_url = <span class="s">"http://app:3100/"</span>
+price       = <span class="g">1000</span>      <span class="c"># 0.001 USDC per request</span></pre>
+      </div>
+    </div>
+
+    <p class="prose" style="margin-top:1.5rem">Before it faces the world, put a TLS proxy in front of it: a TOON node refuses plaintext peers. The <a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/run-a-node.md">operator guide</a> covers that, the settlement block, and <a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/peering.md">peering</a> with a second node.</p>
+
+    <div class="cta">
+      <a class="button primary" href="https://github.com/toon-protocol/connector/blob/main/docs/guide/run-a-node.md">Read the operator guide</a>
+      <a class="button ghost" href="https://github.com/toon-protocol/spaceturtle">Or let an agent run it for you: spaceturtle</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAY ============ -->
+<section id="pay" class="tint">
+  <div class="wrap">
+    <div class="twocol wide-left">
+      <div>
+        <p class="eyebrow">For callers</p>
+        <h2>Paying is one install</h2>
+        <p class="lede" style="font-size:1.05rem">The client asks a node what it charges, opens the channel once, and does the sealing and the vouchers on every request after that. A refusal comes back as a value, not an exception.</p>
+        <ul class="cards" style="margin-top:1.5rem; grid-template-columns:1fr">
+          <li><h3>No account anywhere</h3>A wallet and a deposit are the whole onboarding. The node never learns who you are.</li>
+          <li><h3>One channel, many apps</h3>Routes chain across nodes. Fund one channel and reach apps behind other operators' nodes through it.</li>
+          <li><h3>Works from any language</h3>The wire is x402 v2 over HTTP. The TypeScript client is the reference; the <a href="https://github.com/toon-protocol/connector/blob/main/docs/protocol/client-edge-spec.md">client-edge spec</a> is the contract.</li>
+        </ul>
+      </div>
+      <div class="codeblock">
+        <div class="bar"><span>TypeScript</span><span class="tag">npm install @toon-protocol/client</span></div>
+<pre><span class="k">import</span> { ToonClient } <span class="k">from</span> <span class="s">'@toon-protocol/client'</span>;
+
+<span class="k">const</span> client = <span class="k">await</span> ToonClient.create({
+  connector: <span class="s">'https://proxy.ario.devnet.toonprotocol.dev'</span>,
+  mnemonic: process.env.TOON_MNEMONIC,
+  channelStore: <span class="s">`${process.env.HOME}/.toon/channels.json`</span>,
+});
+
+<span class="k">await</span> client.channel.open({ deposit: <span class="g">100_000n</span> }); <span class="c">// 0.10 USDC</span>
+
+<span class="k">const</span> answer = <span class="k">await</span> client.send({ body: <span class="s">'hello'</span> });
+<span class="k">if</span> (answer.fulfilled) {
+  console.log(answer.status, answer.text());  <span class="c">// the app's own response</span>
+  console.log(answer.claim.amount);           <span class="c">// 1000n (0.001 USDC)</span>
+} <span class="k">else</span> {
+  console.log(answer.code, answer.message);   <span class="c">// a refusal, not an exception</span>
+}
+
+<span class="k">await</span> client.close();</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APPS ============ -->
+<section id="apps">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Already behind a node</p>
+      <h2>Real apps, real prices, open source</h2>
+      <p>Each of these is an ordinary HTTP service with no payment code. The node in front of it does the charging. Four of them are priced on the live node today; all of them are yours to run.</p>
+    </div>
+
+    <ul class="apps">
+      <li>
+        <div class="top"><a href="https://github.com/toon-protocol/relay">relay</a><span class="badge live">Priced live</span></div>
+        <p>A Nostr relay you get paid to write to. Reads are free and speak plain NIP-01; writes arrive already paid.</p>
+        <div class="price">write a message <b>$0.001</b></div>
+      </li>
+      <li>
+        <div class="top"><a href="https://github.com/toon-protocol/store">store</a><span class="badge live">Priced live</span></div>
+        <p>A paid Arweave blob store. Permanent storage, by the KiB, through a plain <code>POST</code>. This page was stored through it.</p>
+        <div class="price">store a file <b>$0.001 + $0.00003 / KiB</b></div>
+      </li>
+      <li>
+        <div class="top"><a href="https://github.com/toon-protocol/anytoon">anytoon</a><span class="badge live">Priced live</span></div>
+        <p>The Anyone Protocol credentials issuer behind a node, reached at a hidden-service address. Fetch a URL anonymously.</p>
+        <div class="price">fetch a URL <b>$0.001</b></div>
+      </li>
+      <li>
+        <div class="top"><a href="https://github.com/toon-protocol/gas-station">gas-station</a><span class="badge live">Priced live</span></div>
+        <p>Pays other people's gas. A peer holding no SOL gets a Solana transaction landed; a peer holding no ETH gets an EVM call mined.</p>
+        <div class="price">Solana fee paid for you <b>$0.012</b></div>
+      </li>
+      <li>
+        <div class="top"><a href="https://github.com/toon-protocol/spaceturtle">spaceturtle</a><span class="badge src">Agent</span></div>
+        <p>An agent that serves your apps from your own machine, and is paid for each request. No cloud, no domain, no open port.</p>
+        <div class="price">one line installs it, no root, no account</div>
+      </li>
+      <li>
+        <div class="top"><a href="https://github.com/toon-protocol/swap">swap</a><span class="badge src">Source</span></div>
+        <p>Swap tokens across chains through a relay, with no server in between. Small fills, each side verifies the other's signed claim.</p>
+        <div class="price">EVM, Solana, Mina</div>
+      </li>
+      <li>
+        <div class="top"><a href="https://github.com/toon-protocol/provider">provider</a><span class="badge src">Source</span></div>
+        <p>A compute provider that sells leases on OCI workloads over TOON payment channels, with a gateway that follows a workload across hosts.</p>
+        <div class="price">spec: TOON_Network</div>
+      </li>
+      <li>
+        <div class="top"><a href="https://github.com/toon-protocol/toon_cli">toon</a><span class="badge src">CLI</span></div>
+        <p>Runs and manages an agent node: wallet, funding, apps, peers, routes, prices, channels and the relay, from one binary.</p>
+        <div class="price">Linux x86_64 and aarch64</div>
+      </li>
+    </ul>
+
+    <div class="rails" aria-label="Chains and rails">
+      <span><i style="background:#0052ff"></i>Base mainnet</span>
+      <span><i style="background:#9945ff"></i>Solana mainnet</span>
+      <span><i style="background:#2775ca"></i>USDC</span>
+      <span><i style="background:var(--accent)"></i>x402 batch-settlement</span>
+      <span><i style="background:var(--gold)"></i>Interledger</span>
+      <span><i style="background:#222"></i>Arweave</span>
+      <span><i style="background:#6b7486"></i>Anyone network</span>
+      <span class="dev">Base Sepolia · Solana devnet</span>
+    </div>
+    <p class="prose" style="margin-top:1rem; font-size:0.9rem">The live node settles on Base mainnet and Solana mainnet. On EVM the channel contract is x402's <code>x402BatchSettlement</code>, one address the x402 Foundation has deployed on Base, Arbitrum, Polygon, Optimism, Avalanche, Celo, Linea, Unichain, Monad and World Chain; on Solana it is the Solana Foundation's <code>payment-channels</code> program. TOON deploys no contract of its own.</p>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section id="pricing" class="tint">
+  <div class="wrap">
+    <div class="twocol wide-left">
+      <div>
+        <p class="eyebrow">What it costs</p>
+        <h2>You set the price. You keep the price.</h2>
+        <div class="prose" style="margin-top:1rem">
+          <p>A route charges a flat amount per request, plus an optional rate per KiB for large bodies, in the token you settle in. Prices count the token's smallest unit, the way a card terminal counts cents: in USDC, <strong>1,000 units is a tenth of a cent</strong>.</p>
+          <p>There is <strong>no protocol fee and no percentage cut</strong>. Vouchers are redeemed onchain in batches, on the channel contracts the x402 ecosystem already runs, so one transaction settles thousands of requests. The cost of a request is the price you set, not a gas fee.</p>
+          <p>The software is MIT licensed. There is no plan, no tier, no minimum and no payout schedule. Nobody sits between the caller's channel and your key.</p>
+        </div>
+      </div>
+      <div>
+        <div class="tablewrap">
+          <table>
+            <caption class="sr">What the live node charged on 2026-10-03</caption>
+            <thead><tr><th>Request</th><th>Price</th><th>Units</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Write a message to the relay</strong></td><td>$0.001</td><td class="num">1,000</td></tr>
+              <tr><td><strong>Store a file on Arweave, permanently</strong></td><td>$0.001 + $0.00003 per KiB</td><td class="num">1,000 + 30/KiB</td></tr>
+              <tr><td><strong>Fetch a URL anonymously</strong><br><span style="font-size:0.85em">over the Anyone network</span></td><td>$0.001</td><td class="num">1,000</td></tr>
+              <tr><td><strong>Have a Solana transaction's fee paid</strong></td><td>$0.012</td><td class="num">12,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:0.75rem; font-size:0.84rem; color:var(--ink-faint)">Read off the live node's own <a href="https://connector.167-233-221-236.sslip.io/ilp"><code>GET /ilp</code></a> on 2026-10-03. This page is a permanent record, so the table is a snapshot; the endpoint answers for today. Revision 5 of this page cost $0.0019 at the door.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY ============ -->
+<section id="why">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Why it is better</p>
+      <h2>Sending a message and sending money are the same action.</h2>
+    </div>
+    <ul class="cards">
+      <li>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+        <h3>Against paying onchain per call</h3>
+        A TOON request costs a signature, not a transaction. No gas per request, no block to wait for, and a tenth of a cent is a real price, not a rounding error.
+      </li>
+      <li>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <h3>Against API keys and invoices</h3>
+        Nothing to provision and nothing to chase. The caller pays with the request, and an unpaid request is refused before it reaches your app.
+      </li>
+      <li>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h3.75a1.75 1.75 0 0 1 0 3.5H10.75a1.75 1.75 0 0 0 0 3.5H14.5"/></svg>
+        <h3>Against metered billing services</h3>
+        No percentage cut, no minimums, no payout schedule. Vouchers settle to a key you hold, in the token and on the chain you chose.
+      </li>
+      <li>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 11l3-4M7 13l3 4M14 7l3 4M14 17l3-4"/></svg>
+        <h3>Against a plain reverse proxy</h3>
+        Routes chain. A node can forward to another node's paid route and keep a fee, so one caller reaches apps behind other nodes through one channel. Forwarding hops carry the payload sealed and cannot read it.
+      </li>
+    </ul>
+
+    <div class="twocol" style="margin-top:3rem; align-items:center">
+      <div class="prose">
+        <p class="eyebrow">Only TOON</p>
+        <h3 style="font-size:1.4rem; color:var(--ink); margin-bottom:0.8rem">Fund one channel, reach many apps.</h3>
+        <p>Routes chain across nodes with the payload sealed. Each hop keeps its own fee, a hop can convert between tokens at a rate it declares, and a node can run at an onion address. The app never sees a payment, and an intermediate hop never sees the request.</p>
+        <p>Pay-per-request protocols answer "what does this cost, and is it paid?" TOON settles on them and adds the one thing they do not have: <strong>a route</strong>.</p>
+      </div>
+      <svg class="diagram" viewBox="0 0 560 190" role="img" aria-labelledby="route-d-title" xmlns="http://www.w3.org/2000/svg">
+        <title id="route-d-title">One caller with one channel reaches apps behind two different nodes. The first node forwards to the second and keeps a fee.</title>
+        <rect class="box" x="10" y="70" width="96" height="56" rx="10"/>
+        <text class="t" x="58" y="94" text-anchor="middle">Caller</text>
+        <text class="m hi" x="58" y="112" text-anchor="middle">one channel</text>
+
+        <rect class="box node" x="170" y="70" width="110" height="56" rx="10"/>
+        <text class="t" x="225" y="94" text-anchor="middle">Node A</text>
+        <text class="m" x="225" y="112" text-anchor="middle">keeps a fee</text>
+
+        <rect class="box node" x="340" y="16" width="110" height="56" rx="10"/>
+        <text class="t" x="395" y="40" text-anchor="middle">Node B</text>
+        <text class="m" x="395" y="58" text-anchor="middle">onion address</text>
+
+        <rect class="box app" x="340" y="124" width="110" height="52" rx="10"/>
+        <text class="t" x="395" y="146" text-anchor="middle">App 1</text>
+        <text class="s" x="395" y="163" text-anchor="middle">behind A</text>
+
+        <rect class="box app" x="470" y="16" width="80" height="56" rx="10"/>
+        <text class="t" x="510" y="40" text-anchor="middle">App 2</text>
+        <text class="s" x="510" y="58" text-anchor="middle">behind B</text>
+
+        <path class="arrow gold" d="M106 98 H168"/>
+        <path class="arrow gold" d="M280 90 C310 90, 310 44, 338 44"/>
+        <path class="arrow ok" d="M280 106 C310 106, 310 150, 338 150" stroke="var(--good)"/>
+        <path class="arrow ok" d="M450 44 H468" stroke="var(--good)"/>
+        <text class="m hi" x="300" y="30" text-anchor="middle">voucher, sealed</text>
+        <text class="m ok" x="300" y="175" text-anchor="middle">plain HTTP</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHERE IT SITS ============ -->
+<section id="compare" class="tint">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Where it sits</p>
+      <h2>Two kinds of agent payment protocol. TOON is the first kind, with a route.</h2>
+    </div>
+    <div class="tablewrap compare">
+      <table>
+        <thead><tr><th style="width:26%">Protocols</th><th style="width:37%">What they answer</th><th>And TOON</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Pay per request</strong><span>x402, L402, Circle Nanopayments</span></td>
+            <td>"What does this request cost, and is it paid?" A 402 names a price; the caller pays onchain, over Lightning, or through a batching service.</td>
+            <td>ILP routes, x402 settles. Every TOON channel is an x402 batch-settlement channel, and an unpaid request gets an x402 document. What TOON adds is the path: ILP carries the voucher from node to node, so a caller is not limited to the seller it opened a channel with.</td>
+          </tr>
+          <tr>
+            <td><strong>Authorize a purchase</strong><span>Google AP2, Stripe and OpenAI ACP, Visa Trusted Agent Protocol, Mastercard Agent Pay</span></td>
+            <td>"Did a human authorize this cart?" Mandates, checkout sessions and agent credentials on card rails, with refunds and disputes.</td>
+            <td>A different question. TOON answers "was this packet paid for before the app saw it?" No cart, no card, no chargeback.</td>
+          </tr>
+          <tr class="toon">
+            <td><strong>Only TOON</strong><span>a route, not just a price</span></td>
+            <td colspan="2">Fund one channel, reach many apps. Routes chain across nodes with the payload sealed, each hop keeps its own fee, a hop can convert between tokens at a rate it declares, and a node can run at an onion address. The app never sees a payment.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROOF ============ -->
+<section id="proof">
+  <div class="wrap">
+    <div class="twocol wide-left">
+      <div>
+        <p class="eyebrow">Proof</p>
+        <h2>This page is not on a web server.</h2>
+        <div class="prose" style="margin-top:1rem">
+          <p>It is one HTML file with no scripts and no external assets, stored permanently on Arweave, and the write that put it there was bought through the node priced above: two paid hops, each charging by the KiB, each paid with a voucher on an x402 channel on Solana mainnet. The node settles on Base mainnet and Solana mainnet.</p>
+          <p>A page cannot contain its own hash, so each revision embeds the receipts of the ones before it: the Arweave transaction id and sha256, the claim on each hop, and the purchase of the name this page lives under. Every hash checks against a public chain.</p>
+          <p>The node's first paid writes are documented receipt by receipt at <a href="https://boughtviatoonnode.ar.io/">boughtviatoonnode.ar.io</a>.</p>
+        </div>
+      </div>
+      <div class="stack">
+        <ol class="receipts" aria-label="Earlier revisions of this page">
+          <li class="live"><b>rev 8</b><span>2026-10-03</span><code title="Arweave transaction id">rAEvwshqhL-oWbcnqfY6iwimpcLbZW-N14FMAsy577o</code><a href="https://arweave.net/rAEvwshqhL-oWbcnqfY6iwimpcLbZW-N14FMAsy577o">view</a></li>
+          <li><b>rev 7</b><span>2026-09-23</span><code>sfLC6YFJ_KCwjIokLITEuLHo_62s4JkM-Szb4pzXJz0</code><a href="https://arweave.net/sfLC6YFJ_KCwjIokLITEuLHo_62s4JkM-Szb4pzXJz0">view</a></li>
+          <li><b>rev 6</b><span>2026-09-23</span><code>R1AsnnPqN0MBGQVibDz2qSFPj4pqrplGdmr44XsEXmc</code><a href="https://arweave.net/R1AsnnPqN0MBGQVibDz2qSFPj4pqrplGdmr44XsEXmc">view</a></li>
+          <li><b>rev 5</b><span>2026-09-13</span><code>eVq5fpCYo3dmm1Ve28FE96awJoCPpGIBO8vBA7OdeO8</code><a href="https://arweave.net/eVq5fpCYo3dmm1Ve28FE96awJoCPpGIBO8vBA7OdeO8">view</a></li>
+          <li><b>rev 4</b><span>2026-09-10</span><code>3DH-cty1UbiNJoj0fWO6xbSq32bqHfxHTUPPZCyIvxU</code><a href="https://arweave.net/3DH-cty1UbiNJoj0fWO6xbSq32bqHfxHTUPPZCyIvxU">view</a></li>
+          <li><b>rev 3</b><span>2026-09-10</span><code>5niuBsUcjfHJJePn0TCijN37xexebzk6WCYzej42Uj4</code><a href="https://arweave.net/5niuBsUcjfHJJePn0TCijN37xexebzk6WCYzej42Uj4">view</a></li>
+          <li><b>rev 2</b><span>2026-08-30</span><code>diMr0l1YgIgux1c3OeCO1NB7HOavNg6B-ScgenmRBZg</code><a href="https://arweave.net/diMr0l1YgIgux1c3OeCO1NB7HOavNg6B-ScgenmRBZg">view</a></li>
+          <li><b>rev 1</b><span>2026-08-27</span><code>Sl49EXVNvlSveojCf1-JPL9K_tRTwEwBA_U3lvamdPk</code><a href="https://arweave.net/Sl49EXVNvlSveojCf1-JPL9K_tRTwEwBA_U3lvamdPk">view</a></li>
+        </ol>
+        <details>
+          <summary>Every earlier revision, receipt by receipt</summary>
+          <p>Revision 8 is the page this one replaces: <code>sha256 288783f3bb0a20d2d33ca16e6db111a9ab2245413c8a8a7b848841587d9c93ce</code>, 34,268 bytes, stored 2026-10-03. Its hop claims were not carried into this record. Revisions 1 to 7 are below exactly as revision 8 recorded them.</p>
+<pre>{
+  &quot;rev1&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 1, served as a paid TOON write (same discipline as boughtviatoonnode self.json: the next revision embeds these receipts)&quot;,
+    &quot;date&quot;: &quot;2026-08-27&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;359c7a97ddbd9766d93170c89d2253543a833e4d6462bdc93ab31774b6a08554&quot;,
+    &quot;bytes&quot;: 134294,
+    &quot;arweave_txid&quot;: &quot;Sl49EXVNvlSveojCf1-JPL9K_tRTwEwBA_U3lvamdPk&quot;,
+    &quot;route&quot;: &quot;g.drew.ario.xl&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;paid_base_units&quot;: 61000,
+      &quot;watermark&quot;: &quot;nonce 16 -&gt; 17, cumulative 376000 -&gt; 437000&quot;
+    },
+    &quot;hop2_edge_store&quot;: {
+      &quot;channel&quot;: &quot;27XcKjUVe3SbVfkrj72bqMcZf3QuEasGxci4kberf8fu&quot;,
+      &quot;claim&quot;: &quot;nonce 7, cumulative 182,700, advance 60,000&quot;,
+      &quot;captured&quot;: &quot;2026-08-27 from the store connector&#x27;s peer-claims.log (inbound_claim_accepted), closing the receipt gap noted at publication&quot;
+    },
+    &quot;x402_leg&quot;: {
+      &quot;chain&quot;: &quot;base-mainnet&quot;,
+      &quot;tx&quot;: &quot;0x327477ee7d0dc3b9f8424a4f630401399374af09be5d322d419bc9fdda5241a4&quot;,
+      &quot;block&quot;: 50533113,
+      &quot;from&quot;: &quot;0x025bf59AD141552A935E54A83d2D9D6571e38A55&quot;,
+      &quot;to_ario_payto&quot;: &quot;0x6A0A10FFD285c971B841bee8892878c0d583Bf67&quot;,
+      &quot;usdc&quot;: &quot;0.004298&quot;,
+      &quot;verified_via&quot;: [
+        &quot;base.blockscout.com&quot;,
+        &quot;mainnet.base.org&quot;
+      ],
+      &quot;winc&quot;: &quot;0&quot;
+    },
+    &quot;arns&quot;: {
+      &quot;name&quot;: &quot;toon&quot;,
+      &quot;bought&quot;: &quot;2026-08-27, 1yr lease, 44,170.416 ARIO (quote was 44,843), funded by Phil via Drew&quot;,
+      &quot;buy_tx&quot;: &quot;24mSdCCz6JkiFLt9JBxriYbd1FgSfwXZYrkMSFyJtx9vVVGJBV3y9JSLUTk2swKfEwBRhYewByaHAttg8FW6khdX&quot;,
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;ant_owner&quot;: &quot;DQCzjWpsDsbwaTkAvzu9pD3QhEK8QAHCmNHvUmgAKdQt&quot;,
+      &quot;set_tx&quot;: &quot;5MqvFKUbYmLjYWkTx7ESCS6E9joLYBwxaLKT3K5PN6WjNE586RYjLf2ha3KvnRY1HyyU41NAy3KLD7vdNAMMT7tG&quot;,
+      &quot;lease_ends&quot;: &quot;2027-08-27 (endTimestamp 1819394542000)&quot;,
+      &quot;url&quot;: &quot;https://toon.permagate.io/&quot;,
+      &quot;alias_undername&quot;: {
+        &quot;url&quot;: &quot;https://toon_boughtviatoonnode.permagate.io/&quot;,
+        &quot;ant&quot;: &quot;BiW6dxwkphDjKWsDEqHRKMvNoTbebEDb5i83DUhTwsB1&quot;,
+        &quot;set_tx&quot;: &quot;5AG6Q95o6E51bnedTjR5FLAGjQqdKfo8o6Y1JiWJg6Xg9pNqQnwrjsW2m8EGorr8t5jwQ9CvdZ1Ka7St1WFAa9Pu&quot;
+      }
+    }
+  },
+  &quot;rev2&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 2, served as a paid TOON write (this object is what rev 3&#x27;s appendix embeds; rev 2&#x27;s page embeds the rev 1 receipts above)&quot;,
+    &quot;date&quot;: &quot;2026-08-30&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;6b9548dd3197158885070a287d66caae1f56a58c1cd498e08c2d1362e6496610&quot;,
+    &quot;bytes&quot;: 86403,
+    &quot;arweave_txid&quot;: &quot;diMr0l1YgIgux1c3OeCO1NB7HOavNg6B-ScgenmRBZg&quot;,
+    &quot;route&quot;: &quot;g.drew.ario (the .xl route is an alias since 2026-08-29; ADR 0065 schedule pricing)&quot;,
+    &quot;content_changes&quot;: &quot;Discord invite added to Links (discord.gg/PxzjbtXg9Q); retired x402-to-AR.IO narration removed; appendices pinned to connector commit deded9f9 (the commit the node runs); config-spec + vocabulary appendices dropped to fit under the 107,520 B free-tier ceiling; rev 1 receipts embedded as Appendix E&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;claim&quot;: &quot;nonce 26, cumulative 512,420, advance 4,420 = 1000 base + 30 x 114 KiB&quot;,
+      &quot;note&quot;: &quot;nonce 25 (+6,940) was the FAILED 151,225 B attempt: store leg T00&#x27;d on turbo-sdk#455, client charged anyway (the #1028 finding, again)&quot;
+    },
+    &quot;hop2_edge_store&quot;: {
+      &quot;channel&quot;: &quot;27XcKjUVe3SbVfkrj72bqMcZf3QuEasGxci4kberf8fu&quot;,
+      &quot;claim&quot;: &quot;nonce 15, cumulative 255,720, advance 4,320 = 900 base + 30 x 114 KiB (nonce 14 +6,840 was the failed attempt)&quot;,
+      &quot;captured&quot;: &quot;GET /claims on the store connector operator surface, book=client (the peer book is empty post-#1257/#1258)&quot;
+    },
+    &quot;storage_leg&quot;: {
+      &quot;how&quot;: &quot;Turbo free signed tier (&lt;= 107,520 B), ZERO winc spent&quot;,
+      &quot;why_not_paid&quot;: &quot;the funded 93,749,282,296 winc CANNOT be spent: /v1/tx ignores winc and demands x402, chunked path debits the wrong account. Filed https://github.com/ardriveapp/turbo-sdk/issues/454 sibling: issues/455&quot;,
+      &quot;read_back&quot;: &quot;byte-identical from permagate.io (sha256 match, 86,403 bytes)&quot;
+    },
+    &quot;arns_set&quot;: {
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;record&quot;: &quot;@ -&gt; diMr0l1YgIgux1c3OeCO1NB7HOavNg6B-ScgenmRBZg, ttl 900, CONFIRMED on chain 2026-08-30&quot;,
+      &quot;note&quot;: &quot;two blockhash-expiry failures against api.mainnet-beta.solana.com before the third attempt landed; publicnode 403s the WSS subscription from the Mac&quot;
+    }
+  },
+  &quot;rev3&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 3, served as a paid TOON write (rev 4&#x27;s Appendix E embeds this object)&quot;,
+    &quot;date&quot;: &quot;2026-09-10&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;e1c9ea033a48e4691825a5183bc617117205e0dc66c0870ae2636c7bd2c21ea2&quot;,
+    &quot;bytes&quot;: 90595,
+    &quot;arweave_txid&quot;: &quot;5niuBsUcjfHJJePn0TCijN37xexebzk6WCYzej42Uj4&quot;,
+    &quot;route&quot;: &quot;g.drew.ario (ADR 0065 schedule: 1000 base + 30 per KiB)&quot;,
+    &quot;content_changes&quot;: &quot;rewritten after reader feedback (the page sold tech not outcome): hero claim &#x27;Put a price on any HTTP endpoint. Get paid per request, in USDC, without changing your app.&#x27;; sections What it does / What it costs (price table read off the node&#x27;s live GET /ilp) / Why it is better / Who it is for / How to use it / Proof / Links (+npm client) / Colophon; the turbo-sdk#455 caveat moved off the front (store paid path works since 2026-09-03); appendices read via git show at connector commit deded9f9, the tag the box runs (rust-sha-deded9f, verified on the box the same day)&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;claim&quot;: &quot;nonce 65 -&gt; 66, cumulative 625,190 -&gt; 629,760, advance 4,570 = 1000 base + 30 x 119 KiB&quot;,
+      &quot;captured&quot;: &quot;client channel store before/after the write, and GET /claims?book=client on the edge operator surface after (nonce 66, cumulative 629,760)&quot;
+    },
+    &quot;hop2_edge_store&quot;: {
+      &quot;channel&quot;: &quot;27XcKjUVe3SbVfkrj72bqMcZf3QuEasGxci4kberf8fu&quot;,
+      &quot;claim&quot;: &quot;nonce 87, cumulative 654,150 after the write; the advance for this packet is 4,470 = 4,570 - 100 edge fee = 900 base + 30 x 119 KiB (prior nonce not read before the write)&quot;,
+      &quot;captured&quot;: &quot;GET /claims?book=client on the store connector operator surface, 2026-09-10&quot;
+    },
+    &quot;storage_leg&quot;: &quot;free signed tier at the bundler (90,595 B is under the 107,520 B ceiling); no ARIO bought for this upload&quot;,
+    &quot;arns&quot;: {
+      &quot;name&quot;: &quot;toon&quot;,
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;set_tx&quot;: &quot;61Ugen2cE3XEt8PdcqLHPQ6SBJ8jYbVSV85oSd7NpyKdE6vsUojJ6WwPAqPMgXiLTJjbLi5hN4NUgzVN3uXmNhW7&quot;,
+      &quot;before&quot;: &quot;diMr0l1YgIgux1c3OeCO1NB7HOavNg6B-ScgenmRBZg (rev 2)&quot;,
+      &quot;after&quot;: &quot;5niuBsUcjfHJJePn0TCijN37xexebzk6WCYzej42Uj4&quot;,
+      &quot;urls&quot;: [
+        &quot;https://toon.permagate.io/&quot;,
+        &quot;https://toon.ar.io/&quot;
+      ]
+    },
+    &quot;first_gateways_to_serve&quot;: &quot;ar-io.dev byte-identical within ~2 min; ardrive.net and vilenarios.com 200 at the ANT dry run; permagate lagged (504 / error pages) for 10+ min, the usual&quot;
+  },
+  &quot;rev4&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 4, served as a paid TOON write (rev 5&#x27;s Appendix E embeds this object)&quot;,
+    &quot;date&quot;: &quot;2026-09-10&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;1df3e5cb583e1a114c606a7aa48e1e8625d37abc9c819d943aec2eca84812dda&quot;,
+    &quot;bytes&quot;: 93089,
+    &quot;arweave_txid&quot;: &quot;3DH-cty1UbiNJoj0fWO6xbSq32bqHfxHTUPPZCyIvxU&quot;,
+    &quot;route&quot;: &quot;g.drew.ario (ADR 0065 schedule: 1000 base + 30 per KiB)&quot;,
+    &quot;content_changes&quot;: &quot;the two showcase links (Proof section, Links table) now point at boughtviatoonnode.ar.io instead of boughtviatoonnode.permagate.io, after permagate&#x27;s front proxy answered 503 &#x27;upstream connect error&#x27; for both names for an afternoon while ar.io and ardrive.net served them; rev 3 receipts embedded in Appendix E; no other copy change&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;claim&quot;: &quot;nonce 66 -&gt; 67, cumulative 629,760 -&gt; 634,420, advance 4,660 = 1000 base + 30 x 122 KiB&quot;,
+      &quot;captured&quot;: &quot;client channel store before/after the write&quot;
+    },
+    &quot;hop2_edge_store&quot;: {
+      &quot;channel&quot;: &quot;27XcKjUVe3SbVfkrj72bqMcZf3QuEasGxci4kberf8fu&quot;,
+      &quot;claim&quot;: &quot;nonce 87 -&gt; 88, cumulative 654,150 -&gt; 658,710, advance 4,560 = 4,660 - 100 edge fee = 900 base + 30 x 122 KiB&quot;,
+      &quot;captured&quot;: &quot;GET /claims?book=client on the store connector operator surface before and after, 2026-09-10&quot;
+    },
+    &quot;storage_leg&quot;: &quot;free signed tier at the bundler (93,089 B is under the 107,520 B ceiling)&quot;,
+    &quot;arns&quot;: {
+      &quot;name&quot;: &quot;toon&quot;,
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;set_tx&quot;: &quot;215BrPyEVXqxwZXKKdj6HmnB1KaHba3obmqxGZDHybjwjpiwTHme6igzD3XUPFciNWxX3iK5uwYWXYvcm8SNaXuh&quot;,
+      &quot;before&quot;: &quot;5niuBsUcjfHJJePn0TCijN37xexebzk6WCYzej42Uj4 (rev 3)&quot;,
+      &quot;after&quot;: &quot;3DH-cty1UbiNJoj0fWO6xbSq32bqHfxHTUPPZCyIvxU&quot;,
+      &quot;urls&quot;: [
+        &quot;https://toon.ar.io/&quot;,
+        &quot;https://toon.permagate.io/&quot;
+      ]
+    },
+    &quot;gateways&quot;: &quot;ar-io.dev and ardrive.net byte-identical within ~2 min of the write; permagate 503 on every ArNS name at the time (its /ar-io/healthcheck said ok)&quot;
+  },
+  &quot;rev5&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 5, served as a paid TOON write (rev 6 embeds this object)&quot;,
+    &quot;date&quot;: &quot;2026-09-13&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;698c6a51fc238f3f10a15dfd2ebb001e1e71b3b7b9fba8cce2179b19b1d54bc0&quot;,
+    &quot;bytes&quot;: 23060,
+    &quot;arweave_txid&quot;: &quot;eVq5fpCYo3dmm1Ve28FE96awJoCPpGIBO8vBA7OdeO8&quot;,
+    &quot;route&quot;: &quot;g.drew.ario (ADR 0065 schedule: 1000 base + 30 per KiB)&quot;,
+    &quot;content_changes&quot;: &quot;the verbatim appendices (operator README, RFC departures, ADR 0046, ADR 0058) are replaced by links to the repository; a wire block under the hero shows the unpaid 402 (x402 v2 terms) and the paid 200; &#x27;Who it is for&#x27; folds into &#x27;What it does&#x27; and the colophon into &#x27;Proof&#x27;; new section &#x27;Where it sits&#x27; places TOON against pay-per-request protocols (x402, L402, Circle Nanopayments) and purchase-authorization protocols (AP2, ACP, Visa TAP, Mastercard Agent Pay); the price table is read off the node&#x27;s GET /ilp at build time and dated; the cost line is a receipt (rev 4 cost $0.0047); one sentence states the mainnet contracts are live; page shrinks 93,089 B to 23,060 B&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;claim&quot;: &quot;nonce 67 -&gt; 68, cumulative 634,420 -&gt; 636,350, advance 1,930 = 1000 base + 30 x 31 KiB (the base64 blob inside the job event, not the 23,060 B file)&quot;,
+      &quot;captured&quot;: &quot;client channel store before/after the write&quot;
+    },
+    &quot;hop2_edge_store&quot;: {
+      &quot;channel&quot;: &quot;27XcKjUVe3SbVfkrj72bqMcZf3QuEasGxci4kberf8fu&quot;,
+      &quot;claim&quot;: &quot;nonce 88 -&gt; 89, cumulative 658,710 -&gt; 660,540, advance 1,830 = 1,930 - 100 edge fee = 900 base + 30 x 31 KiB&quot;,
+      &quot;captured&quot;: &quot;GET /claims?book=client on the store connector operator surface after the write, 2026-09-13&quot;
+    },
+    &quot;storage_leg&quot;: &quot;free signed tier at the bundler (23,060 B is under the 107,520 B ceiling)&quot;,
+    &quot;arns&quot;: {
+      &quot;name&quot;: &quot;toon&quot;,
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;set_tx&quot;: &quot;2K5SsuBRmdb1i6nJ2ZuMZV5vJ1V6JxqvtosrC7Ckr9RJcAcAkNPWCZR4rwJkrji47ovU5VWH1SA2hNG9NkFyY9jB&quot;,
+      &quot;record&quot;: &quot;@ -&gt; eVq5fpCYo3dmm1Ve28FE96awJoCPpGIBO8vBA7OdeO8, ttl 900, CONFIRMED on chain 2026-09-13, first attempt&quot;
+    },
+    &quot;served&quot;: &quot;ar-io.dev byte-identical within a minute; ar.io 404 on the raw txid at first check (propagation); permagate.io 502 (its outage, ongoing since 09-10)&quot;
+  },
+  &quot;rev6&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 6, served as a paid TOON write (rev 7 embeds this object)&quot;,
+    &quot;date&quot;: &quot;2026-09-23&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;baf2cac00ca968a24945dbefaa37f13f1024af5546c9cf0bfed1b06905210969&quot;,
+    &quot;bytes&quot;: 30731,
+    &quot;arweave_txid&quot;: &quot;R1AsnnPqN0MBGQVibDz2qSFPj4pqrplGdmr44XsEXmc&quot;,
+    &quot;route&quot;: &quot;g.drew.ario (ADR 0065 schedule: 1000 base + 30 per KiB)&quot;,
+    &quot;content_changes&quot;: &quot;motto &#x27;Value, routed.&#x27; replaces &#x27;Open harness for the agent economy&#x27;; the claim reads &#x27;settled onchain&#x27; instead of &#x27;in USDC&#x27;; copy is token-agnostic, naming USDC, Base and Solana only as facts about this node; look and feel follow the console site (system sans, dark by default with a light scheme, sky accent, raised cards), still no scripts; new section &#x27;Run a node in three steps&#x27;; a mainnet banner under the header; &#x27;Where it sits&#x27; now correctly calls TOON the first (pay-per-request) kind&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;claim&quot;: &quot;nonce 68 -&gt; 69, cumulative 636,350 -&gt; 638,580, advance 2,230 = 1000 base + 30 x 41 KiB (the base64 blob inside the job event)&quot;,
+      &quot;captured&quot;: &quot;client channel store before/after the write&quot;
+    },
+    &quot;hop2_edge_store&quot;: {
+      &quot;channel&quot;: &quot;27XcKjUVe3SbVfkrj72bqMcZf3QuEasGxci4kberf8fu&quot;,
+      &quot;claim&quot;: &quot;expected advance 2,130 = 2,230 - 100 edge fee; book read after the write: nonce 511, cumulative 1,146,630. The channel also carries the hourly canary and the daily record, so this one advance is not isolated&quot;,
+      &quot;captured&quot;: &quot;GET /claims?book=client on the store connector operator surface after the write, 2026-09-23&quot;
+    },
+    &quot;storage_leg&quot;: &quot;free signed tier at the bundler (30,731 B is under the 107,520 B ceiling)&quot;,
+    &quot;arns&quot;: {
+      &quot;name&quot;: &quot;toon&quot;,
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;set_tx&quot;: &quot;5bW2h4jQ4oNBcvhac58SBLAZ4ZqKBrYitqSwtJT83k51JWSjhantiS7qkZQrGaYeeNSuUUECaTJWdpf3qDJspfWC&quot;,
+      &quot;record&quot;: &quot;@ -&gt; R1AsnnPqN0MBGQVibDz2qSFPj4pqrplGdmr44XsEXmc, ttl 900, CONFIRMED on chain 2026-09-23, first attempt&quot;
+    },
+    &quot;served&quot;: &quot;ardrive.net and vilenarios.com byte-identical on the raw txid within a minute; ar.io 404 on the raw txid at first check (propagation); permagate.io 502/503 (its outage)&quot;
+  },
+  &quot;rev7&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 7, served as a paid TOON write (rev 8 embeds this object)&quot;,
+    &quot;date&quot;: &quot;2026-09-23&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;8fea1592a5adea10839b00f0b4ecd54d61332f50c40d6725c5a2c51d24f2a4ff&quot;,
+    &quot;bytes&quot;: 32383,
+    &quot;arweave_txid&quot;: &quot;sfLC6YFJ_KCwjIokLITEuLHo_62s4JkM-Szb4pzXJz0&quot;,
+    &quot;route&quot;: &quot;g.drew.ario (ADR 0065 schedule: 1000 base + 30 per KiB)&quot;,
+    &quot;content_changes&quot;: &quot;the mainnet banner under the header is cut, and the Proof section keeps only that the settlement contracts are live on Base mainnet and Solana mainnet-beta&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;claim&quot;: &quot;nonce 69 -&gt; 70, cumulative 638,580 -&gt; 640,870, advance 2,290 = 1000 base + 30 x 43 KiB&quot;,
+      &quot;captured&quot;: &quot;client channel store before/after the write&quot;
+    },
+    &quot;storage_leg&quot;: &quot;free signed tier at the bundler (32,383 B is under the 107,520 B ceiling)&quot;,
+    &quot;arns&quot;: {
+      &quot;name&quot;: &quot;toon&quot;,
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;set_tx&quot;: &quot;govnGLwntHdKNz974taGHKB8Cui7uNeosvS1w5gd5G935xRaBHVCUSSFK9K5iHSZSUDAJ5Uk3XF1rG3jgtJw1T2&quot;,
+      &quot;record&quot;: &quot;@ -&gt; sfLC6YFJ_KCwjIokLITEuLHo_62s4JkM-Szb4pzXJz0, ttl 900, CONFIRMED on chain 2026-09-23, first attempt&quot;
+    },
+    &quot;served&quot;: &quot;ardrive.net byte-identical on the raw txid at first check&quot;
+  }
+}</pre>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" class="tint">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">FAQ</p>
+      <h2>Questions operators and callers ask</h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>Is TOON an x402 facilitator?</summary>
+        <p>No. A facilitator verifies and settles payments for a seller as a hosted service, usually for a fee per settlement. A TOON node is software you run: it verifies vouchers itself, offchain, and settles its own channels in batches. Every TOON channel is an x402 batch-settlement channel, so the contracts and the 402 document are x402's; the node is yours. There is no fee to anyone but you.</p>
+      </details>
+      <details>
+        <summary>Do I have to change my app?</summary>
+        <p>No. Your app is an ordinary HTTP service behind a route's <code>handler_url</code>. It receives an ordinary HTTP request, holds no key on your behalf, and never sees a payment. The relay, the store and the gas station above contain no payment code at all.</p>
+      </details>
+      <details>
+        <summary>Which chains and tokens?</summary>
+        <p>The live node settles in USDC on Base mainnet and Solana mainnet. You choose the token and chain in the settlement block of your config. On EVM the channel contract is x402's <code>x402BatchSettlement</code>; on Solana it is the Solana Foundation's <code>payment-channels</code> program. Base Sepolia and Solana devnet are the devnets.</p>
+      </details>
+      <details>
+        <summary>What is the smallest payment?</summary>
+        <p>One base unit of the token. In USDC that is a millionth of a dollar. A voucher is a signature, so a tenth of a cent is a real price with no gas attached to it.</p>
+      </details>
+      <details>
+        <summary>Does a caller need an account or an API key?</summary>
+        <p>No. A caller needs a wallet with a deposit in the token the node prices in. It opens a channel once and attaches a voucher to each request. The node never learns who the caller is beyond the key that signs.</p>
+      </details>
+      <details>
+        <summary>What happens to an unpaid request?</summary>
+        <p>It is refused before it reaches your app, with an x402 <code>402 Payment Required</code> that states the exact price, token, chain and address. The caller pays and sends again. A refusal is a value in the client, not an exception.</p>
+      </details>
+      <details>
+        <summary>When does the money land?</summary>
+        <p>Claims are free and cumulative; the node lands the latest voucher on chain in batches, every ten minutes by default, and right away if the payer starts a withdrawal. One transaction settles everything since the last one.</p>
+      </details>
+      <details>
+        <summary>What does TOON itself charge?</summary>
+        <p>Nothing. The software is MIT licensed and there is no protocol fee. What a caller pays lands in the operator's channel, minus nothing. Gas for a batch settlement is paid by whoever lands it, once per batch, not per request.</p>
+      </details>
+      <details>
+        <summary>Where do I find other nodes and apps?</summary>
+        <p>There is no discovery layer by design (ADR 0046): a node answers for itself at <code>GET /ilp</code> and announces nothing. A peering is made from a URL (ADR 0058). The apps above are the ones the project runs; anyone can run the same images.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<div class="cta-band">
+  <div class="wrap">
+    <h2>Put a price on it.</h2>
+    <p>One Docker image, four lines of TOML, and your app is paid per request. The guide takes about ten minutes.</p>
+    <div class="cta">
+      <a class="button primary" href="https://github.com/toon-protocol/connector/blob/main/docs/guide/run-a-node.md">Run a node</a>
+      <a class="button ghost" href="https://www.npmjs.com/package/@toon-protocol/client">Install the client</a>
+      <a class="button ghost" href="https://discord.gg/PxzjbtXg9Q">Join the Discord</a>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footgrid">
+      <div class="about">
+        <a class="brand" href="#top">TOON Protocol</a>
+        <p>Value, routed. A paid reverse proxy and Interledger connector that settles on x402 channels. MIT licensed. Built for machines that pay each other thousands of times a day.</p>
+      </div>
+      <div>
+        <h4>Build</h4>
+        <ul>
+          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/run-a-node.md">Run a node</a></li>
+          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/put-your-app-behind-it.md">Put your app behind it</a></li>
+          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/get-paid.md">Get paid</a></li>
+          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/peering.md">Peer with a node</a></li>
+          <li><a href="https://www.npmjs.com/package/@toon-protocol/client">Client on npm</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Protocol</h4>
+        <ul>
+          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/rfcs/README.md">RFCs, and where TOON departs from Interledger</a></li>
+          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/adr/0075-every-channel-is-an-x402-channel-a-peering-is-two-of-them.md">ADR 0075: every channel is an x402 channel</a></li>
+          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/adr/0046-the-kind-10032-announce-is-removed-a-connector-needs-no-relay.md">ADR 0046: no discovery layer</a></li>
+          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/adr/0058-a-peering-is-established-from-a-url.md">ADR 0058: peering from a URL</a></li>
+          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/protocol/client-edge-spec.md">Client-edge spec</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Apps</h4>
+        <ul>
+          <li><a href="https://github.com/toon-protocol/connector">connector</a></li>
+          <li><a href="https://github.com/toon-protocol/relay">relay</a></li>
+          <li><a href="https://github.com/toon-protocol/store">store</a></li>
+          <li><a href="https://github.com/toon-protocol/gas-station">gas-station</a></li>
+          <li><a href="https://github.com/toon-protocol/spaceturtle">spaceturtle</a></li>
+          <li><a href="https://github.com/toon-protocol/toon_cli">toon CLI</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/toon-protocol">GitHub</a></li>
+          <li><a href="https://discord.gg/PxzjbtXg9Q">Discord</a></li>
+          <li><a href="https://x.com/toonprotocol">X, @toonprotocol</a></li>
+          <li><a href="https://boughtviatoonnode.ar.io/">Showcase</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footbar">
+      <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write</span>
+      <span>No scripts, no trackers, no external assets.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
