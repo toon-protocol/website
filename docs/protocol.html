@@ -47,6 +47,7 @@
       <a href="get-paid.html">Get paid</a>
       <a href="peering.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
     </div>
     <div class="group">
       <h4>Callers</h4>
@@ -54,7 +55,6 @@
       <a href="channels.html">Payment channels</a>
       <a href="cli.html">CLI reference</a>
       <a href="errors.html">Errors and reject codes</a>
-      <a href="hidden-services.html">Hidden services</a>
     </div>
     <div class="group">
       <h4>Agents</h4>
@@ -79,6 +79,7 @@
       <a href="get-paid.html">Get paid</a>
       <a href="peering.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
     </div>
     <div class="group">
       <h4>Callers</h4>
@@ -86,7 +87,6 @@
       <a href="channels.html">Payment channels</a>
       <a href="cli.html">CLI reference</a>
       <a href="errors.html">Errors and reject codes</a>
-      <a href="hidden-services.html">Hidden services</a>
     </div>
     <div class="group">
       <h4>Agents</h4>
@@ -149,6 +149,8 @@ REJECT   0x0e ‖ code(3) ‖ VarOctetString(triggeredBy)
     "facilitator": "https://onboard.devnet.toonprotocol.dev"
   }
 }</pre></div>
+
+<p>The greeting answers a <em>well-formed packet</em> that carries no voucher. A bare <code>curl -X POST /ilp</code> with no packet body is not that; it gets <code>400 invalid packet type byte</code>. To read a price without forming a packet, use <code>GET /ilp | jq .routes</code> or <code>npx toon-client price &lt;destination&gt; &lt;url&gt;</code>.</p>
 
 <p>Each entry is valid x402: a CAIP-2 <code>network</code>, the <code>asset</code>, <code>payTo</code> set to the node's settlement address, and an <code>extra</code> holding everything a stock x402 client needs to open a channel the node will accept. Two things a stock x402 client can get wrong: the node refuses a zero <code>payerAuthorizer</code>, and the deposit's own voucher must be at least one base unit. <code>GET /ilp</code> publishes the same facts under <code>batchSettlements</code>; the two are projections of one value and never disagree.</p>
 

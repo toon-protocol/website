@@ -294,7 +294,7 @@ footer { border-top:1px solid var(--line); padding:3rem 0 2.5rem; font-size:0.9r
     <div>
       <p class="eyebrow">Pay-per-request for agents, APIs and apps</p>
       <h1>Value, <span>routed.</span></h1>
-      <p class="lede">Put a price on any HTTP endpoint. Get paid per request, settled onchain, <strong>without changing your app</strong>. The caller pays with a signed voucher. Your app sees a plain HTTP request.</p>
+      <p class="lede">Put a price on any HTTP endpoint. Get paid per request, settled onchain, <strong>without changing your app</strong>. The caller pays with a signed voucher, an IOU against a deposit it locked on chain once. Your app sees a plain HTTP request.</p>
       <div class="cta">
         <a class="button primary" href="#run">Run a node in three steps
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
@@ -650,7 +650,7 @@ price       = <span class="g">1000</span>      <span class="c"># 0.001 USDC per 
       <div class="prose">
         <p class="eyebrow">Only TOON</p>
         <h3 style="font-size:1.4rem; color:var(--ink); margin-bottom:0.8rem">Fund one channel, reach many apps.</h3>
-        <p>Routes chain across nodes with the payload sealed. Each hop keeps its own fee, a hop can convert between tokens at a rate it declares, and a node can run at an onion address. The app never sees a payment, and an intermediate hop never sees the request.</p>
+        <p>Routes chain across nodes with the payload sealed. Each hop keeps its own fee, a hop can convert between tokens at a rate it declares, and a node can run as a hidden service at a <code>.anyone</code> address on the Anyone network, with no domain and no open port. The app never sees a payment, and an intermediate hop never sees the request.</p>
         <p>Pay-per-request protocols answer "what does this cost, and is it paid?" TOON settles on them and adds the one thing they do not have: <strong>a route</strong>.</p>
       </div>
       <svg class="diagram" viewBox="0 0 560 190" role="img" aria-labelledby="route-d-title" xmlns="http://www.w3.org/2000/svg">
@@ -665,7 +665,7 @@ price       = <span class="g">1000</span>      <span class="c"># 0.001 USDC per 
 
         <rect class="box node" x="340" y="16" width="110" height="56" rx="10"/>
         <text class="t" x="395" y="40" text-anchor="middle">Node B</text>
-        <text class="m" x="395" y="58" text-anchor="middle">onion address</text>
+        <text class="m" x="395" y="58" text-anchor="middle">.anyone address</text>
 
         <rect class="box app" x="340" y="124" width="110" height="52" rx="10"/>
         <text class="t" x="395" y="146" text-anchor="middle">App 1</text>
@@ -709,7 +709,7 @@ price       = <span class="g">1000</span>      <span class="c"># 0.001 USDC per 
           </tr>
           <tr class="toon">
             <td><strong>Only TOON</strong><span>a route, not just a price</span></td>
-            <td colspan="2">Fund one channel, reach many apps. Routes chain across nodes with the payload sealed, each hop keeps its own fee, a hop can convert between tokens at a rate it declares, and a node can run at an onion address. The app never sees a payment.</td>
+            <td colspan="2">Fund one channel, reach many apps. Routes chain across nodes with the payload sealed, each hop keeps its own fee, a hop can convert between tokens at a rate it declares, and a node can run as a hidden service at a <code>.anyone</code> address. The app never sees a payment.</td>
           </tr>
         </tbody>
       </table>
@@ -1004,7 +1004,7 @@ price       = <span class="g">1000</span>      <span class="c"># 0.001 USDC per 
       </details>
       <details>
         <summary>What happens to an unpaid request?</summary>
-        <p>It is refused before it reaches your app, with an x402 <code>402 Payment Required</code> that states the exact price, token, chain and address. The caller pays and sends again. A refusal is a value in the client, not an exception.</p>
+        <p>It is refused before it reaches your app, with an x402 <code>402 Payment Required</code> that states the exact price, token, chain and address. The caller pays and sends again. A refusal is a value in the client, not an exception. The 402 answers a well-formed packet that carries no voucher; a bare <code>curl -X POST /ilp</code> is not a packet and gets a 400. To read a price by hand, <code>GET /ilp</code> lists every route with its price.</p>
       </details>
       <details>
         <summary>When does the money land?</summary>
@@ -1016,7 +1016,7 @@ price       = <span class="g">1000</span>      <span class="c"># 0.001 USDC per 
       </details>
       <details>
         <summary>Where do I find other nodes and apps?</summary>
-        <p>There is no discovery layer by design (ADR 0046): a node answers for itself at <code>GET /ilp</code> and announces nothing. A peering is made from a URL (ADR 0058). The apps above are the ones the project runs; anyone can run the same images.</p>
+        <p>There is no discovery layer by design (ADR 0046): a node answers for itself at <code>GET /ilp</code> and announces nothing. A peering is made from a URL (ADR 0058). The apps above are the ones the project runs; anyone can run the same images. The <a href="docs/devnet.html">devnet reference</a> lists three public nodes and six routes you can pay today without real money.</p>
       </details>
     </div>
   </div>

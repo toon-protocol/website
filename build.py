@@ -30,13 +30,13 @@ NAV = [
         ("get-paid", "Get paid", "The settlement block, the chains, the tokens, and who pays gas."),
         ("peering", "Peer with another node", "Carry someone else's packets one hop further for a fee."),
         ("operator-surface", "The operator surface", "Reads, signed writes, the dashboard, and operating it."),
+        ("hidden-services", "Hidden services", "Running a node at a .anyone address, and paying one."),
     ]),
     ("Callers", [
         ("pay-a-node", "Pay a node", "From nothing to a paid request, with the CLI and the library."),
         ("channels", "Payment channels", "Opening without gas, who pays what, the watermark, leaving."),
         ("cli", "CLI reference", "Every setting, where it comes from, and the commands."),
         ("errors", "Errors and reject codes", "Who refused, what each code means, and what to do."),
-        ("hidden-services", "Hidden services", "Paying a node that lives at a .anyone address."),
     ]),
     ("Agents", [
         ("spaceturtle", "spaceturtle", "An agent that runs a node from your own machine."),

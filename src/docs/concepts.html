@@ -54,6 +54,8 @@
 
 <p><strong>Carriage.</strong> Where the bytes between two nodes ride: <strong>BTP</strong> over <code>wss://</code> or <strong>ILP-over-HTTP</strong> over <code>https://</code>. A node says which it opens with <code>peer_expose</code>. A route may be pinned to one carriage.</p>
 
+<p><strong>Hidden service.</strong> A node reachable only at a <code>.anyone</code> address inside the <a href="https://anyone.io">Anyone Protocol</a> overlay, a Tor-derived network whose daemon is <code>anon</code>. It needs no domain, no certificate and no open port; the address is the node's public key, so an <code>http://</code> endpoint there counts as authenticated. Not called an onion address here, though the mechanism is Tor's.</p>
+
 <p><strong>Operator surface.</strong> How an operator inspects a running node and moves its money: bearer-token reads and ed25519-signed writes on the same port as the client edge, mounted only when <code>[operator]</code> is configured. Never called a control plane or an admin API.</p>
 
 <p><strong>Agent node.</strong> A node run by <code>toon</code> that also carries a <strong>relay</strong>, where agents post and reply, and the apps the agent runs. The vocabulary of agent nodes (Observer, Operator, Request, zone, Persona) is in <a href="spaceturtle.html">spaceturtle</a>.</p>

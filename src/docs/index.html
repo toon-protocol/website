@@ -1,6 +1,6 @@
 <p>A <strong>TOON node</strong> is a paid reverse proxy. You put it in front of an ordinary HTTP app, you set a price per route, and it collects that price from whoever calls, per request, in a stablecoin, without your app knowing payment exists. <strong>It terminates payments the way nginx terminates TLS.</strong></p>
 
-<p>Underneath, the node is an <a href="https://interledger.org">Interledger</a> connector: value arrives wrapped in a protocol your app never speaks, and at the last hop the node unwraps it, checks it was paid for, and hands your app a plain HTTP request. Every payment is a signed <strong>voucher</strong> on an <a href="https://github.com/x402-foundation/x402">x402</a> <code>batch-settlement</code> channel, so a request costs a signature, not a transaction, and one onchain transaction settles thousands of requests. You do not need to know anything about Interledger or x402 to run one.</p>
+<p>Underneath, the node is an <a href="https://interledger.org">Interledger</a> (ILP) connector: value arrives wrapped in a packet format your app never speaks, which is why the node's one endpoint is called <code>/ilp</code>, and at the last hop the node unwraps it, checks it was paid for, and hands your app a plain HTTP request. Every payment is a signed <strong>voucher</strong>, an IOU against a deposit the caller locked on chain once, on an <a href="https://github.com/x402-foundation/x402">x402</a> <code>batch-settlement</code> channel. So a request costs a signature, not a transaction, and one onchain transaction settles thousands of requests. You do not need to know anything about Interledger or x402 to run one.</p>
 
 <h2>Two roles, and nothing else</h2>
 
@@ -21,6 +21,10 @@
   <li>
     <a class="title" href="pay-a-node.html">I want to pay for requests</a>
     Install the client, make a wallet, open one channel, and buy a request. The first one is on devnet and costs nothing.
+  </li>
+  <li>
+    <a class="title" href="hidden-services.html">I want no domain, no certificate, no open port</a>
+    Run the node as a hidden service at a <code>.anyone</code> address: one daemon beside it, three config keys, done by hand.
   </li>
   <li>
     <a class="title" href="spaceturtle.html">I want an agent to run it</a>
@@ -62,7 +66,7 @@
 <thead><tr><th>Repository</th><th>What it is</th></tr></thead>
 <tbody>
 <tr><td><a href="https://github.com/toon-protocol/connector">connector</a></td><td>The node: one Rust binary, one TOML file. Its <code>docs/</code> hold the specs, the ADRs and the wire vectors that every other repository replays.</td></tr>
-<tr><td><a href="https://github.com/toon-protocol/toon-client">toon-client</a></td><td><code>@toon-protocol/client</code>, the payer, as a library and as the <code>toon</code> CLI.</td></tr>
+<tr><td><a href="https://github.com/toon-protocol/toon-client">toon-client</a></td><td><code>@toon-protocol/client</code>, the payer, as a library and as the <code>toon-client</code> CLI.</td></tr>
 <tr><td><a href="https://github.com/toon-protocol/toon_cli">toon_cli</a></td><td><code>toon</code>, the program that runs and manages an <strong>agent node</strong>: wallet, apps, peers, routes, prices, channels and the relay.</td></tr>
 <tr><td><a href="https://github.com/toon-protocol/spaceturtle">spaceturtle</a></td><td>The agent and the harness that run an agent node from your own machine.</td></tr>
 <tr><td><a href="https://github.com/toon-protocol/relay">relay</a>, <a href="https://github.com/toon-protocol/store">store</a>, <a href="https://github.com/toon-protocol/gas-station">gas-station</a>, <a href="https://github.com/toon-protocol/anytoon">anytoon</a></td><td>Apps that run behind a node today, each a worked example of the app side. The <a href="../ecosystem/index.html">ecosystem page</a> lists them all.</td></tr>

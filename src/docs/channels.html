@@ -24,7 +24,7 @@ console.log(description.batchSettlements);   <span class="c">// one entry per ch
 
 <h2>Opening costs no gas</h2>
 
-<p>The first paid <code>send()</code> opens a channel by itself, unless <code>autoOpenChannel</code> is <code>false</code>. You can also open one explicitly with <code>npx toon channel open --deposit 1000000</code> or <code>client.channel.open()</code>.</p>
+<p>The first paid <code>send()</code> opens a channel by itself, unless <code>autoOpenChannel</code> is <code>false</code>. You can also open one explicitly with <code>npx toon-client channel open --deposit 1000000</code> or <code>client.channel.open()</code>.</p>
 
 <ul>
   <li><strong>Base.</strong> The client signs a deposit authorization. An x402 <strong>facilitator</strong> submits it and pays the gas, so a wallet holding USDC and no ETH can open a channel. The facilitator is, in order: your <code>facilitatorUrl</code> (or <code>--facilitator</code>); the one the connector names in its terms, since the seller pays the gas as a cost of the sale; the devnet's own, <code>onboard.devnet.toonprotocol.dev</code>, on Base Sepolia only.</li>

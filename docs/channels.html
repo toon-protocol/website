@@ -47,6 +47,7 @@
       <a href="get-paid.html">Get paid</a>
       <a href="peering.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
     </div>
     <div class="group">
       <h4>Callers</h4>
@@ -54,7 +55,6 @@
       <a href="channels.html" class="active">Payment channels</a>
       <a href="cli.html">CLI reference</a>
       <a href="errors.html">Errors and reject codes</a>
-      <a href="hidden-services.html">Hidden services</a>
     </div>
     <div class="group">
       <h4>Agents</h4>
@@ -79,6 +79,7 @@
       <a href="get-paid.html">Get paid</a>
       <a href="peering.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
     </div>
     <div class="group">
       <h4>Callers</h4>
@@ -86,7 +87,6 @@
       <a href="channels.html" class="active">Payment channels</a>
       <a href="cli.html">CLI reference</a>
       <a href="errors.html">Errors and reject codes</a>
-      <a href="hidden-services.html">Hidden services</a>
     </div>
     <div class="group">
       <h4>Agents</h4>
@@ -128,7 +128,7 @@ console.log(description.batchSettlements);   <span class="c">// one entry per ch
 
 <h2 id="opening-costs-no-gas"><a class="anchor" href="#opening-costs-no-gas">Opening costs no gas</a></h2>
 
-<p>The first paid <code>send()</code> opens a channel by itself, unless <code>autoOpenChannel</code> is <code>false</code>. You can also open one explicitly with <code>npx toon channel open --deposit 1000000</code> or <code>client.channel.open()</code>.</p>
+<p>The first paid <code>send()</code> opens a channel by itself, unless <code>autoOpenChannel</code> is <code>false</code>. You can also open one explicitly with <code>npx toon-client channel open --deposit 1000000</code> or <code>client.channel.open()</code>.</p>
 
 <ul>
   <li><strong>Base.</strong> The client signs a deposit authorization. An x402 <strong>facilitator</strong> submits it and pays the gas, so a wallet holding USDC and no ETH can open a channel. The facilitator is, in order: your <code>facilitatorUrl</code> (or <code>--facilitator</code>); the one the connector names in its terms, since the seller pays the gas as a cost of the sale; the devnet's own, <code>onboard.devnet.toonprotocol.dev</code>, on Base Sepolia only.</li>

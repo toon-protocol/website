@@ -1,4 +1,74 @@
-<p>A connector is ordinarily a clearnet host. It can also be a <strong>hidden service</strong>: a node reachable only inside the <a href="https://anyone.io">Anyone Protocol</a> overlay, at a <code>.anyone</code> address that public DNS cannot resolve and no certificate authority can certify. Every <a href="spaceturtle.html">spaceturtle</a> node is one, and so is the <a href="https://github.com/toon-protocol/anytoon">anytoon</a> credentials issuer.</p>
+<p>A connector is ordinarily a clearnet host with a domain and a TLS certificate. It can also be a <strong>hidden service</strong>: a node reachable only inside the <a href="https://anyone.io">Anyone Protocol</a> overlay, at a <code>.anyone</code> address that public DNS cannot resolve and no certificate authority can certify. Anyone is a Tor-derived network; its daemon is called <code>anon</code>, and its addresses end in <code>.anyone</code> rather than <code>.onion</code>. A node at such an address needs no domain, no public IP and no port opened on your router, which is how a node can run from a laptop behind a home router.</p>
+
+<p>This page has both halves: <a href="#running-one">running a node as a hidden service</a>, and <a href="#paying-one">paying a node that is one</a>. Every <a href="spaceturtle.html">spaceturtle</a> node is a hidden service, and spaceturtle does the operator half for you; this page is for doing it by hand.</p>
+
+<h2>Running one</h2>
+
+<p>You need a running node from <a href="run-a-node.html">Run a node</a>, with a <a href="get-paid.html">settlement block</a> so that it can be paid, and an <code>anon</code> daemon beside it. The daemon publishes a <code>.anyone</code> address and forwards connections arriving there to the node's client edge. The node never talks to the daemon; you copy the address into the node's config by hand.</p>
+
+<ol class="steps">
+  <li><b>01</b><strong>Run anon</strong>Four lines of config. Wait for <code>Bootstrapped 100%</code>.</li>
+  <li><b>02</b><strong>Read the address</strong><code>cat hs/hostname</code>. It is a 56-character key. Keep the directory.</li>
+  <li><b>03</b><strong>Tell the node</strong>Three TOML keys, then restart. Wait two or three minutes, then check from outside.</li>
+</ol>
+
+<h3>1. Run the daemon</h3>
+
+<p><code>anon</code> is published by Anyone Protocol at <a href="https://github.com/anyone-protocol/ator-protocol/releases">github.com/anyone-protocol/ator-protocol/releases</a>; the client downloads the same <code>anon-live-&lt;platform&gt;.zip</code>. Give it a config file of its own:</p>
+
+<div class="codeblock"><div class="bar"><span>anonrc</span></div>
+<pre>AgreeToTerms 1
+SocksPort 127.0.0.1:9050
+HiddenServiceDir /var/lib/anon/hs
+HiddenServicePort 80 127.0.0.1:3000</pre></div>
+
+<ul>
+  <li><code>AgreeToTerms 1</code> or the daemon exits at once. It is the single most common reason a first start fails.</li>
+  <li><code>HiddenServicePort 80 &lt;ip&gt;:&lt;port&gt;</code> forwards the hidden service's port 80 to the node's <code>client_edge_addr</code>, the port <code>GET /ilp</code> answers on. Virtual port 80 is what lets the address be written as <code>http://&lt;address&gt;.anyone/ilp</code> with no port. <strong>Use an IP address, not a hostname</strong>: the target is resolved when the config is parsed, and an unresolvable name kills the daemon. In Docker Compose, that means the connector container's address on the compose network, not its service name.</li>
+  <li><code>HiddenServiceDir</code> must be on a persisted disk or volume. The daemon writes the address and its private key there on first start. Lose the directory and you get a new address, and every counterparty that wrote the old one down dials a node that is gone.</li>
+  <li><code>SocksPort</code> is the daemon's default and the node needs it only to dial <em>other</em> hidden services. Leave it on.</li>
+</ul>
+
+<p>Start it and wait for <code>Bootstrapped 100%</code> in its log, which takes about a minute. Then read the address:</p>
+
+<pre>cat /var/lib/anon/hs/hostname
+<span class="c">6z666pmpzho3pxj3nxlh4q3imhbfjifanreo2kunc36rie4j3omsh3id.anyone</span></pre>
+
+<h3>2. Tell the node</h3>
+
+<p>Three keys in <code>connector.toml</code>. <code>peer_expose</code> is a root-level key and must come before the first <code>[table]</code> header; without it the node's self-description keeps <code>"peerCarriages": []</code> and the endpoint you publish is not dialable.</p>
+
+<div class="codeblock"><div class="bar"><span>connector.toml</span></div>
+<pre>peer_expose = <span class="s">"http"</span>                         <span class="c"># root level, above every table</span>
+
+[node]
+addresses     = [<span class="s">"g.your.node"</span>]
+http_endpoint = <span class="s">"http://&lt;56-char-address&gt;.anyone/ilp"</span></pre></div>
+
+<p>The <code>http://</code> scheme is allowed here without any opt-in, because a v3 address <em>is</em> the public key the circuit authenticates to, so an endpoint at that host authenticates itself. A host that merely contains the suffix, such as <code>anyone.example</code>, is refused as plaintext. Restart the node and confirm the local self-description shows the endpoint and <code>"peerCarriages": ["http"]</code>:</p>
+
+<pre>curl -s http://127.0.0.1:3000/ilp | jq '.httpEndpoint, .peerCarriages'</pre>
+
+<h3>3. Check it from outside</h3>
+
+<p>The daemon says nothing when it has published the address, and the first minute or two after <code>Bootstrapped 100%</code> a dial usually times out. Wait two or three minutes, then ask through the daemon's SOCKS port:</p>
+
+<pre>curl --socks5-hostname 127.0.0.1:9050 http://&lt;address&gt;.anyone/ilp | jq .ilpAddresses
+npx toon-client describe http://&lt;address&gt;.anyone --socks socks5h://127.0.0.1:9050 --password-file pw</pre>
+
+<p>A <code>200</code> with your own self-description is the proof. From there a client anywhere on the overlay can open a channel toward your node (the gasless deposit takes about ten seconds through the overlay rather than three) and pay it, exactly as on the clearnet. In a test on 2026-10-13 a connector in Docker plus one <code>anon</code> daemon went from nothing to a paid <code>200</code> through the overlay in about twenty minutes.</p>
+
+<h3>If your node dials other hidden services</h3>
+
+<p>To peer with, or forward to, another <code>.anyone</code> node, give the connector the daemon's SOCKS port. The key is root-level, and the scheme must be <code>socks5h</code> (the <code>h</code> makes the daemon resolve the name; a plain <code>socks5://</code> is refused by name, because nothing local can resolve a hidden-service address):</p>
+
+<pre>socks_proxy = <span class="s">"socks5h://127.0.0.1:9050"</span></pre>
+
+<p>There is nothing else to configure: which dials use the proxy is read off each endpoint's host. A host ending in <code>.onion</code> or <code>.anyone</code> goes through the proxy; everything else does not.</p>
+
+<p>The connector repository's <a href="https://github.com/toon-protocol/connector/blob/main/docs/operators/onion-endpoint-bringup.md">onion endpoint bring-up</a> is the fleet-grade runbook behind this section, with the compose sidecar, the restart drills and the failure modes.</p>
+
+<h2>Paying one</h2>
 
 <p>Paying such a node needs one extra thing: a running <code>anon</code> daemon, and its SOCKS5h port.</p>
 
@@ -8,12 +78,12 @@
 
 <p>Nothing else changes. Sealing, pricing, vouchers, channels and refusals are identical; the packet does not know what carried it.</p>
 
-<h2>From the CLI</h2>
+<h3>From the CLI</h3>
 
-<p>Nothing, if you let it: point <code>toon</code> at a <code>.anyone</code> address and it starts a daemon for you.</p>
+<p>Nothing, if you let it: point <code>toon-client</code> at a <code>.anyone</code> address and it starts a daemon for you.</p>
 
 <pre>export TOON_CONNECTOR=http://&lt;address&gt;.anyone
-npx toon describe</pre>
+npx toon-client describe --password-file pw</pre>
 
 <div class="codeblock"><div class="bar"><span>stderr</span></div>
 <pre>toon: http://&lt;address&gt;.anyone is a hidden service; starting a local anon daemon
@@ -23,14 +93,14 @@ toon: starting anon v0.4.10.2 on 127.0.0.1:41337 (…/anon)
 toon: anon is listening; building circuits on demand
 toon: proxying through socks5h://127.0.0.1:41337</pre></div>
 
-<p>Every line of that goes to stderr, never stdout, so <code>--json</code> output stays exactly one parseable document. Already running your own daemon? Name it, and nothing is downloaded and no process is spawned:</p>
+<p>Every line of that goes to stderr, never stdout, so <code>--json</code> output stays exactly one parseable document. The first dial through a fresh daemon takes about forty seconds while circuits are built. Already running your own daemon? Name it, and nothing is downloaded and no process is spawned:</p>
 
-<pre>npx toon send --socks socks5h://127.0.0.1:9050 --body 'hello'
+<pre>npx toon-client send --socks socks5h://127.0.0.1:9050 --body 'hello'
 export TOON_SOCKS=socks5h://127.0.0.1:9050     <span class="c"># same thing, for every command</span></pre>
 
-<p>A clearnet connector starts no daemon and downloads nothing.</p>
+<p>A clearnet connector starts no daemon and downloads nothing. Note that in client 5.0.0 <code>describe</code> opens the keystore even though it signs nothing, so in a script pass <code>--password-file</code>.</p>
 
-<h2>The managed daemon</h2>
+<h3>The managed daemon</h3>
 
 <p>An operator is entitled to know what would run on their machine.</p>
 
@@ -44,10 +114,6 @@ export TOON_SOCKS=socks5h://127.0.0.1:9050     <span class="c"># same thing, for
 
 <h2>What a hidden service does and does not buy</h2>
 
-<p>A hidden-service endpoint hides <strong>where the node is reachable</strong>, and nothing else. The chain still sees the channel's deposit and settlement, and the voucher still names the paying key. A node at a <code>.anyone</code> address needs no domain, no public IP and no open port, which is why spaceturtle can run one from a laptop behind a home router.</p>
+<p>A hidden-service endpoint hides <strong>where the node is reachable</strong>, and nothing else. The chain still sees the channel's deposit and settlement, and the voucher still names the paying key.</p>
 
-<h2>Running one</h2>
-
-<p>On the node's side, the connector publishes its <code>.anyone</code> address as its endpoint and reaches onion peers through its own <code>socks_proxy</code>. The connector repository's <a href="https://github.com/toon-protocol/connector/blob/main/docs/operators/onion-endpoint-bringup.md">onion endpoint bring-up</a> is the operator runbook, and <a href="spaceturtle.html">spaceturtle</a> does all of it for you.</p>
-
-<p class="source">Written from <code>toon-client/docs/hidden-service.md</code> and <code>anytoon/README.md</code>.</p>
+<p class="source">Written from <code>connector/docs/operators/onion-endpoint-bringup.md</code>, <code>toon-client/docs/hidden-service.md</code>, and a first-run test of 2026-10-13.</p>

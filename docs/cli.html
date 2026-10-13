@@ -47,6 +47,7 @@
       <a href="get-paid.html">Get paid</a>
       <a href="peering.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
     </div>
     <div class="group">
       <h4>Callers</h4>
@@ -54,7 +55,6 @@
       <a href="channels.html">Payment channels</a>
       <a href="cli.html" class="active">CLI reference</a>
       <a href="errors.html">Errors and reject codes</a>
-      <a href="hidden-services.html">Hidden services</a>
     </div>
     <div class="group">
       <h4>Agents</h4>
@@ -79,6 +79,7 @@
       <a href="get-paid.html">Get paid</a>
       <a href="peering.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
     </div>
     <div class="group">
       <h4>Callers</h4>
@@ -86,7 +87,6 @@
       <a href="channels.html">Payment channels</a>
       <a href="cli.html" class="active">CLI reference</a>
       <a href="errors.html">Errors and reject codes</a>
-      <a href="hidden-services.html">Hidden services</a>
     </div>
     <div class="group">
       <h4>Agents</h4>
@@ -102,10 +102,10 @@
     <p class="eyebrow">Callers</p>
     <h1>CLI reference</h1>
     <p class="lede">Every setting, where it comes from, and the commands.</p>
-<p>The <code>toon</code> command ships in <code>@toon-protocol/client</code>. <code>npx toon</code> runs it without a global install. This is the payer's CLI; the program that runs an <strong>agent node</strong> is also called <code>toon</code> and lives in <a href="https://github.com/toon-protocol/toon_cli">toon_cli</a>.</p>
+<p>The CLI ships in <code>@toon-protocol/client</code>. Its executable is <strong><code>toon-client</code></strong>, so <code>npx toon-client</code> runs it without a global install; <code>npx toon</code> resolves to an unrelated package and fails. This is the payer's CLI. The program that runs an <strong>agent node</strong> is called <code>toon</code> and lives in <a href="https://github.com/toon-protocol/toon_cli">toon_cli</a>; the two are different programs.</p>
 
-<pre>npx toon help
-npx toon help send</pre>
+<pre>npx toon-client help
+npx toon-client help send</pre>
 
 <h2 id="settings-and-where-each-comes-from"><a class="anchor" href="#settings-and-where-each-comes-from">Settings, and where each comes from</a></h2>
 
@@ -128,7 +128,7 @@ npx toon help send</pre>
 <tr><td>How the token moves</td><td><code>--deposit-method eip3009|permit2</code></td><td><code>TOON_DEPOSIT_METHOD</code></td><td>What the connector names, else <code>eip3009</code></td></tr>
 </tbody></table></div>
 
-<p>Keys resolve in that order for a reason: <code>TOON_MNEMONIC</code> first, then the keystore, then a message telling you to run <code>toon init</code>. <strong>There is no <code>--mnemonic</code> flag and there will not be one.</strong> A flag value is written to shell history and is readable in <code>ps</code> by every other user on the machine.</p>
+<p>Keys resolve in that order for a reason: <code>TOON_MNEMONIC</code> first, then the keystore, then a message telling you to run <code>toon-client init</code>. <strong>There is no <code>--mnemonic</code> flag and there will not be one.</strong> A flag value is written to shell history and is readable in <code>ps</code> by every other user on the machine.</p>
 
 <h2 id="global-flags"><a class="anchor" href="#global-flags">Global flags</a></h2>
 
@@ -146,18 +146,18 @@ npx toon help send</pre>
 <div class="tablewrap"><table>
 <thead><tr><th>Command</th><th>Does</th><th>Needs</th></tr></thead>
 <tbody>
-<tr><td><code>toon init [--import] [--legacy-derivation]</code></td><td>Create or import a keystore. Prints the phrase once. <code>--import</code> reads an existing phrase from stdin, never from an argument.</td><td>nothing</td></tr>
-<tr><td><code>toon identity [--all-derivations]</code></td><td>Show the addresses this keystore holds.</td><td>keys</td></tr>
-<tr><td><code>toon describe [URL]</code></td><td>Read a connector's self-description: addresses, endpoints, the key payloads are sealed to, which chains and tokens it is paid in, and what each route costs.</td><td>nothing</td></tr>
-<tr><td><code>toon price &lt;destination&gt; [URL]</code></td><td>What one route costs. A connector that serves no matching route says so: an answer, not a failure.</td><td>nothing</td></tr>
-<tr><td><code>toon probe &lt;destination&gt;</code></td><td>Learn a path's cost beyond this connector without buying the work.</td><td>a channel you have already paid on</td></tr>
-<tr><td><code>toon faucet</code></td><td>Draw devnet USDC from the faucet.</td><td>keys</td></tr>
-<tr><td><code>toon balances</code></td><td>Token and native balances on the chosen chain.</td><td>keys</td></tr>
-<tr><td><code>toon channel open --deposit N</code></td><td>Open a channel toward the connector, with <code>N</code> base units. Idempotent.</td><td>keys, funds</td></tr>
-<tr><td><code>toon channel deposit N</code></td><td>Top up by an increment.</td><td>a channel</td></tr>
-<tr><td><code>toon channel status</code></td><td>Your side of the channel: deposit, cumulative, config.</td><td>a channel</td></tr>
-<tr><td><code>toon send [destination] --body …</code></td><td>Buy one request. With no destination, the route the connector terminates. Exits <code>3</code> on a refusal.</td><td>a channel, unless the route is free</td></tr>
-<tr><td><code>toon claim-state</code></td><td>The connector's watermark for your channel, as an owner-authenticated read.</td><td>a channel</td></tr>
+<tr><td><code>toon-client init [--import] [--legacy-derivation]</code></td><td>Create or import a keystore. Prints the phrase once. <code>--import</code> reads an existing phrase from stdin, never from an argument.</td><td>nothing</td></tr>
+<tr><td><code>toon-client identity [--all-derivations]</code></td><td>Show the addresses this keystore holds.</td><td>keys</td></tr>
+<tr><td><code>toon-client describe [URL]</code></td><td>Read a connector's self-description: addresses, endpoints, the key payloads are sealed to, which chains and tokens it is paid in, and what each route costs. Refuses a node with no settlement block ("publishes no settlement chains at all").</td><td>no funds; 5.0.0 still opens the keystore, so pass <code>--password-file</code> in a script</td></tr>
+<tr><td><code>toon-client price &lt;destination&gt; [URL]</code></td><td>What one route costs. A connector that serves no matching route says so: an answer, not a failure.</td><td>as above</td></tr>
+<tr><td><code>toon-client probe &lt;destination&gt;</code></td><td>Learn a path's cost beyond this connector without buying the work.</td><td>a channel you have already paid on</td></tr>
+<tr><td><code>toon-client faucet</code></td><td>Draw devnet USDC from the faucet.</td><td>keys</td></tr>
+<tr><td><code>toon-client balances</code></td><td>Token and native balances on the chosen chain.</td><td>keys</td></tr>
+<tr><td><code>toon-client channel open --deposit N</code></td><td>Open a channel toward the connector, with <code>N</code> base units. Idempotent.</td><td>keys, funds</td></tr>
+<tr><td><code>toon-client channel deposit N</code></td><td>Top up by an increment.</td><td>a channel</td></tr>
+<tr><td><code>toon-client channel status</code></td><td>Your side of the channel: deposit, cumulative, config.</td><td>a channel</td></tr>
+<tr><td><code>toon-client send [destination] --body …</code></td><td>Buy one request. With no destination, the route the connector terminates. Exits <code>3</code> on a refusal.</td><td>a channel, unless the route is free</td></tr>
+<tr><td><code>toon-client claim-state</code></td><td>The connector's watermark for your channel, as an owner-authenticated read.</td><td>a channel</td></tr>
 </tbody></table></div>
 
 <div class="callout"><strong>The CLI never opens a channel by itself.</strong> A command that needs a channel you do not have says so and stops, so nothing on chain happens as a side effect of sending. The library does auto-open and auto-top-up unless told not to.</div>

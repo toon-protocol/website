@@ -10,14 +10,17 @@
 
 <p>Pin a <strong>release handle</strong>, <code>rust-&lt;handle&gt;</code>, a UTC date and that day's ordinal. Handles are immutable and never moved. <code>rust-sha-&lt;short-sha&gt;</code> pins an exact commit and is equally immutable. <code>rust-main</code> floats on every green build of <code>main</code>: fine for a scratch trial, never for a deployment.</p>
 
+<p>The image runs as uid <code>10001</code>, and it reads the key files you mount. A key you create as yourself with mode <code>600</code> is unreadable to that uid, and the container restarts forever with <code>failed to read signer key_file … Permission denied</code>. So hand the key to that uid when you make it, and do the same for every settlement key later:</p>
+
 <div class="codeblock"><div class="bar"><span>The shell</span><span>connector 2026.09.29.1</span></div>
 <pre>docker pull ghcr.io/toon-protocol/connector:rust-2026.09.29.1
 mkdir -p node/config node/data &amp;&amp; cd node
-openssl rand -hex 32 &gt; data/signer.key &amp;&amp; chmod 600 data/signer.key</pre></div>
+openssl rand -hex 32 &gt; data/signer.key
+chmod 600 data/signer.key &amp;&amp; sudo chown 10001 data/signer.key   <span class="c"># the image reads it as uid 10001</span></pre></div>
 
 <div class="callout"><strong>The published image is <code>linux/amd64</code> only.</strong> On Apple Silicon or any other arm64 host, pull with <code>--platform linux/amd64</code> and add <code>platform: linux/amd64</code> next to <code>image:</code> in the compose file.</div>
 
-<p>The image runs as uid <code>10001</code> and creates <code>/app/state</code> owned by that uid, so a fresh named volume inherits the ownership. A host bind mount arrives root-owned and the connector refuses to start.</p>
+<p>The image creates <code>/app/state</code> owned by uid <code>10001</code>, so a fresh named volume inherits the ownership. A host bind mount arrives root-owned and the connector refuses to start.</p>
 
 <div class="codeblock"><div class="bar"><span>compose.yml</span></div>
 <pre>services:
@@ -51,6 +54,8 @@ volumes:
   connector-state:</pre></div>
 
 <pre>docker compose up -d</pre>
+
+<p>The <code>quotes</code> and <code>search</code> services stand for your own apps. If you have none yet, delete them and their routes, or keep one route and point it at any small HTTP container: a route whose <code>handler_url</code> answers nothing is a route a caller pays for and gets a reject from.</p>
 
 <h2>From source</h2>
 
@@ -113,6 +118,10 @@ price       = { base = <span class="g">1000</span>, per_kib = <span class="g">30
 
 <p>That free, unauthenticated <code>GET</code> returns the node's <strong>self-description</strong>: its addresses, endpoints, identity key and settlement facts. A connector answers; it never announces. It is also the whole of what another operator needs to <a href="peering.html">peer with you</a>, once <code>[node]</code> and <code>peer_expose</code> are set. This minimal config's own self-description has no endpoints and nothing to dial.</p>
 
+<div class="callout"><strong>This node can be curled but not yet paid, or even described by the client.</strong> Until it has a settlement block, <code>toon-client describe</code> and <code>price</code> refuse it with "publishes no settlement chains at all", because a client cannot pay a node that does not say how. <a href="get-paid.html">Get paid</a> is the next page; its devnet block is eight lines and costs nothing.</div>
+
+<p>Two more things worth setting before anyone calls you. A <code>[node]</code> table with <code>addresses = ["g.your.node"]</code> gives the node an ILP address of its own; if that address is also the prefix of a priced route, a caller can <code>send</code> to you without naming a destination, as the devnet store allows. And an <a href="operator-surface.html"><code>[operator]</code></a> table is the only way to see that you were paid: at the default log level the node writes nothing when it admits a channel or accepts a voucher, so without <code>GET /claims</code> or the dashboard a working node looks idle.</p>
+
 <div class="callout warn">
 <p><strong>One TOML file, read once, immutable for the process lifetime.</strong> There is no environment-variable layer; the only variable read is <code>RUST_LOG</code>. An unknown key is a hard load failure and a removed key is refused by name, so a stale config says so at boot instead of quietly doing nothing.</p>
 <p><strong>Every key is a path, never a value.</strong> No inline keys, no mnemonic, nowhere to smuggle one through.</p>
@@ -123,6 +132,6 @@ price       = { base = <span class="g">1000</span>, per_kib = <span class="g">30
 
 <p>Put a TLS-terminating reverse proxy in front of the client edge. A TOON node refuses plaintext peers, and every deployed config should publish <code>https://</code> and <code>wss://</code> endpoints only. The node has no second port: the client edge, the peer listeners and the <a href="operator-surface.html">operator surface</a> all merge onto <code>client_edge_addr</code>.</p>
 
-<p>A route with a price is only half of being paid. The next two pages are the other half: <a href="put-your-app-behind-it.html">what your app sees</a>, and <a href="get-paid.html">the settlement block</a> that lets anyone actually pay you.</p>
+<p>A route with a price is only half of being paid. The next two pages are the other half: <a href="put-your-app-behind-it.html">what your app sees</a>, and <a href="get-paid.html">the settlement block</a> that lets anyone actually pay you. If you would rather have no domain, no certificate and no open port at all, <a href="hidden-services.html">Hidden services</a> puts the node at a <code>.anyone</code> address instead.</p>
 
 <p class="source">Written from <code>connector/docs/guide/run-a-node.md</code>. The release handle is the connector's latest GitHub release.</p>
