@@ -133,10 +133,28 @@ pre .s { color:#b9d7a1; }
 .cmd button { display:flex; align-items:center; padding:0 1rem; border:0; border-left:1px solid var(--line-strong); background:none; cursor:pointer; color:var(--ink-faint);
   font:600 0.66rem/1 var(--mono); letter-spacing:0.14em; text-transform:uppercase; white-space:nowrap; }
 .cmd button:hover, .cmd button.done { color:var(--ink); }
-pre.sel { position:relative; padding-right:5.5rem; white-space:pre-wrap; overflow-wrap:anywhere; }
-pre.sel button { position:absolute; top:0.55rem; right:0.6rem; padding:0.3rem 0.55rem; border:1px solid var(--term-line); background:none; cursor:pointer; color:var(--term-dim);
+/* Evidence panels: every command and example on the landing page sits in one of these,
+   the panel herdr draws beside each row. A .l line is a command and gets the prompt; a .o
+   line is output; a pre inside keeps its columns. */
+.ev { width:100%; padding:0.8rem 1rem 0.9rem; border:1px solid var(--line-strong); background:var(--bg-raised); color:var(--ink-dim); font:0.78rem/1.75 var(--mono); }
+.ev .hd { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin:0 0 0.55rem; padding-bottom:0.5rem; border-bottom:1px solid var(--line);
+  font:600 0.64rem/1.4 var(--mono); letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-faint); }
+.ev .hd i { font-style:normal; color:var(--good); text-transform:none; letter-spacing:0; font-weight:500; }
+.ev .hd button { margin:-0.3rem -0.4rem -0.3rem 0; padding:0.3rem 0.55rem; border:1px solid var(--line); background:none; cursor:pointer; color:var(--ink-faint);
   font:600 0.62rem/1 var(--mono); letter-spacing:0.14em; text-transform:uppercase; }
-pre.sel button:hover, pre.sel button.done { color:var(--term-ink); }
+.ev .hd button:hover, .ev .hd button.done { color:var(--ink); border-color:var(--line-strong); }
+.ev .l, .ev .o { display:block; white-space:pre-wrap; overflow-wrap:anywhere; }
+.ev .l { color:var(--ink); }
+.ev .l::before, .ev .line > b { content:"$"; color:var(--gold); font-weight:600; margin-right:0.7rem; }
+.ev .o { color:var(--ink-faint); }
+.ev .l + .o { margin-top:0.5rem; }
+.ev .o + .l { margin-top:0.5rem; }
+.ev pre { margin:0; padding:0; border:0; background:none; color:var(--ink); font-size:inherit; line-height:inherit; overflow-x:auto; }
+.ev .k { color:var(--accent); font-weight:600; }
+.ev .g, .ev .hi { color:var(--accent); }
+.ev .ok { color:var(--good); }
+.ev .s { color:var(--good); }
+.ev .c { color:var(--ink-faint); }
 .meta { margin-top:1rem; color:var(--ink-faint); font:0.76rem/1.7 var(--mono); }
 .meta a { color:var(--accent); text-decoration:none; }
 .meta a:hover { text-decoration:underline; }
@@ -171,10 +189,7 @@ pre.sel button:hover, pre.sel button.done { color:var(--term-ink); }
 .rows .cap:hover .arw { color:var(--accent); margin-left:0.6rem; }
 .rows p { color:var(--ink-dim); font-size:0.95rem; max-width:36rem; }
 .rows .codeblock { margin:0; }
-.rows .ev { align-self:center; justify-self:end; width:100%; max-width:34rem; padding:0.9rem 1rem; border:1px solid var(--line-strong);
-  background:var(--bg-raised); color:var(--ink-faint); font:0.76rem/1.75 var(--mono); }
-.rows .ev .k { color:var(--accent); font-weight:600; }
-.rows .ev .ok { color:var(--good); }
+.rows .ev { align-self:start; justify-self:end; max-width:36rem; }
 @media (max-width:900px) { .rows li, .rows .cap { grid-template-columns:4rem minmax(0, 1fr); } .rows li > :nth-child(3), .rows .cap > :nth-child(3) { grid-column:2; margin-top:1rem; justify-self:start; } }
 @media (max-width:520px) { .rows li, .rows .cap { grid-template-columns:1fr; gap:0.9rem; } .rows li > :nth-child(3), .rows .cap > :nth-child(3) { grid-column:1; margin-top:0; } }
 
@@ -182,8 +197,9 @@ pre.sel button:hover, pre.sel button.done { color:var(--term-ink); }
    demo. Each line is one absolutely placed span; `--n` is its length in characters and
    `--i` its turn. One shared timeline per line: type at one step per character, hold,
    erase, then stay hidden until the cycle comes round. Reduced motion holds line one. */
-.tape { --slot:4.6s; --cycle:32.2s; display:flex; align-items:flex-start; gap:0.7rem; white-space:nowrap; overflow:hidden; }
-.tape > b { color:var(--gold); font-weight:600; }
+.tape { --slot:4.6s; --cycle:32.2s; }
+.tape .line { display:flex; align-items:flex-start; white-space:nowrap; overflow:hidden; }
+.tape .line > b { display:block; }
 .tape .lines { position:relative; flex:1; min-width:0; height:1.75em; }
 .tape .lines span { position:absolute; left:0; top:0; display:block; box-sizing:content-box; max-width:0; overflow:hidden; white-space:nowrap; color:var(--ink-dim);
   border-right:0.55em solid var(--ink-dim); opacity:1;
@@ -307,9 +323,8 @@ details pre { margin:0 1.15rem 1.15rem; }
 /* ===== landing: the mechanics frame, the specs, the pay block ===== */
 .frame { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); border:1px solid var(--line); background:var(--bg-raised); }
 .frame > figure { margin:0; padding:1.5rem 1.5rem 1rem; align-self:center; }
-.frame > .codeblock { margin:0; border:0; border-left:1px solid var(--line); border-radius:0; display:flex; flex-direction:column; }
-.frame > .codeblock pre { flex:1; }
-@media (max-width:900px) { .frame { grid-template-columns:1fr; } .frame > .codeblock { border-left:0; border-top:1px solid var(--line); } }
+.frame > .ev { border:0; border-left:1px solid var(--line); padding:1.25rem 1.5rem; }
+@media (max-width:900px) { .frame { grid-template-columns:1fr; } .frame > .ev { border-left:0; border-top:1px solid var(--line); } }
 .specs { margin:1px 0 0; padding:1px; display:grid; gap:1px; grid-template-columns:repeat(3, 1fr); }
 .specs > div { padding:1.1rem 1.25rem; background:var(--bg-raised); box-shadow:0 0 0 1px var(--line); font-size:0.9rem; color:var(--ink-dim); }
 .specs dt { font:600 0.68rem/1.4 var(--mono); letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:0.4rem; }
@@ -320,8 +335,8 @@ details pre { margin:0 1.15rem 1.15rem; }
 #how .twocol { margin-top:3.5rem; }
 #how .twocol h3 { font-size:1.5rem; margin-bottom:0.8rem; }
 #how .twocol .tablewrap { margin:1rem 0 0.6rem; }
-.pay { margin-top:3rem; padding-top:2.5rem; border-top:1px solid var(--line); align-items:center; grid-template-columns:0.85fr 1.15fr; }
-pre.wrap { white-space:pre-wrap; overflow-wrap:anywhere; }
+.pay { margin-top:3rem; padding-top:2.5rem; border-top:1px solid var(--line); align-items:center; grid-template-columns:0.8fr 1.2fr; }
+.pay .ev pre { padding-top:0.2rem; }
 .pay h3 { font-size:1.5rem; margin-bottom:0.7rem; }
 .pay p { color:var(--ink-dim); max-width:34rem; }
 .pay .eyebrow { margin-bottom:0.9rem; }
@@ -336,6 +351,7 @@ pre.wrap { white-space:pre-wrap; overflow-wrap:anywhere; }
 .diagram .s { fill:var(--ink-dim); font:12px var(--body); }
 .diagram .s.cap { font:600 10.5px var(--mono); letter-spacing:0.12em; text-transform:uppercase; fill:var(--ink-faint); }
 .diagram .m { fill:var(--ink-dim); font:11.5px var(--mono); }
+.diagram .m.sm { font-size:10px; }
 .diagram .m.hi { fill:var(--accent); }
 .diagram .m.ok { fill:var(--good); }
 .diagram .m.ac { fill:var(--accent); }

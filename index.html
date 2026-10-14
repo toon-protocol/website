@@ -149,10 +149,28 @@ pre .s { color:#b9d7a1; }
 .cmd button { display:flex; align-items:center; padding:0 1rem; border:0; border-left:1px solid var(--line-strong); background:none; cursor:pointer; color:var(--ink-faint);
   font:600 0.66rem/1 var(--mono); letter-spacing:0.14em; text-transform:uppercase; white-space:nowrap; }
 .cmd button:hover, .cmd button.done { color:var(--ink); }
-pre.sel { position:relative; padding-right:5.5rem; white-space:pre-wrap; overflow-wrap:anywhere; }
-pre.sel button { position:absolute; top:0.55rem; right:0.6rem; padding:0.3rem 0.55rem; border:1px solid var(--term-line); background:none; cursor:pointer; color:var(--term-dim);
+/* Evidence panels: every command and example on the landing page sits in one of these,
+   the panel herdr draws beside each row. A .l line is a command and gets the prompt; a .o
+   line is output; a pre inside keeps its columns. */
+.ev { width:100%; padding:0.8rem 1rem 0.9rem; border:1px solid var(--line-strong); background:var(--bg-raised); color:var(--ink-dim); font:0.78rem/1.75 var(--mono); }
+.ev .hd { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin:0 0 0.55rem; padding-bottom:0.5rem; border-bottom:1px solid var(--line);
+  font:600 0.64rem/1.4 var(--mono); letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-faint); }
+.ev .hd i { font-style:normal; color:var(--good); text-transform:none; letter-spacing:0; font-weight:500; }
+.ev .hd button { margin:-0.3rem -0.4rem -0.3rem 0; padding:0.3rem 0.55rem; border:1px solid var(--line); background:none; cursor:pointer; color:var(--ink-faint);
   font:600 0.62rem/1 var(--mono); letter-spacing:0.14em; text-transform:uppercase; }
-pre.sel button:hover, pre.sel button.done { color:var(--term-ink); }
+.ev .hd button:hover, .ev .hd button.done { color:var(--ink); border-color:var(--line-strong); }
+.ev .l, .ev .o { display:block; white-space:pre-wrap; overflow-wrap:anywhere; }
+.ev .l { color:var(--ink); }
+.ev .l::before, .ev .line > b { content:"$"; color:var(--gold); font-weight:600; margin-right:0.7rem; }
+.ev .o { color:var(--ink-faint); }
+.ev .l + .o { margin-top:0.5rem; }
+.ev .o + .l { margin-top:0.5rem; }
+.ev pre { margin:0; padding:0; border:0; background:none; color:var(--ink); font-size:inherit; line-height:inherit; overflow-x:auto; }
+.ev .k { color:var(--accent); font-weight:600; }
+.ev .g, .ev .hi { color:var(--accent); }
+.ev .ok { color:var(--good); }
+.ev .s { color:var(--good); }
+.ev .c { color:var(--ink-faint); }
 .meta { margin-top:1rem; color:var(--ink-faint); font:0.76rem/1.7 var(--mono); }
 .meta a { color:var(--accent); text-decoration:none; }
 .meta a:hover { text-decoration:underline; }
@@ -187,10 +205,7 @@ pre.sel button:hover, pre.sel button.done { color:var(--term-ink); }
 .rows .cap:hover .arw { color:var(--accent); margin-left:0.6rem; }
 .rows p { color:var(--ink-dim); font-size:0.95rem; max-width:36rem; }
 .rows .codeblock { margin:0; }
-.rows .ev { align-self:center; justify-self:end; width:100%; max-width:34rem; padding:0.9rem 1rem; border:1px solid var(--line-strong);
-  background:var(--bg-raised); color:var(--ink-faint); font:0.76rem/1.75 var(--mono); }
-.rows .ev .k { color:var(--accent); font-weight:600; }
-.rows .ev .ok { color:var(--good); }
+.rows .ev { align-self:start; justify-self:end; max-width:36rem; }
 @media (max-width:900px) { .rows li, .rows .cap { grid-template-columns:4rem minmax(0, 1fr); } .rows li > :nth-child(3), .rows .cap > :nth-child(3) { grid-column:2; margin-top:1rem; justify-self:start; } }
 @media (max-width:520px) { .rows li, .rows .cap { grid-template-columns:1fr; gap:0.9rem; } .rows li > :nth-child(3), .rows .cap > :nth-child(3) { grid-column:1; margin-top:0; } }
 
@@ -198,8 +213,9 @@ pre.sel button:hover, pre.sel button.done { color:var(--term-ink); }
    demo. Each line is one absolutely placed span; `--n` is its length in characters and
    `--i` its turn. One shared timeline per line: type at one step per character, hold,
    erase, then stay hidden until the cycle comes round. Reduced motion holds line one. */
-.tape { --slot:4.6s; --cycle:32.2s; display:flex; align-items:flex-start; gap:0.7rem; white-space:nowrap; overflow:hidden; }
-.tape > b { color:var(--gold); font-weight:600; }
+.tape { --slot:4.6s; --cycle:32.2s; }
+.tape .line { display:flex; align-items:flex-start; white-space:nowrap; overflow:hidden; }
+.tape .line > b { display:block; }
 .tape .lines { position:relative; flex:1; min-width:0; height:1.75em; }
 .tape .lines span { position:absolute; left:0; top:0; display:block; box-sizing:content-box; max-width:0; overflow:hidden; white-space:nowrap; color:var(--ink-dim);
   border-right:0.55em solid var(--ink-dim); opacity:1;
@@ -323,9 +339,8 @@ details pre { margin:0 1.15rem 1.15rem; }
 /* ===== landing: the mechanics frame, the specs, the pay block ===== */
 .frame { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); border:1px solid var(--line); background:var(--bg-raised); }
 .frame > figure { margin:0; padding:1.5rem 1.5rem 1rem; align-self:center; }
-.frame > .codeblock { margin:0; border:0; border-left:1px solid var(--line); border-radius:0; display:flex; flex-direction:column; }
-.frame > .codeblock pre { flex:1; }
-@media (max-width:900px) { .frame { grid-template-columns:1fr; } .frame > .codeblock { border-left:0; border-top:1px solid var(--line); } }
+.frame > .ev { border:0; border-left:1px solid var(--line); padding:1.25rem 1.5rem; }
+@media (max-width:900px) { .frame { grid-template-columns:1fr; } .frame > .ev { border-left:0; border-top:1px solid var(--line); } }
 .specs { margin:1px 0 0; padding:1px; display:grid; gap:1px; grid-template-columns:repeat(3, 1fr); }
 .specs > div { padding:1.1rem 1.25rem; background:var(--bg-raised); box-shadow:0 0 0 1px var(--line); font-size:0.9rem; color:var(--ink-dim); }
 .specs dt { font:600 0.68rem/1.4 var(--mono); letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:0.4rem; }
@@ -336,8 +351,8 @@ details pre { margin:0 1.15rem 1.15rem; }
 #how .twocol { margin-top:3.5rem; }
 #how .twocol h3 { font-size:1.5rem; margin-bottom:0.8rem; }
 #how .twocol .tablewrap { margin:1rem 0 0.6rem; }
-.pay { margin-top:3rem; padding-top:2.5rem; border-top:1px solid var(--line); align-items:center; grid-template-columns:0.85fr 1.15fr; }
-pre.wrap { white-space:pre-wrap; overflow-wrap:anywhere; }
+.pay { margin-top:3rem; padding-top:2.5rem; border-top:1px solid var(--line); align-items:center; grid-template-columns:0.8fr 1.2fr; }
+.pay .ev pre { padding-top:0.2rem; }
 .pay h3 { font-size:1.5rem; margin-bottom:0.7rem; }
 .pay p { color:var(--ink-dim); max-width:34rem; }
 .pay .eyebrow { margin-bottom:0.9rem; }
@@ -352,6 +367,7 @@ pre.wrap { white-space:pre-wrap; overflow-wrap:anywhere; }
 .diagram .s { fill:var(--ink-dim); font:12px var(--body); }
 .diagram .s.cap { font:600 10.5px var(--mono); letter-spacing:0.12em; text-transform:uppercase; fill:var(--ink-faint); }
 .diagram .m { fill:var(--ink-dim); font:11.5px var(--mono); }
+.diagram .m.sm { font-size:10px; }
 .diagram .m.hi { fill:var(--accent); }
 .diagram .m.ok { fill:var(--good); }
 .diagram .m.ac { fill:var(--accent); }
@@ -560,9 +576,9 @@ footer.site-foot { padding-bottom:0; }
           <h3>Install</h3>
           <p>One line puts the release binary on Linux, x86_64 or aarch64. No Rust toolchain, no account.</p>
         </div>
-        <div class="codeblock">
-          <div class="bar"><span>The shell</span><span class="tag">docker and systemd --user on the machine</span></div>
-<pre class="sel"><button type="button" aria-label="Copy install command">copy</button>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</pre>
+        <div class="ev">
+          <div class="hd"><span>The shell</span><button type="button" aria-label="Copy install command">copy</button></div>
+          <span class="l">curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</span>
         </div>
       </li>
       <li>
@@ -571,10 +587,10 @@ footer.site-foot { padding-bottom:0; }
           <h3>Create and fund it</h3>
           <p><code>init</code> makes the wallet and a relay reachable as a hidden service; the mnemonic is shown once. The faucet funds it with test tokens.</p>
         </div>
-        <div class="codeblock">
-          <div class="bar"><span>Devnet, free</span></div>
-<pre>toon init --accept-anyone-terms
-toon wallet fund</pre>
+        <div class="ev">
+          <div class="hd"><span>Devnet</span><i>free</i></div>
+          <span class="l">toon init --accept-anyone-terms</span>
+          <span class="l">toon wallet fund</span>
         </div>
       </li>
       <li>
@@ -583,13 +599,12 @@ toon wallet fund</pre>
           <h3>Start it</h3>
           <p><code>up</code> writes a <code>systemd --user</code> unit, so the node outlives this terminal. <code>status</code> shows what is running and at which address.</p>
         </div>
-        <div class="codeblock">
-          <div class="bar"><span>What status printed</span></div>
-<pre class="wrap">toon up
-toon status
-
-Supervisor: running.
-TOON app relay (ILP address g.toon.fb0e007c71750599): connector running on 127.0.0.1:25599.</pre>
+        <div class="ev">
+          <div class="hd"><span>What status printed</span></div>
+          <span class="l">toon up</span>
+          <span class="l">toon status</span>
+          <span class="o">Supervisor: running.</span>
+          <span class="o">TOON app relay (ILP address g.toon.fb0e007c71750599): connector running on 127.0.0.1:25599.</span>
         </div>
       </li>
       <li>
@@ -598,10 +613,10 @@ TOON app relay (ILP address g.toon.fb0e007c71750599): connector running on 127.0
           <h3>Put your app behind it</h3>
           <p>Any HTTP service in a container image, at the price you choose. From then on every request that reaches it has been paid for.</p>
         </div>
-        <div class="codeblock">
-          <div class="bar"><span>Your app, priced</span><span class="tag">units of the token you settle in</span></div>
-<pre>toon add echo --to relay --image echo-app --price 2 --yes
-toon route list</pre>
+        <div class="ev">
+          <div class="hd"><span>Your app, priced</span><i>in units of the token you settle in</i></div>
+          <span class="l">toon add echo --to relay --image echo-app --price 2 --yes</span>
+          <span class="l">toon route list</span>
         </div>
       </li>
       <li class="linked"><a class="cap" href="docs/spaceturtle.html">
@@ -610,7 +625,7 @@ toon route list</pre>
           <h3>Or let an agent run it <b class="arw">→</b></h3>
           <p>Every command takes <code>--json</code>, and every command that pays states its amount and needs <code>--yes</code>. An agent drives the same surface you do. spaceturtle is one that does.</p>
         </div>
-        <div class="ev tape" aria-hidden="true"><b>$</b><span class="lines">
+        <div class="ev tape" aria-hidden="true"><div class="hd"><span>What an agent types</span><i>--json on every command</i></div><div class="line"><b>$</b><span class="lines">
             <span style="--n:31;--i:0">toon init --accept-anyone-terms</span>
             <span style="--n:16;--i:1">toon wallet fund</span>
             <span style="--n:7;--i:2">toon up</span>
@@ -618,7 +633,7 @@ toon route list</pre>
             <span style="--n:57;--i:4">toon add echo --to relay --image echo-app --price 2 --yes</span>
             <span style="--n:22;--i:5">toon route list --json</span>
             <span style="--n:52;--i:6">toon event publish --kind 1 --content "hello" --json</span>
-        </span></div>
+        </span></div></div>
       </a></li>
     </ol>
 
@@ -628,13 +643,14 @@ toon route list</pre>
         <h3>Paying is one install</h3>
         <p>The client asks a node what it charges, opens the channel once, and signs a voucher on every request after that. A refusal comes back as a value, not an exception. <a href="docs/pay-a-node.html">Pay a node →</a></p>
       </div>
-      <div class="codeblock">
-        <div class="bar"><span>TypeScript</span><span class="tag">npm install @toon-protocol/client</span></div>
-<pre><span class="k">const</span> client = <span class="k">await</span> ToonClient.create(
-  { connector, mnemonic, channelStore });
-<span class="k">await</span> client.channel.open({ deposit: <span class="g">100_000n</span> });    <span class="c">// once. 0.10 USDC</span>
-<span class="k">const</span> answer = <span class="k">await</span> client.send({ body: <span class="s">'hello'</span> }); <span class="c">// every request after</span>
-answer.fulfilled ? answer.text() : answer.code       <span class="c">// a refusal is a value</span></pre>
+      <div class="ev">
+        <div class="hd"><span>TypeScript</span><i>npm install @toon-protocol/client</i></div>
+<pre><span class="k">const</span> client = <span class="k">await</span> ToonClient.create({ connector, mnemonic, channelStore });
+
+<span class="k">await</span> client.channel.open({ deposit: <span class="g">100_000n</span> });     <span class="c">// once: 0.10 USDC</span>
+
+<span class="k">const</span> answer = <span class="k">await</span> client.send({ body: <span class="s">'hello'</span> });  <span class="c">// every request after</span>
+answer.fulfilled ? answer.text() : answer.code        <span class="c">// a refusal is a value</span></pre>
       </div>
     </div>
 
@@ -656,41 +672,41 @@ answer.fulfilled ? answer.text() : answer.code       <span class="c">// a refusa
 
     <div class="frame">
       <figure style="margin:0">
-      <svg class="diagram" viewBox="0 0 560 200" role="img" aria-labelledby="hero-d-title" xmlns="http://www.w3.org/2000/svg">
+      <svg class="diagram" viewBox="0 0 560 196" role="img" aria-labelledby="hero-d-title" xmlns="http://www.w3.org/2000/svg">
         <title id="hero-d-title">A caller sends a request with a voucher to a TOON node. The node checks the voucher and forwards a plain HTTP request to the app. The answer comes back sealed. Vouchers settle in batches on Base or Solana.</title>
         <defs>
           <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/>
           </marker>
         </defs>
-        <rect class="box" x="16" y="56" width="130" height="80" rx="6"/>
-        <text class="t" x="81" y="92" text-anchor="middle">Caller</text>
-        <text class="s" x="81" y="112" text-anchor="middle">an agent or a script</text>
+        <rect class="box" x="10" y="36" width="104" height="96" rx="4"/>
+        <text class="t" x="62" y="80" text-anchor="middle">Caller</text>
+        <text class="s" x="62" y="98" text-anchor="middle">agent or script</text>
 
-        <rect class="box node" x="215" y="48" width="130" height="96" rx="6"/>
-        <text class="t" x="280" y="92" text-anchor="middle">TOON node</text>
-        <text class="s" x="280" y="112" text-anchor="middle">checks the voucher</text>
+        <rect class="box node" x="228" y="36" width="104" height="96" rx="4"/>
+        <text class="t" x="280" y="80" text-anchor="middle">TOON node</text>
+        <text class="s" x="280" y="98" text-anchor="middle">checks vouchers</text>
 
-        <rect class="box app" x="414" y="56" width="130" height="80" rx="6"/>
-        <text class="t" x="479" y="92" text-anchor="middle">Your app</text>
-        <text class="s" x="479" y="112" text-anchor="middle">unchanged</text>
+        <rect class="box app" x="446" y="36" width="104" height="96" rx="4"/>
+        <text class="t" x="498" y="80" text-anchor="middle">Your app</text>
+        <text class="s" x="498" y="98" text-anchor="middle">unchanged</text>
 
-        <path class="arrow gold" d="M148 80 H213"/>
-        <text class="m hi" x="180" y="40" text-anchor="middle">request</text>
-        <text class="m hi" x="180" y="54" text-anchor="middle">+ voucher</text>
-        <path class="arrow ok" d="M347 80 H412"/>
-        <text class="m ok" x="380" y="47" text-anchor="middle">plain HTTP</text>
+        <text class="m sm hi" x="171" y="61" text-anchor="middle">request + voucher</text>
+        <path class="arrow gold" d="M116 70 H226"/>
+        <text class="m sm ok" x="389" y="61" text-anchor="middle">plain HTTP</text>
+        <path class="arrow ok" d="M334 70 H444"/>
 
-        <path class="arrow" d="M412 118 H349"/>
-        <text class="m" x="380" y="150" text-anchor="middle">200</text>
-        <path class="arrow" d="M213 118 H150"/>
-        <text class="m" x="180" y="150" text-anchor="middle">200, sealed</text>
+        <text class="m sm" x="389" y="111" text-anchor="middle">200</text>
+        <path class="arrow" d="M444 120 H336"/>
+        <text class="m sm" x="171" y="111" text-anchor="middle">200, sealed</text>
+        <path class="arrow" d="M226 120 H118"/>
 
-        <text class="s cap" x="280" y="186" text-anchor="middle">vouchers settle in batches on Base and Solana</text>
+        <path class="wire" d="M280 132 V154" stroke-dasharray="3 3"/>
+        <text class="s cap" x="280" y="172" text-anchor="middle">settles in batches on Base and Solana</text>
       </svg>
       </figure>
-      <div class="codeblock">
-        <div class="bar"><span>On the wire</span><span class="tag">x402 v2 over HTTP</span></div>
+      <div class="ev">
+        <div class="hd"><span>On the wire</span><i>x402 v2 over HTTP</i></div>
 <pre><span class="c"># without a voucher</span>
 <span class="k">POST</span> /ilp
 <span class="g">402</span> Payment Required        <span class="c">amount 1000 · USDC on Base</span>
@@ -1059,17 +1075,16 @@ answer.fulfilled ? answer.text() : answer.code       <span class="c">// a refusa
 <script>
 /* The copy buttons, the one script on this site. Each button copies the text of the
    element it sits in, minus its own label; the "$" is CSS and never part of it. */
-document.querySelectorAll(".cmd button, pre.sel button").forEach(function (button) {
+document.querySelectorAll(".cmd button, .ev button").forEach(function (button) {
   button.addEventListener("click", function () {
-    var box = button.parentNode;
-    var text = Array.prototype.filter.call(box.childNodes, function (node) { return node !== button; })
-      .map(function (node) { return node.textContent; }).join("").trim();
+    var box = button.closest(".cmd, .ev");
+    var text = Array.prototype.map.call(box.querySelectorAll("code, .l"), function (node) { return node.textContent.trim(); }).join("\n");
     var done = function () {
       button.textContent = "copied"; button.classList.add("done");
       setTimeout(function () { button.textContent = "copy"; button.classList.remove("done"); }, 1400);
     };
     if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(done); return; }
-    var range = document.createRange(); range.selectNodeContents(box.querySelector("code") || box);
+    var range = document.createRange(); range.selectNodeContents(box.querySelector("code, .l") || box);
     var sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
     if (document.execCommand("copy")) done();
   });
