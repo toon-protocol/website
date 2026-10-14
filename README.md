@@ -44,8 +44,8 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
 
 ## Before publishing
 
-1. **Prices.** The pricing table on the landing page and the "Priced live" cards are a
-   snapshot read off the live node's `GET /ilp`. Reread it and update the dates if a price
+1. **Prices.** The pricing table on the landing page and the "Priced live" tiles on the
+   ecosystem page are a snapshot read off the live node's `GET /ilp`. Reread it and update the dates if a price
    changed.
 2. **Release tags.** The version named in `src/docs/install.html` is toon_cli's latest
    release (`gh release list -R toon-protocol/toon_cli`); the Docker tag in

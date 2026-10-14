@@ -320,12 +320,27 @@ details pre { margin:0 1.15rem 1.15rem; }
 .hero.split h1 { font-size:clamp(2.4rem, 4.8vw, 3.6rem); }
 @media (max-width:900px) { .hero.split .wrap { grid-template-columns:1fr; gap:2.5rem; } .hero .bigmark { display:none; } }
 
-/* ===== landing: the product shot ===== */
-.shot { padding:3rem 0 4rem; }
-.shot .frame { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); border:1px solid var(--line); background:var(--bg-raised); }
-.shot .frame > figure { margin:0; padding:1.5rem 1.5rem 1rem; }
-.shot .frame > .codeblock { margin:0; border:0; border-left:1px solid var(--line); border-radius:0; }
-@media (max-width:900px) { .shot .frame { grid-template-columns:1fr; } .shot .frame > .codeblock { border-left:0; border-top:1px solid var(--line); } }
+/* ===== landing: the mechanics frame, the specs, the pay block ===== */
+.frame { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); border:1px solid var(--line); background:var(--bg-raised); }
+.frame > figure { margin:0; padding:1.5rem 1.5rem 1rem; align-self:center; }
+.frame > .codeblock { margin:0; border:0; border-left:1px solid var(--line); border-radius:0; display:flex; flex-direction:column; }
+.frame > .codeblock pre { flex:1; }
+@media (max-width:900px) { .frame { grid-template-columns:1fr; } .frame > .codeblock { border-left:0; border-top:1px solid var(--line); } }
+.specs { margin:1px 0 0; padding:1px; display:grid; gap:1px; grid-template-columns:repeat(3, 1fr); }
+.specs > div { padding:1.1rem 1.25rem; background:var(--bg-raised); box-shadow:0 0 0 1px var(--line); font-size:0.9rem; color:var(--ink-dim); }
+.specs dt { font:600 0.68rem/1.4 var(--mono); letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:0.4rem; }
+.specs dd { margin:0; }
+.specs dd a { white-space:nowrap; }
+@media (max-width:900px) { .specs { grid-template-columns:1fr 1fr; } }
+@media (max-width:520px) { .specs { grid-template-columns:1fr; } }
+#how .twocol { margin-top:3.5rem; }
+#how .twocol h3 { font-size:1.5rem; margin-bottom:0.8rem; }
+#how .twocol .tablewrap { margin:1rem 0 0.6rem; }
+.pay { margin-top:3rem; padding-top:2.5rem; border-top:1px solid var(--line); align-items:center; grid-template-columns:0.85fr 1.15fr; }
+pre.wrap { white-space:pre-wrap; overflow-wrap:anywhere; }
+.pay h3 { font-size:1.5rem; margin-bottom:0.7rem; }
+.pay p { color:var(--ink-dim); max-width:34rem; }
+.pay .eyebrow { margin-bottom:0.9rem; }
 
 /* ===== diagrams ===== */
 .diagram { width:100%; height:auto; display:block; }
@@ -488,9 +503,9 @@ footer.site-foot { padding-bottom:0; }
   <div class="wrap">
     <a class="brand" href="#top" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg><span class="name">TOON<small>Protocol</small></span></a>
     <nav aria-label="Primary">
-      <a href="#how" class="hide-m">How it works</a>
       <a href="#run" class="hide-m">Run a node</a>
       <a href="#pay" class="hide-m">Pay</a>
+      <a href="#how" class="hide-m">How it holds</a>
       <a href="#pricing" class="hide-m">Pricing</a>
       <a href="docs/faq.html" class="hide-m">FAQ</a>
       <a href="docs/index.html">Docs</a>
@@ -503,7 +518,7 @@ footer.site-foot { padding-bottom:0; }
 
 <main id="top">
 
-<!-- ============ HERO ============ -->
+<!-- ============ 1 · THE PRIZE ============ -->
 <section class="hero">
   <svg class="bigmark mark" viewBox="0 0 1024 1024" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg>
   <div class="wrap">
@@ -518,7 +533,6 @@ footer.site-foot { padding-bottom:0; }
   </div>
 </section>
 
-<!-- ============ STATS ============ -->
 <section class="stats-band">
   <div class="wrap">
     <div class="stats" aria-label="Key numbers">
@@ -530,137 +544,12 @@ footer.site-foot { padding-bottom:0; }
   </div>
 </section>
 
-<!-- ============ HOW IT WORKS ============ -->
-<section class="shot">
-  <div class="wrap">
-    <div class="label-row"><span>The packet, on the wire</span><span>x402 v2 · one channel, thousands of requests</span></div>
-    <div class="frame">
-      <figure style="margin:0">
-      <svg class="diagram" viewBox="0 0 560 362" role="img" aria-labelledby="hero-d-title" xmlns="http://www.w3.org/2000/svg">
-        <title id="hero-d-title">A caller sends a request with a voucher to a TOON node. The node checks the voucher and forwards a plain HTTP request to the app. Vouchers settle in batches on an x402 channel on Base or Solana.</title>
-        <defs>
-          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/>
-          </marker>
-        </defs>
-
-        <text class="s cap" x="74" y="30" text-anchor="middle">Pays</text>
-        <text class="s cap" x="280" y="30" text-anchor="middle">The node</text>
-        <text class="s cap" x="486" y="30" text-anchor="middle">Earns</text>
-
-        <!-- caller -->
-        <rect class="box" x="16" y="80" width="116" height="120" rx="12"/>
-        <text class="t" x="74" y="124" text-anchor="middle">Caller</text>
-        <text class="s" x="74" y="146" text-anchor="middle">an agent, a service</text>
-        <text class="s" x="74" y="163" text-anchor="middle">or a script</text>
-
-        <!-- node -->
-        <ellipse class="glow" cx="280" cy="135" rx="104" ry="92"/>
-        <rect class="box node" x="210" y="60" width="140" height="154" rx="14"/>
-        <text class="t" x="280" y="104" text-anchor="middle">TOON node</text>
-        <text class="s" x="280" y="128" text-anchor="middle">checks the voucher</text>
-        <text class="s" x="280" y="146" text-anchor="middle">unseals the request</text>
-        <text class="s" x="280" y="164" text-anchor="middle">keeps the price</text>
-
-        <!-- app -->
-        <rect class="box app" x="428" y="80" width="116" height="120" rx="12"/>
-        <text class="t" x="486" y="124" text-anchor="middle">Your app</text>
-        <text class="s" x="486" y="146" text-anchor="middle">unchanged</text>
-        <text class="s" x="486" y="163" text-anchor="middle">no payment code</text>
-
-        <!-- 1: the refusal names the price -->
-        <path class="arrow dash" d="M208 118 H134"/>
-        <text class="m" x="171" y="94" text-anchor="middle">402</text>
-        <text class="m" x="171" y="108" text-anchor="middle">1,000</text>
-
-        <!-- 2: the caller pays with a voucher -->
-        <path class="arrow gold" d="M132 158 H208"/>
-        <text class="m hi" x="171" y="174" text-anchor="middle">POST /ilp</text>
-        <text class="m hi" x="171" y="188" text-anchor="middle">+ voucher</text>
-
-        <!-- 3: the app gets plain HTTP -->
-        <path class="arrow ok" d="M350 118 H426"/>
-        <text class="m ok" x="389" y="94" text-anchor="middle">plain HTTP</text>
-        <text class="m ok" x="389" y="108" text-anchor="middle">paid</text>
-
-        <!-- the answer, sealed back -->
-        <path class="arrow" d="M426 158 H352"/>
-        <text class="m" x="389" y="174" text-anchor="middle">200</text>
-        <text class="m" x="389" y="188" text-anchor="middle">sealed</text>
-
-        <!-- settlement -->
-        <path class="wire" d="M280 214 V246" stroke-dasharray="3 4"/>
-        <text class="s cap" x="280" y="258" text-anchor="middle">Settles on</text>
-        <rect class="pill chain" x="135" y="264" width="290" height="58" rx="10"/>
-        <text class="t sm" x="280" y="288" text-anchor="middle">x402 batch-settlement channel</text>
-        <text class="m ac" x="280" y="308" text-anchor="middle">Base · Solana · one tx settles thousands</text>
-
-        <text class="s" x="280" y="352" text-anchor="middle">A voucher is a signature, not a transaction. No gas per request, no block to wait for.</text>
-      </svg>
-    </figure>
-      <div class="codeblock">
-        <div class="bar"><span>On the wire</span><span class="tag">x402 v2</span></div>
-<pre><span class="c"># an unpaid request to a priced route</span>
-<span class="k">POST</span> /ilp                  <span class="c">no voucher attached</span>
-<span class="g">402 Payment Required</span>
-{ "x402Version": 2,
-  "accepts": [{ "scheme":  <span class="s">"batch-settlement"</span>,
-               "network": <span class="s">"eip155:8453"</span>,
-               "amount":  <span class="s">"1000"</span>,
-               "payTo":   <span class="s">"0x…"</span> }] }
-
-<span class="c"># the same request, with a signed voucher</span>
-<span class="k">POST</span> /ilp                  <span class="c">voucher: 1,000 units</span>
-<span class="ok">200</span>                        <span class="c">your app's answer, sealed</span></pre>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="how" class="tint">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">How it works</p>
-      <h2>A paid reverse proxy. It terminates payment the way nginx terminates TLS.</h2>
-      <p>Your app behind it, a price per route. Every request that reaches your app has already been paid for.</p>
-    </div>
-
-    <ol class="rows">
-      <li class="linked"><a class="cap" href="docs/protocol.html">
-        <span class="n">01</span>
-        <div>
-          <h3>The refusal names the price <b class="arw">→</b></h3>
-          <p>An unpaid request gets an x402 <code>402 Payment Required</code> with the exact amount, token, chain and address. A caller never guesses.</p>
-        </div>
-        <div class="ev"><span class="k">402</span> Payment Required<br>amount: "1000" · network: "eip155:8453"</div>
-      </a></li>
-      <li class="linked"><a class="cap" href="docs/channels.html">
-        <span class="n">02</span>
-        <div>
-          <h3>The caller pays with a voucher <b class="arw">→</b></h3>
-          <p>The caller opens an x402 payment channel once, then attaches a signed voucher to every request. No account, no card, no signup, no API key.</p>
-        </div>
-        <div class="ev"><span class="k">POST</span> /ilp<br>voucher: 1,000 units · a signature, not a transaction</div>
-      </a></li>
-      <li class="linked"><a class="cap" href="docs/put-your-app-behind-it.html">
-        <span class="n">03</span>
-        <div>
-          <h3>The app gets plain HTTP <b class="arw">→</b></h3>
-          <p>The node checks the voucher, unseals the request and forwards it. Your app does not change. <strong>No SDK, no invoices, no payment code.</strong></p>
-        </div>
-        <div class="ev"><span class="ok">200</span> your app's answer, sealed back<br>your app saw an ordinary request, already paid</div>
-      </a></li>
-    </ol>
-
-  </div>
-</section>
-
-<!-- ============ RUN A NODE ============ -->
+<!-- ============ 2 · WHAT YOU DO ============ -->
 <section id="run">
   <div class="wrap">
     <div class="section-head">
-      <p class="eyebrow">For operators</p>
-      <h2>One command. A node that gets paid.</h2>
+      <p class="eyebrow">What you do</p>
+      <h2>Four commands. A node that gets paid.</h2>
       <p><code>toon</code> runs the node for you: a wallet, a relay, and a connector in front of any app you add. The first one is on the devnet and costs nothing.</p>
     </div>
 
@@ -669,7 +558,7 @@ footer.site-foot { padding-bottom:0; }
         <span class="n">01</span>
         <div>
           <h3>Install</h3>
-          <p>One line puts the release binary on Linux, x86_64 or aarch64, with glibc 2.35 or later. No Rust toolchain, no account.</p>
+          <p>One line puts the release binary on Linux, x86_64 or aarch64. No Rust toolchain, no account.</p>
         </div>
         <div class="codeblock">
           <div class="bar"><span>The shell</span><span class="tag">docker and systemd --user on the machine</span></div>
@@ -680,36 +569,46 @@ footer.site-foot { padding-bottom:0; }
         <span class="n">02</span>
         <div>
           <h3>Create and fund it</h3>
-          <p><code>init</code> makes the wallet and the first TOON app, a relay reachable as a hidden service; the mnemonic is shown once. The faucet funds it with test tokens. <code>init</code> needs a passphrase file first; <a href="docs/first-agent-node.html">your first agent node</a> shows that.</p>
+          <p><code>init</code> makes the wallet and a relay reachable as a hidden service; the mnemonic is shown once. The faucet funds it with test tokens.</p>
         </div>
         <div class="codeblock">
           <div class="bar"><span>Devnet, free</span></div>
-<pre>toon init --accept-anyone-terms     <span class="c"># a wallet, and a relay reachable as a hidden service</span>
-toon wallet fund                    <span class="c"># test tokens from the faucet</span></pre>
+<pre>toon init --accept-anyone-terms
+toon wallet fund</pre>
         </div>
       </li>
       <li>
         <span class="n">03</span>
         <div>
-          <h3>Start it and see it answer</h3>
-          <p><code>up</code> writes a <code>systemd --user</code> unit, so the node outlives this terminal. <code>status</code> shows what is running and at which address. Then put your app behind it and set its price.</p>
+          <h3>Start it</h3>
+          <p><code>up</code> writes a <code>systemd --user</code> unit, so the node outlives this terminal. <code>status</code> shows what is running and at which address.</p>
         </div>
         <div class="codeblock">
           <div class="bar"><span>What status printed</span></div>
-<pre>toon up                             <span class="c"># a systemd --user unit, so it outlives this terminal</span>
-toon status                         <span class="c"># what is running, and at which address</span>
+<pre class="wrap">toon up
+toon status
 
 Supervisor: running.
-Unconnected: it has joined no network. `toon join &lt;network&gt; --deposit &lt;amount&gt; --yes` connects it.
-TOON app relay (ILP address g.toon.fb0e007c71750599): connector running on 127.0.0.1:25599.
-App relay of relay: running on 127.0.0.1:41733. Route g.toon.fb0e007c71750599.relay at price 1.</pre>
+TOON app relay (ILP address g.toon.fb0e007c71750599): connector running on 127.0.0.1:25599.</pre>
+        </div>
+      </li>
+      <li>
+        <span class="n">04</span>
+        <div>
+          <h3>Put your app behind it</h3>
+          <p>Any HTTP service in a container image, at the price you choose. From then on every request that reaches it has been paid for.</p>
+        </div>
+        <div class="codeblock">
+          <div class="bar"><span>Your app, priced</span><span class="tag">units of the token you settle in</span></div>
+<pre>toon add echo --to relay --image echo-app --price 2 --yes
+toon route list</pre>
         </div>
       </li>
       <li class="linked"><a class="cap" href="docs/spaceturtle.html">
-        <span class="n">04</span>
+        <span class="n">05</span>
         <div>
-          <h3>An agent can run it <b class="arw">→</b></h3>
-          <p>Every command takes <code>--json</code>, and every command that pays states its amount and needs <code>--yes</code>. An agent drives the same surface you do, in the same order. spaceturtle is one that does.</p>
+          <h3>Or let an agent run it <b class="arw">→</b></h3>
+          <p>Every command takes <code>--json</code>, and every command that pays states its amount and needs <code>--yes</code>. An agent drives the same surface you do. spaceturtle is one that does.</p>
         </div>
         <div class="ev tape" aria-hidden="true"><b>$</b><span class="lines">
             <span style="--n:31;--i:0">toon init --accept-anyone-terms</span>
@@ -723,96 +622,99 @@ App relay of relay: running on 127.0.0.1:41733. Route g.toon.fb0e007c71750599.re
       </a></li>
     </ol>
 
-    <div class="cta">
-      <a class="button primary" href="docs/first-agent-node.html">Read the operator guide</a>
-      <a class="button ghost" href="docs/spaceturtle.html">Or let an agent run it for you: spaceturtle</a>
-    </div>
-  </div>
-</section>
-
-<!-- ============ PAY ============ -->
-<section id="pay" class="tint">
-  <div class="wrap">
-    <div class="twocol wide-left">
+    <div class="twocol pay" id="pay">
       <div>
-        <p class="eyebrow">For callers</p>
-        <h2>Paying is one install</h2>
-        <p class="lede" style="font-size:1.05rem">The client asks a node what it charges, opens the channel once, and does the sealing and the vouchers on every request after that. A refusal comes back as a value, not an exception.</p>
+        <p class="eyebrow">To pay one</p>
+        <h3>Paying is one install</h3>
+        <p>The client asks a node what it charges, opens the channel once, and signs a voucher on every request after that. A refusal comes back as a value, not an exception. <a href="docs/pay-a-node.html">Pay a node →</a></p>
       </div>
       <div class="codeblock">
         <div class="bar"><span>TypeScript</span><span class="tag">npm install @toon-protocol/client</span></div>
-<pre><span class="k">import</span> { ToonClient } <span class="k">from</span> <span class="s">'@toon-protocol/client'</span>;
-
-<span class="k">const</span> client = <span class="k">await</span> ToonClient.create({
-  connector: <span class="s">'https://proxy.ario.devnet.toonprotocol.dev'</span>,
-  mnemonic: process.env.TOON_MNEMONIC,
-  channelStore: <span class="s">`${process.env.HOME}/.toon/channels.json`</span>,
-});
-
-<span class="k">await</span> client.channel.open({ deposit: <span class="g">100_000n</span> }); <span class="c">// 0.10 USDC</span>
-
-<span class="k">const</span> answer = <span class="k">await</span> client.send({ body: <span class="s">'hello'</span> });
-<span class="k">if</span> (answer.fulfilled) {
-  console.log(answer.status, answer.text());  <span class="c">// the app's own response</span>
-  console.log(answer.claim.amount);           <span class="c">// 1000n (0.001 USDC)</span>
-} <span class="k">else</span> {
-  console.log(answer.code, answer.message);   <span class="c">// a refusal, not an exception</span>
-}
-
-<span class="k">await</span> client.close();</pre>
+<pre><span class="k">const</span> client = <span class="k">await</span> ToonClient.create(
+  { connector, mnemonic, channelStore });
+<span class="k">await</span> client.channel.open({ deposit: <span class="g">100_000n</span> });    <span class="c">// once. 0.10 USDC</span>
+<span class="k">const</span> answer = <span class="k">await</span> client.send({ body: <span class="s">'hello'</span> }); <span class="c">// every request after</span>
+answer.fulfilled ? answer.text() : answer.code       <span class="c">// a refusal is a value</span></pre>
       </div>
+    </div>
+
+    <div class="cta">
+      <a class="button primary" href="docs/first-agent-node.html">Read the operator guide</a>
+      <a class="button ghost" href="docs/pay-a-node.html">Pay a node</a>
     </div>
   </div>
 </section>
 
-<!-- ============ APPS ============ -->
-<section id="apps">
+<!-- ============ 3 · HOW IT HOLDS ============ -->
+<section id="how" class="tint">
   <div class="wrap">
     <div class="section-head">
-      <p class="eyebrow">Already behind a node</p>
-      <h2>Real apps, real prices, open source</h2>
-      <p>Ordinary HTTP services with no payment code, priced on the live node today. The node in front of them does the charging. spaceturtle, swap, provider, toon and every rail underneath are on the <a href="ecosystem/index.html">ecosystem page →</a></p>
+      <p class="eyebrow">How it holds</p>
+      <h2>A paid reverse proxy. It terminates payment the way nginx terminates TLS.</h2>
+      <p>An unpaid request is refused with the exact price. A paid one reaches your app as plain HTTP. The vouchers settle in batches on a chain. Your app never sees a payment.</p>
     </div>
 
-    <ul class="apps">
-      <li>
-        <div class="top"><a href="https://github.com/toon-protocol/relay">relay</a><span class="badge live">Priced live</span></div>
-        <p>A Nostr relay you get paid to write to. Reads are free and speak plain NIP-01; writes arrive already paid.</p>
-        <div class="price">write a message <b>$0.001</b></div>
-      </li>
-      <li>
-        <div class="top"><a href="https://github.com/toon-protocol/store">store</a><span class="badge live">Priced live</span></div>
-        <p>A paid Arweave blob store. Permanent storage, by the KiB, through a plain <code>POST</code>. This page was stored through it.</p>
-        <div class="price">store a file <b>$0.001 + $0.00003 / KiB</b></div>
-      </li>
-      <li>
-        <div class="top"><a href="https://github.com/toon-protocol/anytoon">anytoon</a><span class="badge live">Priced live</span></div>
-        <p>The Anyone Protocol credentials issuer behind a node, reached at a hidden-service address. Fetch a URL anonymously.</p>
-        <div class="price">fetch a URL <b>$0.001</b></div>
-      </li>
-      <li>
-        <div class="top"><a href="https://github.com/toon-protocol/gas-station">gas-station</a><span class="badge live">Priced live</span></div>
-        <p>Pays other people's gas. A peer holding no SOL gets a Solana transaction landed; a peer holding no ETH gets an EVM call mined.</p>
-        <div class="price">Solana fee paid for you <b>$0.012</b></div>
-      </li>
-    </ul>
+    <div class="frame">
+      <figure style="margin:0">
+      <svg class="diagram" viewBox="0 0 560 200" role="img" aria-labelledby="hero-d-title" xmlns="http://www.w3.org/2000/svg">
+        <title id="hero-d-title">A caller sends a request with a voucher to a TOON node. The node checks the voucher and forwards a plain HTTP request to the app. The answer comes back sealed. Vouchers settle in batches on Base or Solana.</title>
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/>
+          </marker>
+        </defs>
+        <rect class="box" x="16" y="56" width="130" height="80" rx="6"/>
+        <text class="t" x="81" y="92" text-anchor="middle">Caller</text>
+        <text class="s" x="81" y="112" text-anchor="middle">an agent or a script</text>
 
-  </div>
-</section>
+        <rect class="box node" x="215" y="48" width="130" height="96" rx="6"/>
+        <text class="t" x="280" y="92" text-anchor="middle">TOON node</text>
+        <text class="s" x="280" y="112" text-anchor="middle">checks the voucher</text>
 
-<!-- ============ PRICING ============ -->
-<section id="pricing" class="tint">
-  <div class="wrap">
-    <div class="twocol wide-left">
+        <rect class="box app" x="414" y="56" width="130" height="80" rx="6"/>
+        <text class="t" x="479" y="92" text-anchor="middle">Your app</text>
+        <text class="s" x="479" y="112" text-anchor="middle">unchanged</text>
+
+        <path class="arrow gold" d="M148 80 H213"/>
+        <text class="m hi" x="180" y="40" text-anchor="middle">request</text>
+        <text class="m hi" x="180" y="54" text-anchor="middle">+ voucher</text>
+        <path class="arrow ok" d="M347 80 H412"/>
+        <text class="m ok" x="380" y="47" text-anchor="middle">plain HTTP</text>
+
+        <path class="arrow" d="M412 118 H349"/>
+        <text class="m" x="380" y="150" text-anchor="middle">200</text>
+        <path class="arrow" d="M213 118 H150"/>
+        <text class="m" x="180" y="150" text-anchor="middle">200, sealed</text>
+
+        <text class="s cap" x="280" y="186" text-anchor="middle">vouchers settle in batches on Base and Solana</text>
+      </svg>
+      </figure>
+      <div class="codeblock">
+        <div class="bar"><span>On the wire</span><span class="tag">x402 v2 over HTTP</span></div>
+<pre><span class="c"># without a voucher</span>
+<span class="k">POST</span> /ilp
+<span class="g">402</span> Payment Required        <span class="c">amount 1000 · USDC on Base</span>
+
+<span class="c"># with one</span>
+<span class="k">POST</span> /ilp + voucher         <span class="c">a signature, no gas</span>
+<span class="ok">200</span>                         <span class="c">your app's answer, sealed</span></pre>
+      </div>
+    </div>
+
+    <dl class="specs" aria-label="Specifications">
+      <div><dt>Wire</dt><dd>x402 v2 over HTTP. <a href="docs/protocol.html">Protocol and specs</a></dd></div>
+      <div><dt>Settlement</dt><dd>x402 batch-settlement channels. USDC on Base and Solana mainnet; devnets for free. <a href="docs/channels.html">Channels</a></dd></div>
+      <div><dt>Routing</dt><dd>Interledger. Routes chain across nodes with the payload sealed; each hop keeps its own fee. <a href="docs/compared.html">Where TOON sits</a></dd></div>
+      <div><dt>Reachability</dt><dd>Clearnet, or a <code>.anyone</code> hidden service with no domain and no open port. <a href="docs/hidden-services.html">Hidden services</a></dd></div>
+      <div><dt>Contracts</dt><dd>None of TOON's own. x402's <code>x402BatchSettlement</code> on EVM, the Solana Foundation's <code>payment-channels</code> on Solana.</dd></div>
+      <div><dt>Software</dt><dd>MIT licensed. No protocol fee, no plan, no tier, no payout schedule. <a href="ecosystem/index.html">Apps, clients and rails</a></dd></div>
+    </dl>
+
+    <div class="twocol" id="pricing">
       <div>
         <p class="eyebrow">What it costs</p>
-        <h2>You set the price. You keep the price.</h2>
-        <div class="prose" style="margin-top:1rem">
-          <p>A route charges a flat amount per request, plus an optional rate per KiB for large bodies, in the token you settle in. Prices count the token's smallest unit, the way a card terminal counts cents: in USDC, <strong>1,000 units is a tenth of a cent</strong>.</p>
-          <p>There is <strong>no protocol fee and no percentage cut</strong>. Vouchers are redeemed onchain in batches, on the channel contracts the x402 ecosystem already runs, so one transaction settles thousands of requests. The cost of a request is the price you set, not a gas fee.</p>
-        </div>
-      </div>
-      <div>
+        <h3>You set the price. You keep the price.</h3>
+        <p class="prose">A route charges a flat amount per request, plus an optional rate per KiB, in the token you settle in. Prices count the token's smallest unit: in USDC, <strong>1,000 units is a tenth of a cent</strong>. Four apps are priced on the live node today.</p>
         <div class="tablewrap">
           <table>
             <caption class="sr">What the live node charged on 2026-10-03</caption>
@@ -825,73 +727,14 @@ App relay of relay: running on 127.0.0.1:41733. Route g.toon.fb0e007c71750599.re
             </tbody>
           </table>
         </div>
-        <p style="margin-top:0.75rem; font-size:0.84rem; color:var(--ink-faint)">Read off the live node's own <a href="https://connector.167-233-221-236.sslip.io/ilp"><code>GET /ilp</code></a> on 2026-10-03. This page is a permanent record, so the table is a snapshot; the endpoint answers for today. Revision 5 of this page cost $0.0019 at the door.</p>
+        <p class="meta">Read off the live node's own <a href="https://connector.167-233-221-236.sslip.io/ilp">GET /ilp</a> on 2026-10-03. The endpoint answers for today.</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ WHY ============ -->
-<section id="why">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">Why it is better</p>
-      <h2>Sending a message and sending money are the same action.</h2>
-      <p>Against paying onchain per call, API keys, metered billing and a plain reverse proxy: <a href="docs/compared.html">where TOON sits →</a></p>
-    </div>
-    <div class="twocol" style="align-items:center">
-      <div class="prose">
-        <h3 style="font-size:1.4rem; color:var(--ink); margin-bottom:0.8rem">Only TOON: fund one channel, reach many apps.</h3>
-        <p>Routes chain across nodes with the payload sealed. Each hop keeps its own fee, a hop can convert between tokens at a rate it declares, and a node can run as a hidden service at a <code>.anyone</code> address on the Anyone network, with no domain and no open port. The app never sees a payment, and an intermediate hop never sees the request.</p>
-      </div>
-      <svg class="diagram" viewBox="0 0 560 190" role="img" aria-labelledby="route-d-title" xmlns="http://www.w3.org/2000/svg">
-        <title id="route-d-title">One caller with one channel reaches apps behind two different nodes. The first node forwards to the second and keeps a fee.</title>
-        <rect class="box" x="10" y="70" width="96" height="56" rx="10"/>
-        <text class="t" x="58" y="94" text-anchor="middle">Caller</text>
-        <text class="m hi" x="58" y="112" text-anchor="middle">one channel</text>
-
-        <rect class="box node" x="170" y="70" width="110" height="56" rx="10"/>
-        <text class="t" x="225" y="94" text-anchor="middle">Node A</text>
-        <text class="m" x="225" y="112" text-anchor="middle">keeps a fee</text>
-
-        <rect class="box node" x="340" y="16" width="110" height="56" rx="10"/>
-        <text class="t" x="395" y="40" text-anchor="middle">Node B</text>
-        <text class="m" x="395" y="58" text-anchor="middle">.anyone address</text>
-
-        <rect class="box app" x="340" y="124" width="110" height="52" rx="10"/>
-        <text class="t" x="395" y="146" text-anchor="middle">App 1</text>
-        <text class="s" x="395" y="163" text-anchor="middle">behind A</text>
-
-        <rect class="box app" x="470" y="16" width="80" height="56" rx="10"/>
-        <text class="t" x="510" y="40" text-anchor="middle">App 2</text>
-        <text class="s" x="510" y="58" text-anchor="middle">behind B</text>
-
-        <path class="arrow gold" d="M106 98 H168"/>
-        <path class="arrow gold" d="M280 90 C310 90, 310 44, 338 44"/>
-        <path class="arrow ok" d="M280 106 C310 106, 310 150, 338 150" stroke="var(--good)"/>
-        <path class="arrow ok" d="M450 44 H468" stroke="var(--good)"/>
-        <text class="m hi" x="300" y="30" text-anchor="middle">voucher, sealed</text>
-        <text class="m ok" x="300" y="175" text-anchor="middle">plain HTTP</text>
-      </svg>
-    </div>
-  </div>
-</section>
-
-<!-- ============ PROOF ============ -->
-<section id="proof">
-  <div class="wrap">
-    <div class="twocol wide-left">
-      <div>
+      <div id="proof">
         <p class="eyebrow">Proof</p>
-        <h2>This page is not on a web server.</h2>
-        <div class="prose" style="margin-top:1rem">
-          <p>It is one HTML file with no external assets and one script, the copy button, stored permanently on Arweave, and the write that put it there was bought through the node priced above: two paid hops, each charging by the KiB, each paid with a voucher on an x402 channel on Solana mainnet. The node settles on Base mainnet and Solana mainnet.</p>
-          <p>A page cannot contain its own hash, so each revision embeds the receipts of the ones before it: the Arweave transaction id and sha256, the claim on each hop, and the purchase of the name this page lives under. Every hash checks against a public chain.</p>
-          <p>The node's first paid writes are documented receipt by receipt at <a href="https://boughtviatoonnode.ar.io/">boughtviatoonnode.ar.io</a>.</p>
-        </div>
-      </div>
-      <div class="stack">
-        <ol class="receipts" aria-label="Earlier revisions of this page">
+        <h3>This page is not on a web server.</h3>
+        <p class="prose">It is one HTML file on Arweave, and the write that put it there was bought through the node priced here: two paid hops, each paid with a voucher on an x402 channel on Solana mainnet. Each revision embeds the receipts of the ones before it, and every hash checks against a public chain. The node's first paid writes are at <a href="https://boughtviatoonnode.ar.io/">boughtviatoonnode.ar.io</a>.</p>
+        <div class="stack">
+          <ol class="receipts" aria-label="Earlier revisions of this page">
           <li class="live"><b>rev 8</b><span>2026-10-03</span><code title="Arweave transaction id">rAEvwshqhL-oWbcnqfY6iwimpcLbZW-N14FMAsy577o</code><a href="https://arweave.net/rAEvwshqhL-oWbcnqfY6iwimpcLbZW-N14FMAsy577o">view</a></li>
           <li><b>rev 7</b><span>2026-09-23</span><code>sfLC6YFJ_KCwjIokLITEuLHo_62s4JkM-Szb4pzXJz0</code><a href="https://arweave.net/sfLC6YFJ_KCwjIokLITEuLHo_62s4JkM-Szb4pzXJz0">view</a></li>
           <li><b>rev 6</b><span>2026-09-23</span><code>R1AsnnPqN0MBGQVibDz2qSFPj4pqrplGdmr44XsEXmc</code><a href="https://arweave.net/R1AsnnPqN0MBGQVibDz2qSFPj4pqrplGdmr44XsEXmc">view</a></li>
@@ -901,7 +744,7 @@ App relay of relay: running on 127.0.0.1:41733. Route g.toon.fb0e007c71750599.re
           <li><b>rev 2</b><span>2026-08-30</span><code>diMr0l1YgIgux1c3OeCO1NB7HOavNg6B-ScgenmRBZg</code><a href="https://arweave.net/diMr0l1YgIgux1c3OeCO1NB7HOavNg6B-ScgenmRBZg">view</a></li>
           <li><b>rev 1</b><span>2026-08-27</span><code>Sl49EXVNvlSveojCf1-JPL9K_tRTwEwBA_U3lvamdPk</code><a href="https://arweave.net/Sl49EXVNvlSveojCf1-JPL9K_tRTwEwBA_U3lvamdPk">view</a></li>
         </ol>
-        <details>
+          <details>
           <summary>Every earlier revision, receipt by receipt</summary>
           <p>Revision 8 is the page this one replaces: <code>sha256 288783f3bb0a20d2d33ca16e6db111a9ab2245413c8a8a7b848841587d9c93ce</code>, 34,268 bytes, stored 2026-10-03. Its hop claims were not carried into this record. Revisions 1 to 7 are below exactly as revision 8 recorded them.</p>
 <pre>{
@@ -1129,6 +972,7 @@ App relay of relay: running on 127.0.0.1:41733. Route g.toon.fb0e007c71750599.re
   }
 }</pre>
         </details>
+        </div>
       </div>
     </div>
   </div>
@@ -1152,6 +996,7 @@ App relay of relay: running on 127.0.0.1:41733. Route g.toon.fb0e007c71750599.re
 </div>
 
 </main>
+
 
 <footer class="site-foot">
   <div class="wrap">
