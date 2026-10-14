@@ -25,9 +25,9 @@ labelled `wayfinder:*` are skipped (`.sandcastle/ready-issues.ts`). A human merg
 **The gate reads its steps from CI.** The gate is the `run:` steps of the `gate` job
 (else the `checks` job) of `.github/workflows/ci.yml` **on `main`**, in order. If there is
 no `ci.yml`, no such job, or no runnable step, the gate runs nothing and logs that loudly.
-Today this repo has no `.github/workflows/ci.yml`, so the gate runs nothing and the
-review is the only check. Adding a `ci.yml` with a job named `gate` (or `checks`) makes the
-factory gate on it with no further change.
+Today the gate is the `gate` job of `.github/workflows/ci.yml`: `python3 build.py`, then a
+check that the built pages match their sources, then `sh -n install.sh`. It runs in the
+sandbox image's Python 3.11, so `build.py` must stay runnable on 3.11.
 The rule lives in one place, `gateFromCi` in `.sandcastle/run-gate.ts`, tested by
 `.sandcastle/run-gate.test.ts`.
 

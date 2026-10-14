@@ -154,9 +154,10 @@ def head(title, description, root):
 
 def nav_groups(active, wrapper_class):
     out = []
+    active_attr = ' class="active"'
     for section, pages in NAV:
         links = "\n".join(
-            f'      <a href="{slug}.html"{" class=\"active\"" if slug == active else ""}>{html.escape(title)}</a>'
+            f'      <a href="{slug}.html"{active_attr if slug == active else ""}>{html.escape(title)}</a>'
             for slug, title, _ in pages)
         out.append(f'    <div class="group">\n      <h4>{html.escape(section)}</h4>\n{links}\n    </div>')
     return "\n".join(out)
