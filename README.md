@@ -68,6 +68,10 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
    ```
 6. **No scripts.** `grep -rl '<script' --include='*.html' . | grep -v ^./src` must print
    nothing, and no page may reference another host for a stylesheet, font or image.
+   This is why a command box carries a "select" control and not a copy button: nothing on
+   the page can write the clipboard, so the box is `user-select: all` and one click selects
+   exactly the command for Ctrl+C. The typing tape in the operators section is a CSS
+   animation over real commands in workflow order; reduced motion holds its first line.
 
 ## Publishing
 
