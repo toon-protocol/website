@@ -28,11 +28,11 @@
 :root {
   --bg:#f3efe6; --bg-raised:#faf8f2; --bg-sunken:#eae5d8; --bg-tint:#ece7db;
   --ink:#2b2f36; --ink-soft:#3f444c; --ink-dim:#5c616a; --ink-faint:#7a7f88;
-  --line:#d8d2c4; --line-strong:#bdb6a6;
+  --line:#d8d2c4; --line-strong:#bdb6a6; --bg-outer:#e9e4d7; --grid:#dcd6c7;
   --gold:#c9a24a; --accent:#a8842c; --accent-ink:#2b2f36; --accent-soft:rgba(201,162,74,.16);
   --good:#3a7d52; --good-soft:rgba(58,125,82,.12); --bad:#a9443b;
   --term:#2b2f36; --term-2:#242830; --term-line:#3b404a; --term-ink:#f3efe6; --term-dim:#9aa0ab; --term-faint:#6f757f;
-  --radius:4px; --radius-sm:3px; --measure:68ch; --max:96rem; --gut:clamp(1.5rem, 6vw, 7rem);
+  --radius:4px; --radius-sm:3px; --measure:68ch; --max:92rem; --gut:clamp(1.5rem, 5vw, 5.5rem);
   --display:"Archivo", "Archivo Black", Impact, "Arial Black", ui-sans-serif, system-ui, sans-serif;
   --mono:"JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --body:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -41,7 +41,7 @@
 @media (prefers-color-scheme: dark) {
   :root { --bg:#1c1f24; --bg-raised:#23272d; --bg-sunken:#15181c; --bg-tint:#202429;
     --ink:#f3efe6; --ink-soft:#e6e1d5; --ink-dim:#b6bbc4; --ink-faint:#878d97;
-    --line:#31363e; --line-strong:#454b56;
+    --line:#31363e; --line-strong:#454b56; --bg-outer:#141619; --grid:#1f2328;
     --gold:#c9a24a; --accent:#d9b65c; --accent-ink:#1c1f24; --accent-soft:rgba(201,162,74,.14);
     --good:#6cc08a; --good-soft:rgba(108,192,138,.12); --bad:#e07067;
     --term:#111317; --term-2:#0d0f12; --term-line:#2a2f37; --term-ink:#f3efe6; --term-dim:#9aa0ab; --term-faint:#6a707a;
@@ -51,8 +51,12 @@
 * { box-sizing:border-box; }
 html, body { margin:0; padding:0; }
 html { scroll-behavior:smooth; scroll-padding-top:4.5rem; }
-body { background:var(--bg); color:var(--ink); overflow-x:clip; min-width:320px;
+body { background:var(--bg-outer); color:var(--ink); overflow-x:clip; min-width:320px; padding-bottom:2.5rem;
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size:2.5rem 2.5rem;
   font:16px/1.6 var(--body); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+/* The page is one column on the grid, as on herdr.dev: bordered on both sides, the grid
+   showing beyond it on a wide screen and beneath it at the bottom. */
+.page { max-width:var(--max); margin:0 auto; background:var(--bg); border:0 solid var(--line); border-width:0 1px; min-height:100vh; }
 code, pre, kbd { font-family:var(--mono); font-size:0.86em; line-height:1.55; }
 a { color:var(--accent); text-underline-offset:3px; text-decoration-thickness:1px; }
 a:hover { text-decoration-thickness:2px; }
@@ -84,9 +88,10 @@ p { margin:0; }
 .site-header nav a:hover, .site-header nav a.active { color:var(--ink); }
 .site-header nav .button { padding:0 0.9rem; height:2.1rem; font-size:0.76rem; }
 .site-header nav .social { display:flex; gap:0.4rem; margin:0 0.2rem; }
-.site-header nav .social a { display:inline-flex; align-items:center; justify-content:center; width:2.1rem; height:2.1rem; border:1px solid var(--line-strong); color:var(--ink-dim); }
-.site-header nav .social a:hover { color:var(--ink); border-color:var(--gold); }
-.site-header nav .social svg { width:0.95rem; height:0.95rem; fill:currentColor; }
+.social a { display:inline-flex; align-items:center; justify-content:center; gap:0.45rem; min-width:2.1rem; height:2.1rem; padding:0 0.55rem; border:1px solid var(--line-strong); color:var(--ink-dim); text-decoration:none; }
+.social a:hover { color:var(--ink); border-color:var(--gold); }
+.social svg { width:0.95rem; height:0.95rem; fill:currentColor; flex:none; }
+.social b { font:600 0.74rem/1 var(--mono); letter-spacing:0.02em; color:var(--ink); font-variant-numeric:tabular-nums; }
 @media (max-width:980px) { .site-header nav a.hide-m { display:none; } }
 @media (max-width:640px) { .site-header nav .social { display:none; } }
 @media (max-width:520px) { :root { --gut:1rem; } .site-header nav { gap:0.8rem; }
@@ -353,7 +358,8 @@ details pre { margin:0 1.15rem 1.15rem; }
 .specs dd a { white-space:nowrap; }
 @media (max-width:900px) { .specs { grid-template-columns:1fr 1fr; } }
 @media (max-width:520px) { .specs { grid-template-columns:1fr; } }
-.pay { margin-top:3rem; padding-top:2.5rem; border-top:1px solid var(--line); align-items:center; grid-template-columns:0.8fr 1.2fr; }
+.pay { margin-top:3rem; padding-top:2.5rem; border-top:1px solid var(--line); align-items:start; grid-template-columns:0.8fr 1.2fr; }
+.pay .eyebrow { margin-top:0.2rem; }
 .pay .ev pre { padding-top:0.2rem; }
 .pay h3 { font-size:1.5rem; margin-bottom:0.7rem; }
 .pay p { color:var(--ink-dim); max-width:34rem; }
@@ -396,22 +402,15 @@ details pre { margin:0 1.15rem 1.15rem; }
 @media (max-width:900px) { .end .bigmark { display:none; } }
 
 /* ===== footer ===== */
-footer { border-top:1px solid var(--line); padding:2.5rem 0; color:var(--ink-dim); font:0.76rem/1.7 var(--mono); }
-footer .wrap { display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.8rem 2rem; align-items:center; }
-footer nav { display:flex; flex-wrap:wrap; gap:1.2rem; }
+footer { border-top:1px solid var(--line); padding:1.3rem 0; color:var(--ink-faint); font:0.74rem/1.7 var(--mono); }
+footer .wrap { display:flex; flex-wrap:wrap; gap:0.8rem 1.4rem; align-items:center; }
+footer nav { display:flex; flex-wrap:wrap; gap:1.1rem; }
 footer a { color:var(--ink-dim); text-decoration:none; }
 footer a:hover { color:var(--ink); }
-footer .brand { font-size:0.95rem; }
-.footgrid { display:grid; gap:2rem; grid-template-columns:1.4fr repeat(4, 1fr); font:0.9rem/1.6 var(--body); }
-.footgrid h4 { margin-bottom:0.8rem; }
-.footgrid ul { list-style:none; padding:0; margin:0; display:grid; gap:0.45rem; }
-.footgrid .about p { margin-top:0.8rem; max-width:24rem; color:var(--ink-dim); }
-.footbar { margin-top:2.5rem; padding-top:1.25rem; border-top:1px solid var(--line); display:flex; flex-wrap:wrap; gap:0.5rem 1.5rem; justify-content:space-between; color:var(--ink-faint); }
-footer.site-foot { padding-bottom:0; }
-.footcells { margin-top:2.5rem; height:4.5rem; border-top:1px solid var(--line);
-  background:repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 4.5rem); }
-@media (max-width:900px) { .footgrid { grid-template-columns:1fr 1fr; } }
-@media (max-width:520px) { .footgrid { grid-template-columns:1fr; } }
+footer .brand .mark { width:1.1rem; height:1.1rem; }
+footer .fact { color:var(--ink-faint); }
+footer .out { margin-left:auto; }
+@media (max-width:700px) { footer .out { margin-left:0; } }
 
 /* ===== docs layout ===== */
 .docs { display:grid; grid-template-columns:15rem minmax(0, 1fr) 13rem; gap:3rem; padding-top:2.5rem; padding-bottom:5rem; }
@@ -516,7 +515,9 @@ footer.site-foot { padding-bottom:0; }
 </style>
 </head>
 <body>
+<div class="page">
 
+<!-- header -->
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="#top" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg><span class="name">TOON<small>Protocol</small></span></a>
@@ -525,14 +526,15 @@ footer.site-foot { padding-bottom:0; }
       <a href="ecosystem/index.html#apps">Apps</a>
       <a href="ecosystem/index.html">Ecosystem</a>
       <span class="social">
-        <a href="https://github.com/toon-protocol" aria-label="TOON on GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
-        <a href="https://x.com/toonprotocol" aria-label="TOON on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
-        <a href="https://discord.gg/PxzjbtXg9Q" aria-label="TOON on Discord" title="Discord"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg></a>
+      <a href="https://github.com/toon-protocol/toon_cli" aria-label="TOON on GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+      <a href="https://x.com/toonprotocol" aria-label="TOON on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
+      <a href="https://discord.gg/PxzjbtXg9Q" aria-label="TOON on Discord" title="Discord"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg></a>
       </span>
       <a class="button primary" href="#run">Run a node</a>
     </nav>
   </div>
 </header>
+<!-- /header -->
 
 <main id="top">
 
@@ -751,63 +753,25 @@ answer.fulfilled ? answer.text() : answer.code        <span class="c">// a refus
 </main>
 
 
+<!-- footer -->
 <footer class="site-foot">
   <div class="wrap">
-    <div class="footgrid">
-      <div class="about">
-        <a class="brand" href="#top"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg><span class="name">TOON<small>Protocol</small></span></a>
-        <p>Value, routed. A paid reverse proxy and Interledger connector that settles on x402 channels. MIT licensed. Built for machines that pay each other thousands of times a day.</p>
-      </div>
-      <div>
-        <h4>Docs</h4>
-        <ul>
-          <li><a href="docs/index.html">Overview</a></li>
-          <li><a href="docs/install.html">Install</a></li>
-          <li><a href="docs/first-agent-node.html">Your first agent node</a></li>
-          <li><a href="docs/adding-an-app.html">Adding an app</a></li>
-          <li><a href="docs/run-a-node.html">The connector, by hand</a></li>
-          <li><a href="docs/pay-a-node.html">Pay a node</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Protocol</h4>
-        <ul>
-          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/rfcs/README.md">RFCs, and where TOON departs from Interledger</a></li>
-          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/adr/0075-every-channel-is-an-x402-channel-a-peering-is-two-of-them.md">ADR 0075: every channel is an x402 channel</a></li>
-          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/adr/0046-the-kind-10032-announce-is-removed-a-connector-needs-no-relay.md">ADR 0046: no discovery layer</a></li>
-          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/adr/0058-a-peering-is-established-from-a-url.md">ADR 0058: peering from a URL</a></li>
-          <li><a href="https://github.com/toon-protocol/connector/blob/main/docs/protocol/client-edge-spec.md">Client-edge spec</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Ecosystem</h4>
-        <ul>
-          <li><a href="ecosystem/index.html">Apps, clients and rails</a></li>
-          <li><a href="https://github.com/toon-protocol/toon_cli">toon</a></li>
-          <li><a href="https://github.com/toon-protocol/connector">connector</a></li>
-          <li><a href="https://github.com/toon-protocol/relay">relay</a></li>
-          <li><a href="https://github.com/toon-protocol/store">store</a></li>
-          <li><a href="https://github.com/toon-protocol/gas-station">gas-station</a></li>
-          <li><a href="https://github.com/toon-protocol/spaceturtle">spaceturtle</a></li>
-                  </ul>
-      </div>
-      <div>
-        <h4>Community</h4>
-        <ul>
-          <li><a href="https://github.com/toon-protocol">GitHub</a></li>
-          <li><a href="https://discord.gg/PxzjbtXg9Q">Discord</a></li>
-          <li><a href="https://x.com/toonprotocol">X, @toonprotocol</a></li>
-          <li><a href="https://boughtviatoonnode.ar.io/">Showcase</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footbar">
-      <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write</span>
-      <span>No trackers, nothing loaded from anywhere else; the only script copies a command.</span>
-    </div>
+    <a class="brand" href="index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></a>
+    <nav aria-label="Footer">
+      <a href="docs/index.html">docs</a>
+      <a href="ecosystem/index.html">ecosystem</a>
+      <a href="docs/proof.html">proof</a>
+      <a href="https://github.com/toon-protocol/toon_cli">source</a>
+    </nav>
+    <span class="fact">MIT licensed · stored on Arweave via a paid TOON write</span>
+    <span class="out"><span class="social">
+      <a href="https://github.com/toon-protocol/toon_cli" aria-label="TOON on GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+      <a href="https://x.com/toonprotocol" aria-label="TOON on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
+      <a href="https://discord.gg/PxzjbtXg9Q" aria-label="TOON on Discord" title="Discord"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg></a>
+      </span></span>
   </div>
-  <div class="footcells" aria-hidden="true"></div>
 </footer>
+<!-- /footer -->
 
 <script>
 /* The copy buttons, the one script on this site. Each button copies the text of the
@@ -827,5 +791,6 @@ document.querySelectorAll(".cmd button, .ev button").forEach(function (button) {
   });
 });
 </script>
+</div>
 </body>
 </html>

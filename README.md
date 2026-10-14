@@ -22,7 +22,9 @@ before it.
 
 ## Editing
 
-- **The landing page** is `index.html`. Edit its markup directly. Its `<style>` block is a
+- **The landing page** is `index.html`. Edit its markup directly, except the header and
+  the footer, which `build.py` writes between the `<!-- header -->` and `<!-- footer -->`
+  markers from the same templates every other page uses. Its `<style>` block is a
   copy of `assets/site.css` that `build.py` refreshes on every build, so the one file stands
   alone, as every earlier revision did, while the stylesheet has a single source. Edit
   `assets/site.css`, never the copy.
