@@ -67,7 +67,12 @@ p { margin:0; }
 .site-header nav a { color:var(--ink-dim); text-decoration:none; font:600 0.76rem/1 var(--mono); letter-spacing:0.08em; text-transform:uppercase; }
 .site-header nav a:hover, .site-header nav a.active { color:var(--ink); }
 .site-header nav .button { padding:0 0.9rem; height:2.1rem; font-size:0.76rem; }
+.site-header nav .social { display:flex; gap:0.4rem; margin:0 0.2rem; }
+.site-header nav .social a { display:inline-flex; align-items:center; justify-content:center; width:2.1rem; height:2.1rem; border:1px solid var(--line-strong); color:var(--ink-dim); }
+.site-header nav .social a:hover { color:var(--ink); border-color:var(--gold); }
+.site-header nav .social svg { width:0.95rem; height:0.95rem; fill:currentColor; }
 @media (max-width:980px) { .site-header nav a.hide-m { display:none; } }
+@media (max-width:640px) { .site-header nav .social { display:none; } }
 @media (max-width:520px) { :root { --gut:1rem; } .site-header nav { gap:0.8rem; }
   .site-header nav a.hide-s { display:none; } .brand .name { display:none; } .site-header nav .button { padding:0 0.7rem; } }
 
