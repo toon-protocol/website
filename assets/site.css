@@ -210,7 +210,7 @@ pre .s { color:var(--good); }
    demo. Each line is one absolutely placed span; `--n` is its length in characters and
    `--i` its turn. One shared timeline per line: type at one step per character, hold,
    erase, then stay hidden until the cycle comes round. Reduced motion holds line one. */
-.tape { --slot:4.6s; --cycle:32.2s; }
+.tape { --slot:4.6s; --cycle:36.8s; }
 .tape .line { display:flex; align-items:flex-start; white-space:nowrap; overflow:hidden; }
 .tape .line > b { display:block; }
 .tape .lines { position:relative; flex:1; min-width:0; height:1.75em; }
@@ -220,10 +220,10 @@ pre .s { color:var(--good); }
   animation-delay:calc(var(--i) * var(--slot) - var(--cycle)), 0s; animation-iteration-count:infinite, infinite; }
 @keyframes tape {
   0% { max-width:0; opacity:1; }
-  6.5% { max-width:calc(var(--n) * 1ch); }
-  11.5% { max-width:calc(var(--n) * 1ch); opacity:1; }
-  13.5% { max-width:0; opacity:1; }
-  13.6%, 100% { max-width:0; opacity:0; }
+  5.7% { max-width:calc(var(--n) * 1ch); }
+  10.1% { max-width:calc(var(--n) * 1ch); opacity:1; }
+  11.8% { max-width:0; opacity:1; }
+  11.9%, 100% { max-width:0; opacity:0; }
 }
 @keyframes caret { 50% { border-color:transparent; } }
 @media (prefers-reduced-motion: reduce) {

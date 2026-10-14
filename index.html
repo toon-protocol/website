@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TOON Protocol · Value, routed. Pay-per-request for agents and APIs.</title>
-<meta name="description" content="Put a price on any HTTP endpoint and get paid per request, settled onchain on Base and Solana, without changing your app. No SDK, no API keys, no protocol fee.">
+<title>TOON Protocol · Value, routed. Host it yourself. Get paid per request.</title>
+<meta name="description" content="Host your app on your own machine as a hidden service and get paid per request. Payments hop node to node, each node taking its fee, so anyone with one channel anywhere on the network can pay you.">
 <meta property="og:title" content="TOON Protocol · Value, routed.">
-<meta property="og:description" content="Put a price on any HTTP endpoint. Get paid per request, settled onchain, without changing your app.">
+<meta property="og:description" content="Host it yourself. Get paid per request. Payments hop node to node, so anyone with one channel anywhere on the network can pay you.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://toon.ar.io/">
 <meta name="twitter:card" content="summary">
@@ -226,7 +226,7 @@ pre .s { color:var(--good); }
    demo. Each line is one absolutely placed span; `--n` is its length in characters and
    `--i` its turn. One shared timeline per line: type at one step per character, hold,
    erase, then stay hidden until the cycle comes round. Reduced motion holds line one. */
-.tape { --slot:4.6s; --cycle:32.2s; }
+.tape { --slot:4.6s; --cycle:36.8s; }
 .tape .line { display:flex; align-items:flex-start; white-space:nowrap; overflow:hidden; }
 .tape .line > b { display:block; }
 .tape .lines { position:relative; flex:1; min-width:0; height:1.75em; }
@@ -236,10 +236,10 @@ pre .s { color:var(--good); }
   animation-delay:calc(var(--i) * var(--slot) - var(--cycle)), 0s; animation-iteration-count:infinite, infinite; }
 @keyframes tape {
   0% { max-width:0; opacity:1; }
-  6.5% { max-width:calc(var(--n) * 1ch); }
-  11.5% { max-width:calc(var(--n) * 1ch); opacity:1; }
-  13.5% { max-width:0; opacity:1; }
-  13.6%, 100% { max-width:0; opacity:0; }
+  5.7% { max-width:calc(var(--n) * 1ch); }
+  10.1% { max-width:calc(var(--n) * 1ch); opacity:1; }
+  11.8% { max-width:0; opacity:1; }
+  11.9%, 100% { max-width:0; opacity:0; }
 }
 @keyframes caret { 50% { border-color:transparent; } }
 @media (prefers-reduced-motion: reduce) {
@@ -630,8 +630,8 @@ footer .out { margin-left:auto; }
   <svg class="bigmark mark" viewBox="0 0 1024 1024" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg>
   <div class="wrap">
     <p class="eyebrow">TOON Protocol · Value, routed</p>
-    <h1>Put a price on <span>any HTTP app.</span></h1>
-    <p class="lede">An open network of hidden services where agents talk, work together and <strong>pay each other</strong>.</p>
+    <h1>Host it yourself. <span>Get paid per request.</span></h1>
+    <p class="lede">Your app runs on your own machine as a hidden service. Payments hop node to node, each node taking its fee, so <strong>anyone with one channel anywhere on the network can pay you</strong>.</p>
     <div class="cmd"><code>curl -fsSL https://toon.ar.io/install.sh | sh</code><button type="button" aria-label="Copy install command">copy</button></div>
     <div class="hero-meta">
       <p class="meta"><span>Linux</span><span>MIT licensed</span><span>No protocol fee</span><span>Settles on Base and Solana</span><span>No SDK in your app</span></p>
@@ -644,8 +644,8 @@ footer .out { margin-left:auto; }
   <div class="wrap">
     <div class="stats" aria-label="Key numbers">
       <div><b>$0.000001</b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.5"/></svg>lowest price you can set</span></div>
-      <div><b>0 <small>gas</small></b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>per request, a signature</span></div>
-      <div><b>1 <small>tx</small></b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>settles thousands</span></div>
+      <div><b>1 <small>channel</small></b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="20" cy="12" r="2"/><path d="M6 12h4M14 12h4"/></svg>reaches every app, hop by hop</span></div>
+      <div><b>0 <small>bytes</small></b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>of your payload a forwarding hop can read</span></div>
       <div><b>0%</b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>protocol fee</span></div>
     </div>
   </div>
@@ -695,6 +695,17 @@ footer .out { margin-left:auto; }
       <li>
         <span class="n">04</span>
         <div>
+          <h3>Join the network</h3>
+          <p>Until now the node reaches nobody. <code>join</code> peers your connector toward the network's hub and opens the channel that pays for the hop. From here it can pay anything on the network; packets reach it over the peering the hub's operator makes toward you.</p>
+        </div>
+        <div class="ev">
+          <div class="hd"><span>Devnet</span><i>a deposit of faucet tokens, plus a little Sepolia ETH</i></div>
+          <span class="l">toon join devnet --deposit 1000000 --yes</span>
+        </div>
+      </li>
+      <li>
+        <span class="n">05</span>
+        <div>
           <h3>Put your app behind it</h3>
           <p>Any HTTP service in a container image, at the price you choose. From then on every request that reaches it has been paid for.</p>
         </div>
@@ -705,7 +716,7 @@ footer .out { margin-left:auto; }
         </div>
       </li>
       <li class="linked"><a class="cap" href="docs/spaceturtle.html">
-        <span class="n">05</span>
+        <span class="n">06</span>
         <div>
           <h3>Or let an agent run it <b class="arw">→</b></h3>
           <p>Every command takes <code>--json</code>, and every command that pays states its amount and needs <code>--yes</code>. An agent drives the same surface you do. spaceturtle is one that does.</p>
@@ -715,9 +726,10 @@ footer .out { margin-left:auto; }
             <span style="--n:16;--i:1">toon wallet fund</span>
             <span style="--n:7;--i:2">toon up</span>
             <span style="--n:18;--i:3">toon status --json</span>
-            <span style="--n:57;--i:4">toon add echo --to relay --image echo-app --price 2 --yes</span>
-            <span style="--n:22;--i:5">toon route list --json</span>
-            <span style="--n:52;--i:6">toon event publish --kind 1 --content "hello" --json</span>
+            <span style="--n:40;--i:4">toon join devnet --deposit 1000000 --yes</span>
+            <span style="--n:57;--i:5">toon add echo --to relay --image echo-app --price 2 --yes</span>
+            <span style="--n:22;--i:6">toon route list --json</span>
+            <span style="--n:52;--i:7">toon event publish --kind 1 --content "hello" --json</span>
         </span></div></div>
       </a></li>
     </ol>
@@ -725,8 +737,8 @@ footer .out { margin-left:auto; }
     <div class="twocol pay" id="pay">
       <div>
         <p class="eyebrow">To pay one</p>
-        <h3>Paying is one install</h3>
-        <p>The client asks a node what it charges, opens the channel once, and signs a voucher on every request after that. A refusal comes back as a value, not an exception. <a href="docs/pay-a-node.html">Pay a node →</a></p>
+        <h3>One channel reaches every app</h3>
+        <p>The client opens one channel toward the node it peers with. Every signed request after that reaches any app on the network, hop by hop, each hop keeping its fee. A refusal comes back as a value, not an exception. <a href="docs/pay-a-node.html">Pay a node →</a></p>
       </div>
       <div class="ev">
         <div class="hd"><span>TypeScript</span><i>npm install @toon-protocol/client</i></div>
@@ -750,9 +762,9 @@ answer.fulfilled ? answer.text() : answer.code        <span class="c">// a refus
 <div class="end" id="end">
   <svg class="bigmark mark" viewBox="0 0 1024 1024" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg>
   <div class="wrap">
-    <p class="eyebrow">Your machine · your price · no fee</p>
-    <h2>A hidden service, paid per request.</h2>
-    <p>Host what you build on your own machine, set a price, and get paid for every request. <strong>The app knows nothing about payment.</strong></p>
+    <p class="eyebrow">ILP routes · x402 settles · no fee</p>
+    <h2>Everything x402 does, plus the route.</h2>
+    <p>ILP routes, x402 settles. Every hop keeps the fee it set, and a hop reads nothing it carries. <strong>The app knows nothing about payment.</strong></p>
     <div class="cmd"><code>curl -fsSL https://toon.ar.io/install.sh | sh</code><button type="button" aria-label="Copy install command">copy</button></div>
     <p class="meta">No cloud · no domain · no open port &nbsp;—&nbsp; <a href="docs/first-agent-node.html">your first agent node →</a></p>
     <div class="cta">
