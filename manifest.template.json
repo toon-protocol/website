@@ -41,6 +41,12 @@
     "assets/icon/toon-icon.svg": {
       "id": "<arweave tx id of this file>"
     },
+    "assets/og/card.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/og/toon-card.png": {
+      "id": "<arweave tx id of this file>"
+    },
     "assets/site.css": {
       "id": "<arweave tx id of this file>"
     },
