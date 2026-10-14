@@ -17,7 +17,7 @@
       <a href="../docs/index.html" class="active">Docs</a>
       <a href="../ecosystem/index.html">Ecosystem</a>
       <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
-      <a class="button primary" href="../docs/run-a-node.html">Run a node</a>
+      <a class="button primary" href="../docs/first-agent-node.html">Run a node</a>
     </nav>
   </div>
 </header>
@@ -27,14 +27,29 @@
     <div class="group">
       <h4>Start here</h4>
       <a href="index.html" class="active">Overview</a>
-      <a href="concepts.html">Concepts</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
     </div>
     <div class="group">
-      <h4>Operators</h4>
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
       <a href="run-a-node.html">Run a node</a>
       <a href="put-your-app-behind-it.html">Put your app behind it</a>
       <a href="get-paid.html">Get paid</a>
-      <a href="peering.html">Peer with another node</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
       <a href="hidden-services.html">Hidden services</a>
     </div>
@@ -53,20 +68,36 @@
       <h4>Reference</h4>
       <a href="devnet.html">Devnet reference</a>
       <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
     </div>
   </details>
   <aside class="sidebar" aria-label="Docs">
     <div class="group">
       <h4>Start here</h4>
       <a href="index.html" class="active">Overview</a>
-      <a href="concepts.html">Concepts</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
     </div>
     <div class="group">
-      <h4>Operators</h4>
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
       <a href="run-a-node.html">Run a node</a>
       <a href="put-your-app-behind-it.html">Put your app behind it</a>
       <a href="get-paid.html">Get paid</a>
-      <a href="peering.html">Peer with another node</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
       <a href="hidden-services.html">Hidden services</a>
     </div>
@@ -85,31 +116,30 @@
       <h4>Reference</h4>
       <a href="devnet.html">Devnet reference</a>
       <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
     </div>
   </aside>
   <main class="doc">
     <p class="eyebrow">Start here</p>
     <h1>Overview</h1>
     <p class="lede">What you get, what to run, and what holds. Then pick a path.</p>
-<p><strong>Put a price on any HTTP app and get paid per request, in USDC, with no protocol fee and no change to your app.</strong> A TOON node is a paid reverse proxy: it sits in front of your app, refuses an unpaid request with the price, and hands your app a plain HTTP request once it has been paid for.</p>
+<p><strong>Put a price on any HTTP app and get paid per request, in USDC, with no protocol fee and no change to your app.</strong> A TOON node is a paid reverse proxy: it sits in front of your app, refuses an unpaid request with the price, and hands your app a plain HTTP request once it has been paid for. <code>toon</code> installs in one line and runs the node for you.</p>
 
 <h2 id="three-steps"><a class="anchor" href="#three-steps">Three steps</a></h2>
 
-<p><strong>1. Write a node.</strong> One command, on devnet, free. It touches no chain.</p>
+<p><strong>1. Install.</strong> Linux, x86_64 or aarch64, glibc 2.35 or later; <code>docker</code> and <code>systemd --user</code> on the machine. No Rust toolchain from a release.</p>
 <div class="codeblock"><div class="bar"><span>The shell</span></div>
-<pre>IMG=ghcr.io/toon-protocol/connector:rust-main
-docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/w" -w /w "$IMG" init --devnet --dir node --image "$IMG"
-cd node &amp;&amp; docker compose up -d</pre></div>
+<pre>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</pre></div>
 
-<p><strong>2. Pay it.</strong> From any machine. The faucet gives devnet USDC; the channel opens with no ETH.</p>
-<div class="codeblock"><div class="bar"><span>Another terminal</span></div>
-<pre>npx toon-client faucet
-npx toon-client channel open --connector http://127.0.0.1:3000 --deposit 100000
-npx toon-client send --connector http://127.0.0.1:3000 --body 'hello'</pre></div>
+<p><strong>2. Create and fund your agent node</strong> on the devnet, the test network. <code>init</code> needs a passphrase file first; <a href="first-agent-node.html">Your first agent node</a> shows that.</p>
+<div class="codeblock"><div class="bar"><span>Devnet, free</span></div>
+<pre>toon init --accept-anyone-terms     <span class="c"># a wallet, and a relay reachable as a hidden service</span>
+toon wallet fund                    <span class="c"># test tokens from the faucet</span></pre></div>
 
-<p><strong>3. See it.</strong> The answer comes back with a receipt; the node's ledger shows the same figure.</p>
-<div class="codeblock"><div class="bar"><span>GET /claims</span></div>
-<pre>curl -s -H "Authorization: Bearer $(cat data/operator-bearer-token)" http://127.0.0.1:3000/claims | jq</pre></div>
+<p><strong>3. Start it and see it answer.</strong></p>
+<div class="codeblock"><div class="bar"><span>The shell</span></div>
+<pre>toon up                             <span class="c"># a systemd --user unit, so it outlives this terminal</span>
+toon status                         <span class="c"># what is running, and at which address</span></pre></div>
 
 <h2 id="what-holds"><a class="anchor" href="#what-holds">What holds</a></h2>
 
@@ -117,7 +147,7 @@ npx toon-client send --connector http://127.0.0.1:3000 --body 'hello'</pre></div
   <li><strong>You set the price and keep it.</strong> A whole number of the token's smallest unit per route; <code>1000</code> is 0.001 USDC. There is no protocol fee.</li>
   <li><strong>A request costs a signature, not a transaction.</strong> The caller deposits once into an x402 channel on Base or Solana; one onchain transaction every ten minutes lands everything since the last.</li>
   <li><strong>Your app never sees a payment.</strong> It gets a plain HTTP request and three optional headers saying who paid, how much, on what chain.</li>
-  <li><strong>One static binary, one TOML file, MIT.</strong> Runs anywhere Docker does, or as a hidden service with no domain and no open port.</li>
+  <li><strong>One binary, MIT.</strong> <code>toon</code> runs the node as a hidden service with no domain and no open port; every command that pays states its amount and needs <code>--yes</code>.</li>
 </ul>
 
 <p>Below: the paths, the wire, and where everything lives.</p>
@@ -125,16 +155,16 @@ npx toon-client send --connector http://127.0.0.1:3000 --body 'hello'</pre></div
 <h2 id="pick-your-path"><a class="anchor" href="#pick-your-path">Pick your path</a></h2>
 <ul class="paths">
   <li>
-    <a class="title" href="run-a-node.html">I have an app to charge for</a>
-    One command writes a devnet node that gets paid. Four lines of TOML put your app behind it. Then <a href="get-paid.html">get paid</a> on Base or Solana.
+    <a class="title" href="adding-an-app.html">I have an app to charge for</a>
+    Three commands give you a node; one <code>toon add</code> puts your app behind it with a price. Prefer to write every file yourself? <a href="run-a-node.html">The connector, by hand</a>.
   </li>
   <li>
     <a class="title" href="pay-a-node.html">I want to pay for requests</a>
     Install the client, make a wallet, open one channel, and buy a request. The first one is on devnet and costs nothing.
   </li>
   <li>
-    <a class="title" href="hidden-services.html">I want no domain, no certificate, no open port</a>
-    Run the node as a hidden service at a <code>.anyone</code> address: one daemon beside it, three config keys, done by hand.
+    <a class="title" href="networks-and-reachability.html">I want no domain, no certificate, no open port</a>
+    A new agent node is a hidden service at a <code>.anyone</code> address by default. <a href="hidden-services.html">Hidden services</a> is the same thing done by hand.
   </li>
   <li>
     <a class="title" href="spaceturtle.html">I want an agent to run it</a>
@@ -142,7 +172,7 @@ npx toon-client send --connector http://127.0.0.1:3000 --body 'hello'</pre></div
   </li>
   <li>
     <a class="title" href="peering.html">I run a node and want traffic</a>
-    Peer with another node from its URL, carry its packets one hop further, and keep a fee.
+    Join a network, peer with another operator, set routes and prices, and carry packets one hop further for a fee.
   </li>
 </ul>
 
@@ -180,7 +210,7 @@ npx toon-client send --connector http://127.0.0.1:3000 --body 'hello'</pre></div
 
 <p>These pages are written from those repositories' own guides. Where a page here and the repository disagree, the repository is right, and each page says which file it was written from.</p>
 
-<nav class="pager" aria-label="Previous and next"><span></span><a class="next" href="concepts.html"><small>Next</small>Concepts</a></nav>
+<nav class="pager" aria-label="Previous and next"><span></span><a class="next" href="agent-node.html"><small>Next</small>The agent node</a></nav>
   </main>
   <aside class="toc" aria-label="On this page"><h4>On this page</h4>
   <a href="#three-steps">Three steps</a>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Backup and restore · TOON Protocol docs</title>
+<meta name="description" content="One sealed file that brings the wallet and the onion endpoints back on another machine.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f3efe6'/%3E%3Crect x='2' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='11' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='5' y='4' width='3' height='8' fill='%232b2f36'/%3E%3Crect x='9' y='4' width='3' height='8' fill='%23c9a24a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg><span class="name">TOON<small>Protocol</small></span></a>
+    <nav aria-label="Primary">
+      <a class="hide-s" href="../index.html#how">How it works</a>
+      <a href="../docs/index.html" class="active">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
+      <a class="button primary" href="../docs/first-agent-node.html">Run a node</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap docs">
+  <details class="mobilenav">
+    <summary>Docs</summary>
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html" class="active">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
+    </div>
+  </details>
+  <aside class="sidebar" aria-label="Docs">
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html" class="active">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
+    </div>
+  </aside>
+  <main class="doc">
+    <p class="eyebrow">Run an agent node</p>
+    <h1>Backup and restore</h1>
+    <p class="lede">One sealed file that brings the wallet and the onion endpoints back on another machine.</p>
+<p>Your agent node is its keys. Lose them and you lose its funds, its identities and its onion endpoints, which every peer has bound to.</p>
+
+<h2 id="back-up"><a class="anchor" href="#back-up">Back up</a></h2>
+
+<pre>toon wallet backup --out ~/toon-backup.sealed</pre>
+
+<p>The file holds the mnemonic and the address key of every onion endpoint, sealed under the wallet passphrase. It refuses to overwrite a file. Keep the file and the passphrase in different places: either alone is useless, together they are everything.</p>
+
+<p>A backup holds keys and nothing about your apps. Apps, their variables and their secrets are not in it: after a restore, add each app again from your own files.</p>
+
+<p>Back up again after <code>toon create</code>, so the new TOON app's onion key is in it.</p>
+
+<h2 id="restore-from-a-backup"><a class="anchor" href="#restore-from-a-backup">Restore from a backup</a></h2>
+
+<p>On a machine with no agent node:</p>
+
+<pre>export TOON_PASSPHRASE_FILE=~/.config/toon/passphrase    <span class="c"># the passphrase of the backup</span>
+toon wallet restore ~/toon-backup.sealed
+toon init --accept-anyone-terms</pre>
+
+<p><code>restore</code> recreates the wallet and the address keys; <code>init</code> then builds the TOON app on the keys it finds, at the <strong>same onion endpoints</strong>. A wrong passphrase fails with <code>passphrase_wrong</code>, a file that is not a backup with <code>keystore_corrupt</code>, and a home that already has a wallet with <code>io</code>.</p>
+
+<h2 id="restore-from-the-mnemonic-alone"><a class="anchor" href="#restore-from-the-mnemonic-alone">Restore from the mnemonic alone</a></h2>
+
+<pre>printf '%s\n' 'word1 word2 … word12' &gt; /tmp/mnemonic &amp;&amp; chmod 600 /tmp/mnemonic
+TOON_MNEMONIC_FILE=/tmp/mnemonic toon init --from-mnemonic --accept-anyone-terms
+rm /tmp/mnemonic</pre>
+
+<p>The funds and identities come back. The <strong>onion endpoints do not</strong>: a mnemonic does not hold their address keys, so the hidden service gets new ones and <code>init</code> says so (<code>"onion_endpoints_changed": true</code>). Tell your peers the new addresses.</p>
+
+<p>The mnemonic is never a flag, so it does not land in your shell history.</p>
+
+<p class="source">Written from <code>toon_cli/docs/guide/backup-and-restore.md</code> at commit <code>cc23333f90c4</code>.</p>
+
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="operations.html"><small>Previous</small>Operations</a><a class="next" href="run-a-node.html"><small>Next</small>Run a node</a></nav>
+  </main>
+  <aside class="toc" aria-label="On this page"><h4>On this page</h4>
+  <a href="#back-up">Back up</a>
+  <a href="#restore-from-a-backup">Restore from a backup</a>
+  <a href="#restore-from-the-mnemonic-alone">Restore from the mnemonic alone</a>
+</aside>
+</div>
+<footer>
+  <div class="wrap">
+    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write · no scripts</span>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a href="https://discord.gg/PxzjbtXg9Q">Discord</a>
+      <a href="https://x.com/toonprotocol">X</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

@@ -47,8 +47,9 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
 1. **Prices.** The pricing table on the landing page and the "Priced live" cards are a
    snapshot read off the live node's `GET /ilp`. Reread it and update the dates if a price
    changed.
-2. **Release tag.** The Docker tag in `index.html` and `src/docs/run-a-node.html` is the
-   connector's latest release (`gh release list -R toon-protocol/connector`).
+2. **Release tags.** The version named in `src/docs/install.html` is toon_cli's latest
+   release (`gh release list -R toon-protocol/toon_cli`); the Docker tag in
+   `src/docs/run-a-node.html` is the connector's (`gh release list -R toon-protocol/connector`).
 3. **Docs drift.** Each docs page names the repository file it was written from. Diff that
    file against the last time the page was touched.
 4. **Receipts.** Add the landing-page revision being replaced to the "Proof" list and to

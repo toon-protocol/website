@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exit codes · TOON Protocol docs</title>
+<meta name="description" content="Every exit code and error code toon can return, and the rules behind each command&#x27;s output.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f3efe6'/%3E%3Crect x='2' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='11' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='5' y='4' width='3' height='8' fill='%232b2f36'/%3E%3Crect x='9' y='4' width='3' height='8' fill='%23c9a24a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg><span class="name">TOON<small>Protocol</small></span></a>
+    <nav aria-label="Primary">
+      <a class="hide-s" href="../index.html#how">How it works</a>
+      <a href="../docs/index.html" class="active">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
+      <a class="button primary" href="../docs/first-agent-node.html">Run a node</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap docs">
+  <details class="mobilenav">
+    <summary>Docs</summary>
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html" class="active">Exit codes</a>
+    </div>
+  </details>
+  <aside class="sidebar" aria-label="Docs">
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html" class="active">Exit codes</a>
+    </div>
+  </aside>
+  <main class="doc">
+    <p class="eyebrow">Reference</p>
+    <h1>Exit codes</h1>
+    <p class="lede">Every exit code and error code toon can return, and the rules behind each command&#x27;s output.</p>
+<p>Both are part of <code>toon</code>'s interface. A code is added, and never renumbered or given a new meaning, so a script or an agent can branch on it across releases. <code>tests/exit_codes.rs</code> holds a copy of both lists and fails when the exit codes here, the ones <code>toon --help</code> prints, and that copy differ, or when an error code in that copy is missing here. Add a new code to the test and to this file together.</p>
+
+<h2 id="output"><a class="anchor" href="#output">Output</a></h2>
+
+<ul>
+  <li>With <code>--json</code>, a command prints exactly one JSON document on standard output and nothing on standard error, whether it succeeded or failed. <code>--help</code> is the one exception: it is always text.</li>
+  <li>Without <code>--json</code>, a command prints readable text on standard output, and an error goes to standard error as <code>error: &lt;message&gt;</code>.</li>
+  <li>No command reads standard input or prompts.</li>
+  <li>A command that stays in the foreground, such as <code>toon up --foreground</code>, prints its one JSON document once what it runs is up, and then keeps running. It stops when <code>toon down</code> asks it to, exits 0 and prints no second document. If an app behind its connector stops, it stops too and exits 1, also with no second document.</li>
+  <li><code>toon connector</code> is not an operator's command and keeps none of these rules. It is hidden, <code>toon up</code> starts it as a child process, and it reports to its supervisor.</li>
+  <li><code>help</code> is not a command. Ask for help with <code>--help</code>.</li>
+  <li>If the output cannot be written, the command exits 1 whatever it found.</li>
+</ul>
+
+<h2 id="exit-codes"><a class="anchor" href="#exit-codes">Exit codes</a></h2>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>The command did what was asked</td></tr>
+<tr><td>1</td><td>The command failed; the error's code says why</td></tr>
+<tr><td>2</td><td>The command line was not understood</td></tr>
+<tr><td>3</td><td>There is no agent node on this machine</td></tr>
+</tbody></table></div>
+
+<p><code>toon up</code> without <code>--foreground</code> installs a <code>systemd --user</code> unit and returns once <code>systemctl</code> has started it. A connector that stops by itself is restarted by the supervisor, and <code>toon status</code> reports how many times.</p>
+
+<p><code>toon status</code> exits with the code that describes the agent node, and still prints its report. It exits 1 when the supervisor or a connector is not running, and <code>toon down</code> exits 0 whether or not anything was running, unless <code>systemctl</code> would not stop the unit. <code>toon send</code> exits 1 when the packet was rejected, and still prints its report: the reject code is in <code>reject.code</code>, and <code>paid</code> is what the packet cost (see Spending limit). It exits 1 too, with <code>"outcome": "wrong_fulfilment"</code>, when the packet was fulfilled with a fulfilment that does not match it. <code>toon probe</code> sends a packet as <code>toon send</code> does and exits 0 on a reject that states a cost, complete or partial (<code>cost</code> and <code>complete</code> in the report, <code>cost</code> possibly <code>"0"</code>), and on a fulfil; it exits 1 on a reject that states none (the connector's rule says which: no route, a peer that could not be reached and the like), when the answer was not understood or did not come, and on a wrong fulfilment. It has no exit code or error code of its own. On a machine with no agent node, <code>toon status</code> prints <code>{"home": "&lt;path&gt;", "agent_node": null}</code> and exits 3.</p>
+
+<h2 id="errors"><a class="anchor" href="#errors">Errors</a></h2>
+
+<p>A failed command with <code>--json</code> prints:</p>
+
+<pre>{ "error": { "code": "usage", "message": "unrecognized subcommand 'frobnicate'" } }</pre>
+
+<p><code>code</code> is stable. <code>message</code> is for a person to read and may be reworded.</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Error code</th><th>Exit code</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>usage</code></td><td>2</td><td>The command line was not understood: an unknown command or flag, or a missing argument</td></tr>
+<tr><td><code>home_unresolved</code></td><td>1</td><td><code>HOME</code> is not set or is empty, so there is nowhere to look for an agent node</td></tr>
+<tr><td><code>no_wallet</code></td><td>3</td><td>There is no wallet on this machine: run <code>toon init</code></td></tr>
+<tr><td><code>passphrase_missing</code></td><td>1</td><td>Neither <code>TOON_PASSPHRASE_FILE</code> nor <code>TOON_PASSPHRASE</code> is set, or the passphrase is empty</td></tr>
+<tr><td><code>passphrase_unreadable</code></td><td>1</td><td><code>TOON_PASSPHRASE_FILE</code> names a file that cannot be read, or the passphrase is not valid UTF-8</td></tr>
+<tr><td><code>passphrase_wrong</code></td><td>1</td><td>The passphrase does not open the keystore</td></tr>
+<tr><td><code>keystore_corrupt</code></td><td>1</td><td>The keystore file is not one this version reads</td></tr>
+<tr><td><code>io</code></td><td>1</td><td>A file or the system's randomness could not be used</td></tr>
+<tr><td><code>no_agent_node</code></td><td>3</td><td>The command needs an agent node and this machine has none</td></tr>
+<tr><td><code>connector_failed</code></td><td>1</td><td>A connector did not start, or the supervisor did not stop when <code>toon down</code> asked; the message carries the connector's own reason</td></tr>
+<tr><td><code>already_running</code></td><td>1</td><td>A supervisor is already running this agent node: <code>toon down</code> stops it</td></tr>
+<tr><td><code>app_failed</code></td><td>1</td><td>An app behind a connector did not start, or stopped; the message carries the reason</td></tr>
+<tr><td><code>unfunded</code></td><td>1</td><td>A settlement key does not hold what is needed, so <code>toon up</code> did not start the connector (the token; on Solana also SOL), or a command that has a connector send a transaction did not (EVM gas, 0.001 ETH, whether the check finds too little or the connector reports the chain refused to estimate for lack of it: <code>toon join</code>, <code>toon peer add</code> with a deposit, <code>toon create</code> with a deposit, <code>toon channel open</code>, <code>fund</code>, <code>withdraw</code>, <code>land</code>); the message names each address and the amount</td></tr>
+<tr><td><code>faucet_unavailable</code></td><td>1</td><td><code>toon wallet fund</code> has no faucet to ask: the network is not the devnet, or the faucet did not answer or refused every address (one refusal does not fail the command while another address is funded)</td></tr>
+<tr><td><code>not_running</code></td><td>1</td><td>The command needs the agent node's connector running: run <code>toon up</code>. With an agent key, the supervisor did not answer at the key file's address</td></tr>
+<tr><td><code>send_failed</code></td><td>1</td><td>The packet (or, for <code>toon event publish</code> and <code>toon nip publish</code>, the event; for <code>toon message send</code>, a wrap) could not be sent: the connector's operator surface refused the write, could not be reached, or did not answer within the wait (the packet's 30-second expiry and five seconds more); the message carries the reason. A packet that went unanswered has expired and will not be delivered, so the command can be run again; the failure's JSON carries <code>paid</code> and, for <code>toon event publish --relay</code>, the <code>event</code> with its id (see Spending limit)</td></tr>
+<tr><td><code>systemd_failed</code></td><td>1</td><td><code>toon up</code> wrote its <code>systemd --user</code> unit and <code>systemctl</code> would not load or start it, or <code>toon down</code> could not stop it; the message carries <code>systemctl</code>'s own reason</td></tr>
+<tr><td><code>unknown_name</code></td><td>1</td><td><code>--app</code>, <code>toon create --app</code>, <code>toon destroy</code>, <code>toon logs</code> (also an app served at a URL, which has no log of its own), <code>toon add</code>, <code>toon change</code> or <code>toon remove</code> was given a name that is not a TOON app or an app of this agent node, as that command needs; or <code>toon approve</code> or <code>toon refuse</code> was given a name that is not a pending app</td></tr>
+<tr><td><code>peer_failed</code></td><td>1</td><td>The connector's operator surface refused a peering write or could not be reached; the message carries the reason</td></tr>
+<tr><td><code>peer_not_peerable</code></td><td>1</td><td><code>peer add</code> named a connector that is not peerable: the refusal is on the other side, and only its operator can lift it</td></tr>
+<tr><td><code>route_failed</code></td><td>1</td><td>The connector's operator surface refused a route write or could not be reached, or a route command was given an address prefix it cannot use or that no route has; the message carries the reason</td></tr>
+<tr><td><code>chain_failed</code></td><td>1</td><td>A chain's JSON-RPC endpoint could not be reached or did not answer a read as expected; the message carries the reason</td></tr>
+<tr><td><code>channel_failed</code></td><td>1</td><td>A channel write was refused by the connector or could not be sent, the channel id is not one, or the terms file was unreadable; the message carries the reason</td></tr>
+<tr><td><code>name_taken</code></td><td>1</td><td><code>toon add</code> or <code>toon create</code> was given a name that is not usable, or that a TOON app or an app of this agent node already has; or an agent key's <code>toon add</code> named a pending app another key asked for, or one of its own asked for differently</td></tr>
+<tr><td><code>query_failed</code></td><td>1</td><td><code>toon event query</code>, or <code>toon nip publish</code> asking for a draft's current revision, could not read events from the relay: it did not answer, is not a <code>ws://</code> or <code>wss://</code> relay (or its certificate did not verify), or closed the subscription with a reason the message carries; or <code>toon relay subscriptions --incoming</code> could not read the running relay's list of subscribers, or the agent node's relay does not sell its live feed</td></tr>
+<tr><td><code>draft_refused</code></td><td>1</td><td><code>toon nip new</code> or <code>toon nip publish</code> would not write or publish a draft: the file exists already, does not name a draft or begin with its title, is not UTF-8, or the relay holds the identifier under another title and <code>--title-changed</code> was not given; the message says which</td></tr>
+<tr><td><code>confirmation_required</code></td><td>1</td><td><code>toon add</code>, <code>toon remove</code>, <code>toon route price</code>, <code>toon relay config</code> or <code>toon relay price</code> restarts a running connector, which drops the packets it holds in flight (<code>toon relay</code> restarts the relay too), and was not given <code>--yes</code>; nothing was changed</td></tr>
+<tr><td><code>overlay_unavailable</code></td><td>1</td><td>The Anyone overlay did not bootstrap (its <code>anon</code> release could not be downloaded or did not match its pinned checksum, its terms were not agreed to, or the daemon did not come up), so a hidden service was not created or started, or a command on a hidden agent node that makes a request of its own (a faucet, a chain, a relay, a connector) had no overlay to send it through; nothing falls back to clearnet</td></tr>
+<tr><td><code>join_refused</code></td><td>1</td><td><code>toon join</code> named a network other than the one this agent node was initialised for, the agent node has already joined one, or it records no connector for the network; nothing was spent</td></tr>
+<tr><td><code>relay_not_payable</code></td><td>1</td><td><code>toon event publish --relay</code>, <code>toon message send --relay</code>, <code>toon relay describe</code> or <code>toon relay subscribe</code> could not read the relay's information document (or, for a <code>wss://</code> relay, its certificate did not verify), or it names no write edge (<code>toon</code>: <code>ilp_address</code>, <code>connector_url</code>, <code>connector_seal_key</code>, <code>price</code>; the key is 65 bytes of hex beginning <code>04</code>) or, for <code>subscribe</code>, no subscribe route (<code>toon_subscription</code>: <code>ilp_address</code>, <code>price</code>, <code>broadcast_price</code>); nothing was paid</td></tr>
+<tr><td><code>peering_needed</code></td><td>1</td><td><code>toon event publish --relay</code>, <code>toon message send --relay</code> or <code>toon relay subscribe</code> found no route that forwards the relay's <code>ilp_address</code>; nothing was paid and nothing was created. If no peering of this agent node reaches the relay's <code>connector_url</code>, the message prints the <code>toon peer add &lt;connector_url&gt; --deposit &lt;amount&gt; --yes</code> to run (for <code>subscribe</code>, with the deposit it would take in place of <code>&lt;amount&gt;</code>), then <code>toon route add</code>. If one does (the network joined from that URL, or a peering whose id is the label <code>peer add</code> derives from it), the message names only <code>toon route add &lt;address&gt; --peer &lt;id&gt;</code> and says no new deposit is needed</td></tr>
+<tr><td><code>no_follow_list</code></td><td>1</td><td><code>toon event query --following</code> or <code>toon relay subscribe --following</code> found no follow list of the agent identity on the agent node's own relay, or one with no keys; nothing was sent or paid</td></tr>
+<tr><td><code>not_confirmed</code></td><td>1</td><td>A command that moves money was run without <code>--yes</code>, so it did nothing</td></tr>
+<tr><td><code>spending_limit</code></td><td>1</td><td>A payment is over the per-command limit or what is left of the day's, or the spending limit is missing or was not signed by the wallet; with an agent key, the connector refused the write for the key's spending limit (or deposit limit); the message says which limit and how much remains</td></tr>
+<tr><td><code>funds_held</code></td><td>1</td><td><code>toon destroy</code> did nothing: a channel of the TOON app still holds funds, or its channels could not be read; the message names each</td></tr>
+<tr><td><code>last_toon_app</code></td><td>1</td><td><code>toon destroy</code> was given the only TOON app: an agent node always has one</td></tr>
+<tr><td><code>one_relay</code></td><td>1</td><td><code>toon create</code> or <code>toon add</code> was given the relay's image (any tag or digest of the repository this build pins): an agent node runs one relay, the one <code>toon init</code> created; nothing was changed</td></tr>
+<tr><td><code>describe_failed</code></td><td>1</td><td><code>toon describe</code> got no self-description from the connector's <code>/ilp</code> URL: it did not answer, answered an error status, or answered something that is not a self-description (a JSON object with <code>routes</code>); nothing was paid</td></tr>
+<tr><td><code>agent_key_not_kept</code></td><td>1</td><td><code>toon message list</code> found no kept secret of the agent identity in the agent node's home, so no private message has been opened: <code>toon event publish</code>, <code>toon event sign</code> and <code>toon message send</code> write it; nothing was read or sent</td></tr>
+<tr><td><code>needs_home</code></td><td>1</td><td><code>toon</code> was run with an agent key (<code>--agent-key</code> or <code>TOON_AGENT_KEY</code>) and the command needs the agent node's home, which an agent key never reads: the message names the command and says the operator must run it; nothing was sent</td></tr>
+<tr><td><code>needs_operator</code></td><td>1</td><td>An agent key asked for what only the operator may do: to remove the relay, or to add a ninth app while it has eight pending; nothing was removed, recorded, pulled, started or routed</td></tr>
+<tr><td><code>rate_limited</code></td><td>1</td><td><code>toon route price</code> was run with an agent key that has already used its restart limit (6 an hour unless <code>toon agent-key set --max-restarts</code> changed it): setting a price restarts a connector, so the supervisor refused the order and restarted nothing; the message says when the next restart is allowed. The operator with the home is never limited</td></tr>
+<tr><td><code>approval_pending</code></td><td>1</td><td>An agent key asked to add an app that only the operator may add at once: an image not on the list of trusted images, an app at a <code>--url</code>, an image added with an allowance (<code>--allow-egress</code>, <code>--scratch</code>, <code>--memory</code>, <code>--cpus</code>, <code>--pids</code>), a variable (<code>--env</code>) or a runtime (<code>--runtime</code>), or an add that names a secret (<code>--secret NAME</code>, <code>--secret-file &lt;path&gt;</code>). The app is recorded as a pending app, named in the message, for the operator to <code>toon approve</code> or <code>toon refuse</code>; nothing was pulled, started or routed. The same add again gives the same answer and records nothing more.</td></tr>
+</tbody></table></div>
+
+<h2 id="the-wallet-passphrase"><a class="anchor" href="#the-wallet-passphrase">The wallet passphrase</a></h2>
+
+<p><code>toon init</code>, <code>toon wallet show</code>, <code>toon wallet balances</code>, <code>toon wallet backup</code>, <code>toon wallet restore</code>, <code>toon relay subscribe</code>, <code>toon event publish</code>, <code>toon event sign</code>, <code>toon message send</code> and <code>toon nip publish</code> read the passphrase from the file named by <code>TOON_PASSPHRASE_FILE</code>, else from <code>TOON_PASSPHRASE</code>. It is never a flag. One trailing newline in the file is not part of the passphrase.</p>
+
+<p><code>toon wallet fund</code> reads the settlement keys the agent node holds, not the keystore, so it needs no passphrase. <code>toon relay subscriptions</code> reads the subscriber key's secret that <code>toon relay subscribe</code> kept in the agent node's home, and needs the passphrase only when that key is not kept (the file is absent or not a whole key).</p>
+
+<h2 id="network-profiles-and-funding"><a class="anchor" href="#network-profiles-and-funding">Network profiles and funding</a></h2>
+
+<p><code>toon init --network</code> takes <code>devnet</code> (the default), <code>sandbox</code> or <code>mainnet</code>. Solana settlement is off unless <code>--solana</code> is given. <code>toon up</code> does not start a connector whose settlement key holds less than one whole token, or on Solana less than 0.01 SOL for fees; it fails with <code>unfunded</code>. An EVM connector starts without gas: gas is spent when it sends a transaction, so <code>toon join</code>, <code>toon peer add</code> with a deposit, <code>toon create</code> with a deposit (both keys send one) and <code>toon channel open</code>, <code>fund</code>, <code>withdraw</code> and <code>land</code> fail with <code>unfunded</code> while the EVM settlement key holds less than 0.001 ETH. They refuse before the spending limit is charged and before anything is sent. A connector that refuses such a write because the chain would not estimate the transaction for lack of gas (a 502 whose text says <code>out of gas</code>, <code>gas required exceeds</code> or <code>insufficient funds</code>, as RPC nodes word it) is reported the same way, with the connector's text kept: it estimates before it signs, so nothing was sent, and the deposit is not counted against the spending limit. A chain that cannot be asked is not a verdict: the connector answers for itself. The devnet faucet sends no ETH: the message then says Base Sepolia ETH comes from a public Base Sepolia faucet, to be given the address it names, and does not name <code>toon wallet fund</code>. <code>toon wallet fund</code> exits 0 when only gas is lacking, and says so. <code>needs</code> of <code>toon init</code> and <code>lacking</code> of <code>toon wallet fund</code> carry <code>"for"</code>: <code>"start"</code> or <code>"deposit"</code>. Only the devnet has a faucet: on the other networks <code>toon wallet fund</code> fails with <code>faucet_unavailable</code>, and on mainnet the operator funds the addresses themselves.</p>
+
+<p><code>mainnet</code>'s profile names a connector, <code>https://connector.mainnet.toonprotocol.dev/ilp</code>, and a relay, <code>wss://relay.mainnet.toonprotocol.dev</code>, run by one operator (ADR 0009); <code>--connector-url</code> and <code>--relay-url</code> at <code>init</code> name others.</p>
+
+<p><code>sandbox</code> allows plaintext peers by itself, since every endpoint of the sandbox is a plain <code>http://</code> one, and its hub is <code>http://localhost:3200/ilp</code>. A hidden agent node cannot reach <code>localhost</code>, so <code>init --network sandbox</code> without <code>--clearnet</code> and without <code>--connector-url</code> records no connector, says so, and <code>toon join sandbox</code> fails with <code>join_refused</code> until <code>init</code> names the hub: <code>--connector-url http://&lt;hub&gt;.anyone:3200/ilp</code> (and <code>--relay-url ws://&lt;hub&gt;.anyone:7100</code>), or <code>--clearnet</code>.</p>
+
+<h2 id="hidden-service-and-clearnet"><a class="anchor" href="#hidden-service-and-clearnet">Hidden service and clearnet</a></h2>
+
+<p>A new TOON app is a hidden service (ADR 0003): its connector is reachable only at its onion endpoint, a <code>.anyone</code> address, on port 80, and the relay's read port at the same address on port 7100. Its connector listens on loopback only, and all of its outbound traffic goes through the overlay's SOCKS proxy, settlement RPC included. The endpoint is made from a key the wallet derives, so it is the same after a restart, and a wallet backup restores it.</p>
+
+<p><code>toon init</code> creates a hidden service only with <code>--accept-anyone-terms</code>, which says the operator agrees to the Anyone Protocol's terms; without it <code>init</code> fails with <code>usage</code> and creates nothing. If the overlay cannot bootstrap, <code>init</code> fails with <code>overlay_unavailable</code>, creates nothing and leaves nothing listening: it never falls back to clearnet.</p>
+
+<p>On a hidden agent node, one with at least one hidden TOON app, the requests a command makes itself also go through the overlay's SOCKS5 proxy, naming the host: the faucet and chain RPC of <code>wallet fund</code> and <code>wallet balances</code>, a relay's information document and balance read (<code>event publish --relay</code>, <code>relay subscribe</code>, <code>relay subscriptions</code>), a relay's websocket (<code>event query</code>), and the <code>/identity</code> and packet of <code>send --seal-to</code>. A plain <code>http://</code> or <code>ws://</code> endpoint on this machine (<code>localhost</code>, <code>127.0.0.1</code>, <code>[::1]</code>) is dialled directly, as the connector's own RPC is. If the overlay cannot be had, each of these commands fails with <code>overlay_unavailable</code> and dials nothing directly; a relay the proxy refuses fails as that command does for a relay that did not answer. Elsewhere, requests are dialled directly.</p>
+
+<p><code>toon init --clearnet &lt;hostname&gt;</code> asks for clearnet instead. The connector binds the <code>--listen</code> address (<code>127.0.0.1:0</code> unless given), and the certificate and the reverse proxy that answer at the hostname are the operator's to provide. A clearnet TOON app needs no overlay and no terms flag.</p>
+
+<p>The overlay is Anyone's <code>anon</code> daemon. <code>toon</code> downloads the release pinned in <code>src/anon.rs</code>, checks its SHA-256 and only then runs it, one daemon per agent node home, detached so it outlives the command that started it and shared by every connector. It stops when the supervisor does, and after <code>init</code> or <code>create</code> when no supervisor is running. The operator's agreement to the terms is recorded in <code>overlay/agreed</code> once the daemon has bootstrapped; <code>toon up</code> starts no daemon without it. <code>TOON_ANON_MIRROR</code> replaces the download location (the checksum still applies).</p>
+
+<p>A relay URL is <code>ws://</code> or <code>wss://</code> wherever one is given, and any other scheme is refused with the code of the command, the message naming both. <code>wss://</code> is dialled with TLS, through the overlay's proxy too, where the proxy is asked for the host by name and TLS runs inside the stream it returns; with no port it means 443, and <code>ws://</code> means 80. The certificate is checked against the host name in the URL and the roots compiled into the binary, and a relay's information document is read over <code>https://</code>. A certificate that does not verify fails as the command does for a relay that did not answer, and the message says it was the certificate. <code>TOON_TRUSTED_ROOT</code>, a seam for tests and private deployments, names a PEM file whose certificates are trusted as well, for the websocket and the information document alike; a file that cannot be read or holds no certificate is an error, and it never disables verification.</p>
+
+<p>A hidden service hides where the TOON app is reachable and not who it pays: payments are on a public chain. <code>toon init</code> says so.</p>
+
+<h2 id="events"><a class="anchor" href="#events">Events</a></h2>
+
+<p><code>toon event publish</code> signs with the agent identity, which is why it needs the passphrase, and sends the event to the agent node's own relay as an operator write: it exits 1 with <code>"outcome": "rejected"</code> when the packet is rejected, <code>"outcome": "refused"</code> when the relay answers with a status that is not 2xx, and <code>"outcome": "wrong_fulfilment"</code> when the packet is fulfilled but not by this connector. <code>toon event query</code> is a plain NIP-01 <code>REQ</code> and needs no passphrase; it reads from <code>ws://</code> and <code>wss://</code> relays. <code>toon event sign</code> signs as <code>toon event publish</code> does and prints the event (alone as text, under <code>event</code> with <code>--json</code>): it sends nothing, pays nothing, and does not need the agent node to be running.</p>
+
+<p><code>toon event publish --relay &lt;relay-url&gt;</code> publishes to a relay this agent node does not run. It reads the relay's NIP-11 information document (<code>GET</code> of the relay's URL as <code>http://</code>, or <code>https://</code> for a <code>wss://</code> relay, with <code>Accept: application/nostr+json</code>) for its <code>toon</code> object: <code>ilp_address</code>, <code>connector_url</code>, <code>connector_seal_key</code> and <code>price</code>. It seals the packet to <code>connector_seal_key</code> and makes no request to <code>connector_url</code>, which only appears in the <code>peering_needed</code> message. It shows the amount and publishes only with <code>--yes</code>, under the spending limit, paying from this agent node's own connector over a peering. If no peering of the agent node reaches the relay's <code>ilp_address</code> it fails with <code>peering_needed</code> and creates nothing (when a peering already reaches the <code>connector_url</code>, the message asks only for a <code>route add</code>). The report has the same outcomes as a publish to the own relay, plus <code>relay</code> and <code>paid</code>: the amount sent, or, when the packet was rejected, what the agent node's outbound channels moved by across it (<code>0</code> when none did). The amount is the relay's price unless <code>--amount &lt;n&gt;</code> states another: <code>toon</code> sends exactly <code>n</code>, never probes for the path's cost, and refuses an <code>--amount</code> below the relay's price with <code>usage</code> before anything is signed. A connector between this agent node and the relay may charge to forward the write and rejects any other amount than its route's price (<code>F03</code>). A rejected packet whose reject states a cost above 0 is reported with <code>cost</code> (the accumulated cost in base units, a decimal string) and <code>complete</code> beside <code>outcome</code>, and the text states the figure as <code>--amount &lt;cost&gt;</code>; read the cost from the report. <code>complete</code> is <code>false</code> for an <code>R01</code>: the packet stopped at a connector it could not pay, <code>cost</code> is the amount to carry to get past that connector, a floor and not the whole cost, and the text says so instead of naming <code>--amount</code>. A cost of 0 is left out. <code>reject.message</code> is the reject's own message. Nothing is retried, and the same report is given by <code>toon send</code>. <code>--yes</code> is refused without <code>--relay</code>.</p>
+
+<p><code>toon relay describe &lt;relay-url&gt;</code> reads the same information document and prints what the relay charges: <code>write</code> (its <code>ilp_address</code>, <code>connector_url</code> and <code>price</code>), <code>feed</code> (<code>selling</code>, and for a relay that sells its live feed the subscribe route's <code>ilp_address</code>, <code>subscribe_price</code> and <code>broadcast_price</code>; a relay that sells none is <code>"selling": false</code> and exits 0) and <code>peering</code>, whether a route of this agent node forwards the write edge's <code>ilp_address</code>. Amounts are in base units. It pays nothing, needs no passphrase and no <code>--yes</code>, and does not change the spending limit. A document without a usable <code>toon</code> object fails with <code>relay_not_payable</code>.</p>
+
+<p><code>toon relay subscribe &lt;relay-url&gt; --filter &lt;filter&gt; --amount &lt;amount&gt;</code> subscribes to another relay's paid live feed (<code>nips/paid-subscription.md</code>). It reads <code>toon_subscription</code> from the relay's information document and shows the subscribe price, the broadcast price and the events the amount buys. It pays only with <code>--yes</code>, under the spending limit, over a peering (<code>peering_needed</code> names the deposit it would take and creates nothing). The amount is paid as whole packets of the packet amount, each authorized by NIP-98 with the subscriber key (<code>m/10473'/6'/0'</code>, not the agent identity). A packet is sent for the subscribe price unless <code>--packet-amount &lt;n&gt;</code> states another: every packet is sent for exactly <code>n</code>, <code>toon</code> never probes for the path's cost, and a <code>--packet-amount</code> below the subscribe price is <code>usage</code>. The number of packets is <code>--amount</code> divided by the packet amount, rounded down, and an <code>--amount</code> that buys none is <code>usage</code>. The spending limit is checked against packets times packet amount, and the day's count rises by <code>paid</code>. A connector between this agent node and the relay may charge to forward and rejects any other amount than its route's price (<code>F03</code>); the rejected packet's <code>response</code> then holds <code>cost</code> and <code>complete</code> as for <code>toon send</code>, and the text states <code>--packet-amount &lt;cost&gt;</code>, since the cost is one packet's; read the cost from the report. The report gives <code>packets</code>, <code>paid</code> (the packet amount times the packets fulfilled), <code>credited</code> (what the relay answered, less than <code>paid</code> through such a connector), <code>price</code> (the subscribe price), <code>packet_amount</code>, <code>balance</code>, <code>broadcast_price</code> and <code>filter</code>. A packet the relay refuses still cost its amount; a rejected or wrongly fulfilled packet adds to <code>paid</code> what it moved the outbound channels by. <code>outcome</code> says <code>refused</code>, <code>rejected</code>, <code>wrong_fulfilment</code>, <code>unanswered</code> when the connector did not answer a later packet within the wait (it has expired by then, and adds to <code>paid</code> what it moved the outbound channels by) or, when a later packet could not be sent, <code>failed</code>, with the exit code 1; a packet that failed after it may have left stays counted against the limit at its amount. A first subscription needs <code>--filter</code>; a later one may leave it out to top up with the filter last kept, or give a new one to replace the old, and keeps the balance. <code>toon relay subscriptions</code> lists, per relay, the <code>balance</code>, <code>filter</code> and <code>subscriber_key</code>, read from the relay now (<code>current: true</code>; a relay that holds no subscription for the key answers a balance of 0) or as it last answered, and <code>exhausted</code>: whether the balance is below the broadcast price. Each item carries <code>read_at</code>, the Unix second a relay last stated the balance (the answer to a subscribe payment or to a balance read, a <code>404</code> included); for a relay that did not answer it is the earlier time. <code>toon status</code> asks no relay: it lists each subscription under <code>agent_node.subscriptions</code> with the same <code>exhausted</code> and <code>read_at</code>, as last kept, and its text line says the balance is as last read, and when, and names <code>toon relay subscriptions</code> as the command that reads the current one. An entry kept before <code>read_at</code> existed has <code>read_at: null</code>, and its line says the time is unknown.</p>
+
+<p>The supervisor receives every subscription that has a balance (ADR 0005). It dials the relay's live feed, answers its NIP-42 challenge with the subscriber key (<code>subscribe</code> keeps that key's secret in <code>subscriber.key</code> in the agent node's home, for the supervisor, which has no passphrase), and writes each event to the agent node's own relay at its write endpoint over loopback, through the overlay's proxy when the agent node has one. It reads <code>subscriptions.json</code> again every moment: after a restart every subscription with a balance resumes, a top-up resumes one that ran out, and a feed that drops is dialled again. When the relay closes a feed with <code>payment-required</code> the subscription is marked exhausted until it is topped up.</p>
+
+<p><code>--following</code>, on <code>toon event query</code> and <code>toon relay subscribe</code>, sets the <code>authors</code> of the filter to the keys in the <code>p</code> tags of the newest kind 3 event the agent identity signed, read from the agent node's own relay (which must be running, else <code>not_running</code>). <code>--filter</code> is then optional and keeps its other fields; one that already has <code>authors</code> is <code>usage</code>, and no follow list, or one without keys, is <code>no_follow_list</code>, each before anything is sent or paid. The filter a subscription is given is a snapshot: following someone later does not change it, and the report of <code>relay subscribe --following</code> says how many keys it holds and that it stays fixed until the command is run again. The command needs the passphrase, to name the agent identity.</p>
+
+<p><code>toon event watch [--filter &lt;json&gt;] [--following]</code> prints the live events of the agent node's own relay, one JSON document to a line, flushed as each arrives, with or without <code>--json</code>. It takes no relay URL, needs no subscription, sends no packet and counts nothing against the spending limit. Only events that arrive after it starts are printed; <code>event query</code> reads the stored ones. <code>--filter</code> is parsed and refused as on <code>event query</code>, and its <code>limit</code> is dropped; <code>--following</code> sets its <code>authors</code> as on <code>event query</code>, read once at the start. A relay that sells its feed keeps a <code>REQ</code> open only for its operator, so the command answers the relay's NIP-42 challenge with the relay's own identity key, signing the <code>relay</code> tag with the URL the relay is reached at (its onion endpoint or public hostname) and not the loopback address it dials; a relay that does not sell its feed sends no challenge and is read at once. Without an agent node it fails with <code>no_agent_node</code>, with no relay in it <code>unknown_name</code>, and with the relay not running <code>not_running</code>. A feed has no end, so it exits 1 with the reason it stopped: <code>query_failed</code> when the relay closed the feed or dropped. <code>toon event follow</code> is removed and is <code>usage</code>, naming <code>toon event watch</code>.</p>
+
+<p><code>toon nip publish</code> signs a draft (<code>nips/proposals-as-events.md</code>) the same way and writes it to the agent node's own relay as <code>toon event publish</code> does, with the same outcomes. It first asks <code>--relay</code> for the draft's current revision, so <code>--relay</code> must be the agent node's own relay's <code>ws://</code> or <code>wss://</code> URL. It exits 1 with <code>draft_refused</code> when the file is not a draft it can publish, or the relay holds that identifier under another title and <code>--title-changed</code> was not given.</p>
+
+<h2 id="backup-and-restore"><a class="anchor" href="#backup-and-restore">Backup and restore</a></h2>
+
+<p><code>toon wallet backup --out &lt;file&gt;</code> seals the keystore's mnemonic and the address key of every onion endpoint into one file under the wallet's passphrase, and refuses a file that exists. <code>toon wallet restore &lt;file&gt;</code> recreates the wallet and the address keys in a home with no wallet or agent node (<code>io</code> if there is one), sealed under the passphrase that opened the backup; a wrong passphrase fails with <code>passphrase_wrong</code> and a file that is not a backup with <code>keystore_corrupt</code>. Then <code>toon init</code> makes the TOON app on the keys it finds, at the same onion endpoints.</p>
+
+<p><code>toon init --from-mnemonic</code> restores a wallet from a mnemonic alone, read from the file named by <code>TOON_MNEMONIC_FILE</code>, else from <code>TOON_MNEMONIC</code>, never a flag, into a home with no wallet (<code>io</code> if there is one; <code>usage</code> if the mnemonic is missing or not BIP-39). It shows no mnemonic, and a hidden service gets new onion endpoints, which it says (<code>"onion_endpoints_changed": true</code>): a mnemonic does not hold the address keys.</p>
+
+<h2 id="creating-and-destroying-a-toon-app"><a class="anchor" href="#creating-and-destroying-a-toon-app">Creating and destroying a TOON app</a></h2>
+
+<p><code>toon create &lt;name&gt; --app &lt;from&gt;</code> makes a second TOON app (ADR 0002): a connector on the next unused index of the wallet's keys, and an app behind it, named <code>&lt;name&gt;</code> too and reached at <code>g.toon.&lt;segment&gt;.&lt;name&gt;</code>. <code>--image</code> or <code>--url</code> says which app; <code>--clearnet</code>, <code>--accept-anyone-terms</code> and <code>--listen</code> say how the connector is reached, as for <code>toon init</code>. It reads the wallet passphrase. It is peered with <code>&lt;from&gt;</code>, the first TOON app if <code>--app</code> is left out, in both directions, each channel opened with <code>--deposit</code>, with a forwarding route each way; <code>--no-peer</code> says not to. The deposits move money, so they need <code>--yes</code> and count twice against the spending limit. A settlement key that holds too little fails with <code>unfunded</code>, and nothing is created: the message names the address to fund. With a deposit, both the new app's key and <code>&lt;from&gt;</code>'s must hold the gas a deposit spends (0.001 ETH on EVM); with <code>--no-peer</code> neither needs any. A running supervisor starts the connector; otherwise <code>toon up</code> does.</p>
+
+<p><code>--app &lt;name&gt;</code> on any command that talks to a connector, such as <code>toon send</code>, <code>toon peer</code>, <code>toon route</code> and <code>toon channel</code>, says which TOON app it is about; the first TOON app is the default.</p>
+
+<p><code>toon destroy &lt;name&gt;</code> stops a TOON app's connector and removes its files and its app's data, except an onion key. It needs the TOON app running, to read its channels, and fails with <code>funds_held</code>, naming each channel, while an outbound channel holds collateral or an inbound one a voucher that has not landed. It never removes the last TOON app (<code>last_toon_app</code>).</p>
+
+<h2 id="the-spending-limit"><a class="anchor" href="#the-spending-limit">The spending limit</a></h2>
+
+<p>Every command that moves money (<code>toon send</code>, <code>toon peer add</code>, <code>toon join</code>) states its amount and needs <code>--yes</code>. <code>toon probe</code> moves money only for an amount: with the default amount of 0 it needs no <code>--yes</code>, is not checked against the limits and counts nothing against the day, and its report carries <code>paid: 0</code>; with any other amount it is counted as <code>toon send</code> is, by what the outbound channels moved by. The amount is checked against the spending limit before the command runs: at most <code>--max-per-command</code> for one command, and <code>--max-per-day</code> for the commands of one UTC day together, both in the token's base units, set at <code>toon init</code> (defaults 10000000 and 100000000). A packet that was rejected is counted by what the watermarks of the agent node's outbound channels moved by across it, read before the packet is sent and after it is answered, under a lock shared by the packet-sending commands. <code>paid</code> in the JSON report of <code>toon send</code>, <code>toon event publish --relay</code> and <code>toon relay subscribe</code> carries that amount: <code>0</code>, and not counted, when the agent node's own connector rejected the packet before signing anything, and possibly the packet's whole amount when a connector farther on rejected it (the outbound watermark in <code>toon channel list</code> shows the same). If the watermarks cannot be read, the packet's full amount stays counted. Nor is a payment counted that failed before it reached the connector or that the other side refused. A peering the connector refused because both connectors settle on more than one chain and no <code>--chain</code> named one (<code>peer_failed</code>, before any channel is opened) is not counted either, for <code>peer add</code>, <code>join</code> and <code>create --deposit</code>. A packet that was never sent is not counted either: the operator key or the <code>--body</code> file of <code>toon send</code> could not be read, the identity of the connector to seal to could not be fetched or has no usable public key, the packet could not be sealed, or the connector's <code>send</code> refused its arguments. These still fail with <code>send_failed</code>. Any other failure may have paid, and stays counted, including a refusal from the operator surface and an answer that was not understood. A packet the connector did not answer within the wait, which is longer than the packet's 30-second expiry so that the connector's own reject is what is normally reported (a connector forwarding it answers <code>R00</code> at the packet's outgoing expiry, a little before its own, and signs nothing for a packet that has run out of time), fails with <code>send_failed</code> and is counted by what the watermarks moved by, like a rejected packet (the whole amount, if they cannot be read). A packet the next hop never carried is not paid for on a batch-settlement channel when the next hop can be asked where it stands: the next forward signs from what it reports, so the count can be above what the packet finally costs. The failure's JSON is <code>{"error": {"code", "message"}, "paid"}</code> with the <code>event</code> for <code>toon event publish --relay</code>; the text says that the packet has expired, names the event's id so that <code>toon event query</code> can ask the relay for it, and gives the "It cost N base units." sentence when N is above 0. <code>toon limit show</code> prints the limits and what is left today. <code>toon limit set</code> changes them and reads the wallet passphrase, so an agent without it cannot raise them: the limits are signed with a key the wallet derives, and an unsigned or edited <code>limits.json</code> stops every payment. When <code>limits.json</code> is missing or was edited, <code>toon limit set</code> needs both <code>--max-per-command</code> and <code>--max-per-day</code>.</p>
+
+<p class="source">Written from <code>toon_cli/docs/exit-codes.md</code> at commit <code>cc23333f90c4</code>.</p>
+
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="protocol.html"><small>Previous</small>Protocol and specs</a><span></span></nav>
+  </main>
+  <aside class="toc" aria-label="On this page"><h4>On this page</h4>
+  <a href="#output">Output</a>
+  <a href="#exit-codes">Exit codes</a>
+  <a href="#errors">Errors</a>
+  <a href="#the-wallet-passphrase">The wallet passphrase</a>
+  <a href="#network-profiles-and-funding">Network profiles and funding</a>
+  <a href="#hidden-service-and-clearnet">Hidden service and clearnet</a>
+  <a href="#events">Events</a>
+  <a href="#backup-and-restore">Backup and restore</a>
+  <a href="#creating-and-destroying-a-toon-app">Creating and destroying a TOON app</a>
+  <a href="#the-spending-limit">The spending limit</a>
+</aside>
+</div>
+<footer>
+  <div class="wrap">
+    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write · no scripts</span>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a href="https://discord.gg/PxzjbtXg9Q">Discord</a>
+      <a href="https://x.com/toonprotocol">X</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

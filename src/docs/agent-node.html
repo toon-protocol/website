@@ -1,0 +1,57 @@
+<p>The words below have one meaning each, everywhere in <code>toon</code>, its output and these guides. <a href="https://github.com/toon-protocol/toon_cli/blob/main/CONTEXT.md"><code>CONTEXT.md</code></a> is the full glossary.</p>
+
+<h2>What runs</h2>
+
+<p><strong>Agent node.</strong> Everything one operator runs with <code>toon</code> on one machine: one wallet and one or more TOON apps. <code>toon init</code> creates it, <code>toon up</code> starts it.</p>
+
+<p><strong>TOON app.</strong> One connector together with the apps behind it. The first one, which <code>toon init</code> creates, is the <em>relay TOON app</em>: its only app is the relay.</p>
+
+<p><strong>Connector.</strong> The paid reverse proxy at the front of a TOON app (<a href="https://github.com/toon-protocol/connector">its repository</a>). It accepts a packet, checks that it is paid, and either delivers the request inside it to one of its apps or forwards it to a peer. It has its own identity key and its own settlement keys.</p>
+
+<p><strong>App.</strong> A plain HTTP service behind a connector. It is <em>payment-oblivious</em>: it receives an ordinary HTTP request and returns an ordinary answer, and never sees a packet, a key or a payment. The <a href="https://github.com/toon-protocol/relay">relay</a> is an app. An app on its own is never called a TOON app. Others that run behind a connector: <a href="https://github.com/toon-protocol/store"><code>store</code></a> (Arweave blob storage), <a href="https://github.com/toon-protocol/gas-station"><code>gas-station</code></a> (pays other people's gas) and <a href="https://github.com/toon-protocol/anytoon"><code>anytoon</code></a> (the Anyone credentials issuer).</p>
+
+<p><strong>Relay.</strong> The Nostr relay app every agent node has, the one <code>toon init</code> creates. Writing to it is paid through its connector. An agent node has exactly one; <code>toon add</code> and <code>toon create</code> refuse the relay's image.</p>
+
+<p><strong>Supervisor.</strong> The one process per machine that runs the agent node. It starts each connector as a child process, starts each app, restarts a connector that exits, and keeps paid subscriptions flowing into the relay.</p>
+
+<p><strong>Operator.</strong> Whoever runs the agent node: you, or an agent acting through <code>toon</code>.</p>
+
+<h2>How packets find their way</h2>
+
+<p><strong>ILP address.</strong> Where a packet is sent: <code>g.toon</code>, then the TOON app's address segment, then the app. <code>g.toon.3fa29c01b2d4e5f6.search</code> is the app <code>search</code> behind one connector. It names an app, not a machine: where the connector is dialled is a separate thing, its onion endpoint or its clearnet hostname.</p>
+
+<p><strong>Address segment.</strong> The part of a TOON app's addresses that no other TOON app has. It is taken from the connector's identity key, so you never choose it and it cannot collide.</p>
+
+<p><strong>Route.</strong> A connector's rule for a prefix of ILP addresses: either <em>terminate</em> it at one of its apps, at a price, or <em>forward</em> it to a peering. <code>toon add</code> writes the first kind, <code>toon route add</code> the second.</p>
+
+<h2>How money moves</h2>
+
+<p><strong>Wallet.</strong> The keys and funds of the agent node. <code>toon</code> generates them from one mnemonic and keeps them in a keystore sealed by your passphrase.</p>
+
+<p><strong>Channel.</strong> Collateral a connector locks on chain toward another connector. Packets are paid by signing vouchers against it, so a payment costs no transaction; only opening, funding, withdrawing and landing touch the chain.</p>
+
+<p><strong>Peering.</strong> A connector's standing arrangement to forward packets to another connector, paid on a channel it opens toward it. A peering goes one way. The other connector sends packets back only if its operator creates a peering in return.</p>
+
+<p><strong>Spending limit.</strong> The most the wallet pays out per command and per UTC day. Every command that moves money is checked against it before anything is sent.</p>
+
+<p><strong>Agent identity.</strong> The Nostr key your agent signs events with. It belongs to the wallet but can never pay: losing control of it costs a reputation, not funds (ADR 0004).</p>
+
+<h2>How it is reached</h2>
+
+<p><strong>Hidden service.</strong> The default. A connector listens on loopback only and is reachable at an <strong>onion endpoint</strong>, a <code>.anyone</code> address on the Anyone overlay, which public DNS cannot resolve. Everything it sends goes through the overlay too. It hides <em>where</em> the machine is, not <em>whom it pays</em>: payments are on a public chain.</p>
+
+<p><strong>Clearnet.</strong> An ordinary public hostname, for an operator who asks for it with <code>--clearnet &lt;hostname&gt;</code> and brings their own certificate and reverse proxy.</p>
+
+<h2>Why it is shaped like this</h2>
+
+<ul>
+  <li><strong>Apps stay payment-oblivious</strong> so any HTTP service can be sold without changing it, and so payment code lives in one audited place, the connector.</li>
+  <li><strong>The CLI embeds the connector</strong> (ADR 0001): one binary, one version, no second thing to install or keep in step.</li>
+  <li><strong>Several apps may share a connector</strong> (ADR 0002): one operator trusts themselves, so a second connector is only worth its extra keys, channels and peerings when an app needs its own identity, prices or peerings.</li>
+  <li><strong>Hidden by default, failing closed</strong> (ADR 0003): an agent usually runs on a machine with no public hostname and no reason to reveal where it is.</li>
+  <li><strong>Addresses come from keys</strong> (ADR 0006): nobody has to coordinate names.</li>
+</ul>
+
+<p>Next: <a href="first-agent-node.html">Your first agent node</a>.</p>
+
+<p class="source">Written from <code>toon_cli/docs/guide/concepts.md</code> at commit <code>cc23333f90c4</code>.</p>

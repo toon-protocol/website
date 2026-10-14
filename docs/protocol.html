@@ -17,7 +17,7 @@
       <a href="../docs/index.html" class="active">Docs</a>
       <a href="../ecosystem/index.html">Ecosystem</a>
       <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
-      <a class="button primary" href="../docs/run-a-node.html">Run a node</a>
+      <a class="button primary" href="../docs/first-agent-node.html">Run a node</a>
     </nav>
   </div>
 </header>
@@ -27,14 +27,29 @@
     <div class="group">
       <h4>Start here</h4>
       <a href="index.html">Overview</a>
-      <a href="concepts.html">Concepts</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
     </div>
     <div class="group">
-      <h4>Operators</h4>
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
       <a href="run-a-node.html">Run a node</a>
       <a href="put-your-app-behind-it.html">Put your app behind it</a>
       <a href="get-paid.html">Get paid</a>
-      <a href="peering.html">Peer with another node</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
       <a href="hidden-services.html">Hidden services</a>
     </div>
@@ -53,20 +68,36 @@
       <h4>Reference</h4>
       <a href="devnet.html">Devnet reference</a>
       <a href="protocol.html" class="active">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
     </div>
   </details>
   <aside class="sidebar" aria-label="Docs">
     <div class="group">
       <h4>Start here</h4>
       <a href="index.html">Overview</a>
-      <a href="concepts.html">Concepts</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
     </div>
     <div class="group">
-      <h4>Operators</h4>
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
       <a href="run-a-node.html">Run a node</a>
       <a href="put-your-app-behind-it.html">Put your app behind it</a>
       <a href="get-paid.html">Get paid</a>
-      <a href="peering.html">Peer with another node</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
       <a href="hidden-services.html">Hidden services</a>
     </div>
@@ -85,6 +116,7 @@
       <h4>Reference</h4>
       <a href="devnet.html">Devnet reference</a>
       <a href="protocol.html" class="active">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
     </div>
   </aside>
   <main class="doc">
@@ -148,7 +180,7 @@ REJECT   0x0e ‖ code(3) ‖ VarOctetString(triggeredBy)
 
 <h2 id="the-self-description"><a class="anchor" href="#the-self-description">The self-description</a></h2>
 
-<p><code>GET /ilp</code>, free and unauthenticated, answers with the node's <code>ilpAddresses</code>, <code>httpEndpoint</code> and <code>btpEndpoint</code>, <code>peerCarriages</code>, <code>edgeIdentity</code>, <code>batchSettlements</code>, <code>voucherSigners</code>, <code>routes</code> with prices, and <code>supportedVersions</code>. Fields a node has nothing to say about are omitted entirely, never sent empty. <a href="peering.html#read-the-other-node-first">Peering</a> shows a full one. A connector answers; it never announces.</p>
+<p><code>GET /ilp</code>, free and unauthenticated, answers with the node's <code>ilpAddresses</code>, <code>httpEndpoint</code> and <code>btpEndpoint</code>, <code>peerCarriages</code>, <code>edgeIdentity</code>, <code>batchSettlements</code>, <code>voucherSigners</code>, <code>routes</code> with prices, and <code>supportedVersions</code>. Fields a node has nothing to say about are omitted entirely, never sent empty. <a href="peering-by-hand.html#read-the-other-node-first">Peering</a> shows a full one. A connector answers; it never announces.</p>
 
 <h2 id="the-specs"><a class="anchor" href="#the-specs">The specs</a></h2>
 
@@ -186,7 +218,7 @@ REJECT   0x0e ‖ code(3) ‖ VarOctetString(triggeredBy)
 
 <p class="source">Written from <code>toon-client/docs/how-a-paid-packet-works.md</code>, <code>connector/docs/operators/x402-batch-settlement.md</code> and the connector's <code>docs/protocol/</code> index.</p>
 
-<nav class="pager" aria-label="Previous and next"><a class="prev" href="devnet.html"><small>Previous</small>Devnet reference</a><span></span></nav>
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="devnet.html"><small>Previous</small>Devnet reference</a><a class="next" href="exit-codes.html"><small>Next</small>Exit codes</a></nav>
   </main>
   <aside class="toc" aria-label="On this page"><h4>On this page</h4>
   <a href="#the-packet">The packet</a>

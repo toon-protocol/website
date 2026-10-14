@@ -23,13 +23,27 @@ SRC = ROOT / "src"
 NAV = [
     ("Start here", [
         ("index", "Overview", "What you get, what to run, and what holds. Then pick a path."),
-        ("concepts", "Concepts", "After this page the rest of the docs read without a glossary."),
+        ("agent-node", "The agent node", "Agent node, TOON app, connector, app, relay, peering, address and channel: one meaning each."),
+        ("concepts", "Connector concepts", "After this page the connector pages read without a glossary."),
     ]),
-    ("Operators", [
+    ("Run an agent node", [
+        ("install", "Install", "toon in ~/.local/bin, checked against the release's checksum, and the agent skills beside it."),
+        ("first-agent-node", "Your first agent node", "A hidden agent node on the devnet, funded and running, with an event on your own relay read back."),
+        ("networks-and-reachability", "Networks and reachability", "Which network init settles on and joins, and the connector reached hidden or on clearnet."),
+        ("money", "Money", "Where each address is funded, what each command moves, the spending limit, and channels by hand."),
+        ("agent-keys", "Agent keys", "A scoped, limited key an agent works the node with: its orders, its file, and the apps it may add."),
+        ("peering", "Peering", "A peering toward another operator, a route over it, a probe of the path's cost, and one paid packet."),
+        ("adding-an-app", "Adding an app", "Your HTTP service behind the connector at its own price, confined, with its variables and secrets."),
+        ("creating-a-toon-app", "Creating a TOON app", "A second connector with its own keys and onion endpoint, peered with the first, and how to destroy it."),
+        ("relay", "The relay", "Writes to your relay and to others', its settings and prices, and a live feed sold or bought."),
+        ("operations", "Operations", "up, down, status and logs, packet counts and history, every --json exit code, and where things live."),
+        ("backup-and-restore", "Backup and restore", "One sealed file that brings the wallet and the onion endpoints back on another machine."),
+    ]),
+    ("The connector, by hand", [
         ("run-a-node", "Run a node", "A node running on your machine and answering GET /ilp, in one command or by hand."),
         ("put-your-app-behind-it", "Put your app behind it", "Your own app behind a priced route, told who paid in three headers."),
         ("get-paid", "Get paid", "A node anyone on Base or Solana can open a channel to and pay, with no gas."),
-        ("peering", "Peer with another node", "Your node carrying another node's packets for a fee, set up from one URL."),
+        ("peering-by-hand", "Peer with another node", "Your node carrying another node's packets for a fee, set up from one URL."),
         ("operator-surface", "The operator surface", "A token that reads what you were paid, and a key that moves it."),
         ("hidden-services", "Hidden services", "Your node at a .anyone address with no domain and no open port, and a client that reaches it."),
     ]),
@@ -45,6 +59,7 @@ NAV = [
     ("Reference", [
         ("devnet", "Devnet reference", "Every devnet address, route and price, and the faucet that funds you."),
         ("protocol", "Protocol and specs", "The packet, the greeting and the self-description, and where the specs live."),
+        ("exit-codes", "Exit codes", "Every exit code and error code toon can return, and the rules behind each command's output."),
     ]),
 ]
 
@@ -69,7 +84,7 @@ def header(root, active):
       <a href="{root}docs/index.html"{cls('docs')}>Docs</a>
       <a href="{root}ecosystem/index.html"{cls('ecosystem')}>Ecosystem</a>
       <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
-      <a class="button primary" href="{root}docs/run-a-node.html">Run a node</a>
+      <a class="button primary" href="{root}docs/first-agent-node.html">Run a node</a>
     </nav>
   </div>
 </header>"""

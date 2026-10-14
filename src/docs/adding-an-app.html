@@ -1,0 +1,240 @@
+<p><code>toon add</code> puts a new app behind the connector of a TOON app you already run. The app gets its own route, <code>g.toon.&lt;segment&gt;.&lt;app&gt;</code>, and its own price, and shares the connector's identity, channels and peerings.</p>
+
+<p>Add an app to an existing connector unless it needs its own identity, prices for the whole connector, or its own peerings. Then <a href="creating-a-toon-app.html">create a TOON app</a> instead.</p>
+
+<h2>What an app is</h2>
+
+<p>An app is a plain HTTP service. The connector unseals each paid packet and makes the HTTP request inside it (method, path and body) to the app, then returns the app's answer to the payer. The app never sees a payment, so any HTTP service can be one. <a href="https://github.com/toon-protocol/gas-station"><code>gas-station</code></a> and <a href="https://github.com/toon-protocol/anytoon"><code>anytoon</code></a> are real payment-oblivious services, worth reading to see what a full app looks like. Neither can be started with <code>toon add --image</code>: each listens on its own ports and needs configuration and secrets <code>toon add</code> does not pass. Each is deployed with its own compose file, behind its own connector. The minimal app below is the one image this guide shows running under <code>toon add --image</code>.</p>
+
+<p>Given as a container image, an app must:</p>
+
+<ul>
+  <li>listen on port <strong>3100</strong> inside the container (<code>TOON_BLS_PORT</code> says so too),</li>
+  <li>answer <code>GET /health</code> with <code>200</code> within two minutes of starting,</li>
+  <li>keep anything it must not lose under <strong><code>/data</code></strong> (<code>TOON_DATA_DIR</code>), which is a directory in the agent node's home that survives restarts.</li>
+</ul>
+
+<p>The app is given <code>TOON_BLS_PORT</code> and <code>TOON_DATA_DIR</code>, and whatever variables and secrets you add it with (<a href="#variables-and-secrets">Variables and secrets</a>). An image that needs another variable to start fails with <code>app_failed</code>; <code>toon logs &lt;app&gt;</code> shows what it wrote before it stopped.</p>
+
+<p><code>toon</code> runs it with <code>docker</code>, confined, on a network of its own that publishes no port: nothing reaches the app except through its connector, and the app reaches nothing. See <a href="#what-an-app-may-and-may-not-do">What an app may and may not do</a>.</p>
+
+<p>Any answer is a paid answer. A <code>404</code> or a <code>400</code> is real work the payer asked for, so the packet is still fulfilled; status codes are for the payer to read, not a refund.</p>
+
+<h3>A minimal app</h3>
+
+<div class="codeblock"><div class="bar"><span>app.py</span></div>
+<pre><span class="c"># app.py: answers every request with what it was sent</span>
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+class App(BaseHTTPRequestHandler):
+    protocol_version = "HTTP/1.1"
+
+    def answer(self):
+        size = int(self.headers.get("content-length") or 0)
+        body = b'{"path":"%s","received":%d}' % (self.path.encode(), len(self.rfile.read(size)))
+        self.send_response(200)
+        self.send_header("content-type", "application/json")
+        self.send_header("content-length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    do_GET = do_POST = answer
+
+HTTPServer(("0.0.0.0", 3100), App).serve_forever()</pre></div>
+
+<div class="codeblock"><div class="bar"><span>Dockerfile</span></div>
+<pre>FROM python:3.13-alpine
+COPY app.py /app.py
+EXPOSE 3100
+CMD ["python", "-u", "/app.py"]</pre></div>
+
+<pre>docker build -t echo-app .</pre>
+
+<p>The same app is used by the end-to-end run, in <a href="https://github.com/toon-protocol/toon_cli/tree/main/docs/end-to-end/app"><code>docs/end-to-end/app</code></a>.</p>
+
+<h2>Walkthrough: add an app</h2>
+
+<p><strong>1. Find the TOON app to add it to.</strong></p>
+
+<pre>toon status
+<span class="c"># TOON app relay (ILP address g.toon.fb0e007c71750599): connector running ...</span></pre>
+
+<p><strong>2. Add it, with a price.</strong> <code>--price</code> is what a client pays the connector for one packet to the app, in base units; it defaults to 0.</p>
+
+<pre>toon add echo --to relay --image echo-app --price 2 --yes --json &gt; add.json
+jq '{address, restarted}' add.json
+<span class="c"># { "address": "g.toon.fb0e007c71750599.echo", "restarted": true }</span></pre>
+
+<p>A connector reads its routes only when it starts, so <code>add</code> restarts it, which drops the packets it holds in flight. While the connector is running, that needs <code>--yes</code>; without it <code>add</code> fails with <code>confirmation_required</code> and changes nothing. On a stopped agent node no <code>--yes</code> is needed and the app starts with the next <code>toon up</code>.</p>
+
+<p><strong>3. Check it is running and pay it.</strong></p>
+
+<pre>toon status
+toon logs echo
+toon send "$(jq -r .address add.json)" --amount 2 --yes
+echo '{"text":"hello"}' &gt; body.json
+toon send "$(jq -r .address add.json)" --amount 2 \
+  --method POST --path '/say?loud=1' --body body.json --yes</pre>
+
+<p><code>toon logs echo</code> shows what the app wrote to its standard output and standard error, kept in its data directory once its container stops, so it also answers after a failed start or while the agent node is stopped. <code>toon logs echo --connector</code> shows the log of the connector it is behind, where its paid requests pass. An app added with <code>--url</code> is not run here and has no log.</p>
+
+<p><code>--method</code> and <code>--path</code> are the request the app receives, and <code>--body</code> is a file sent as its <code>application/json</code> body; without them the request is an empty <code>POST /</code>. This, not the app's loopback address, is how you use it: a call to the loopback address is not paid.</p>
+
+<p>An app that takes a signed event as its body is sent one made by <code>toon event sign</code>, which prints an event signed with the agent identity and publishes nothing:</p>
+
+<pre>toon event sign --kind 5301 --tags '[["i","https://example.com","url"]]' &gt; body.json</pre>
+
+<p>A packet to an app behind your own connector needs no <code>--seal-to</code>. Others reach it over a peering toward your connector, with <code>--seal-to</code> set to your connector's <code>/ilp</code> URL.</p>
+
+<h2>An app you already serve</h2>
+
+<p>Give <code>--url</code> instead of <code>--image</code> and <code>toon</code> runs nothing; the connector delivers to that URL. <code>status</code> shows it as served there, since its process is yours to keep running:</p>
+
+<pre>toon add search --to relay --url http://127.0.0.1:8080/ --price 10 --yes</pre>
+
+<p>Keep such an app on loopback. Anything that can reach its URL directly can use it without paying.</p>
+
+<h2>Choose the address</h2>
+
+<p>By default the route is <code>g.toon.&lt;segment&gt;.&lt;app&gt;</code>. <code>--address</code> sets another prefix. Keep it under <code>g.toon.&lt;segment&gt;</code>: that is where every address the connector answers to sits.</p>
+
+<pre>toon add search-v2 --to relay --image search:2 --address g.toon.fb0e007c71750599.search.v2 --yes</pre>
+
+<h2>Say what a client should send</h2>
+
+<p><code>--request &lt;file&gt;</code> takes a file holding one JSON object that states what a client should send the app. The connector publishes it on the route, in <code>routes[]</code> of <code>GET &lt;connector&gt;/ilp</code> and in its terms, and never reads it, so its content is yours to define. A client reads it with <code>toon describe</code>, which shows each route's <code>request</code> under the route. A probe is not how to read it: the reject <code>toon probe</code> reports states what the path costs and carries no <code>request</code>.</p>
+
+<pre>cat &gt; request.json &lt;&lt;'EOF'
+{ "protocol": "http", "method": "POST", "path": "/echo", "params": { "text": "a string" } }
+EOF
+toon add echo --to relay --image echo-app --request request.json --yes
+toon route list --json | jq '.routes[] | {prefix, request}'</pre>
+
+<p><code>toon</code> checks only that the file is one JSON object a TOML table can carry: a file that is anything else, or holds a <code>null</code>, is refused with <code>usage</code> before anything changes. An app added without <code>--request</code> is published with no <code>request</code>. The request stays with the app across <code>toon down</code> and <code>toon up</code> and across restarts. To change it, remove the app and add it again.</p>
+
+<h2>Change the price</h2>
+
+<pre>toon route price g.toon.fb0e007c71750599.echo 5 --yes
+toon route list</pre>
+
+<p>This restarts the connector too, so it needs <code>--yes</code> while the connector runs.</p>
+
+<h2>Take an app away</h2>
+
+<pre>toon remove echo --yes</pre>
+
+<p>It removes the app and its route and restarts the connector.</p>
+
+<h2>Variables and secrets</h2>
+
+<p>An app that calls a chain or signs anything needs a key, and an image may read its settings from its environment. Give them when adding the app, with <code>toon add</code> or <code>toon create</code> and only with <code>--image</code> (any of them with <code>--url</code> is refused with <code>usage</code>). Each flag is repeatable.</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Flag</th><th>The app is started with</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>--env NAME=value</code></td><td>the variable <code>NAME</code> set to <code>value</code>: everything after the first <code>=</code>, which may be empty</td><td><code>--env LOG_LEVEL=debug</code></td></tr>
+<tr><td><code>--secret NAME=&lt;file&gt;</code></td><td>the variable <code>NAME</code> set to the contents of your file, less one trailing newline</td><td><code>--secret SIGNING_KEY=./signing.key</code></td></tr>
+<tr><td><code>--secret-file &lt;path&gt;=&lt;file&gt;</code></td><td>your file's bytes, unchanged, mounted read-only at <code>&lt;path&gt;</code> in the container</td><td><code>--secret-file /run/secrets/minter.key=./minter.key</code></td></tr>
+</tbody></table></div>
+
+<pre>toon add minter --to relay --image minter:1 --env LOG_LEVEL=debug \
+  --secret SIGNING_KEY=./signing.key --secret-file /run/secrets/minter.key=./minter.key --yes</pre>
+
+<p>A variable is kept in the app's record in the agent node's home, and <code>toon status</code> shows its name and <code>toon status --json</code> its value. A secret is copied into the app's <code>secrets</code> directory in the home, outside <code>/data</code>, in a file only your account can read (mode 0600, in a directory of mode 0700). The record holds its name or its path in the container, never its contents, and no output, log line or error message of <code>toon</code> carries them. The copy is what the app is started with every time, across <code>toon down</code>, <code>toon up</code> and restarts, although you delete your own file. Removing the app removes the copies.</p>
+
+<p><code>toon status --json</code> shows, for each app:</p>
+
+<pre>"variables": { "LOG_LEVEL": "debug" },
+"secrets": { "variables": ["SIGNING_KEY"], "files": ["/run/secrets/minter.key"] }</pre>
+
+<p>with empty values for an app that has none, and <code>null</code> for both for an app at a URL.</p>
+
+<p>Which form to use for a secret: one given with <code>--secret</code> is a variable of the container, and <strong>anyone who can use docker on the machine can read it</strong> (<code>docker inspect</code>). One given with <code>--secret-file</code> is a file the app can only read, and docker does not show it. Use the file where the image can read one. Whoever can read the agent node's home can read both, as they can already sign as the agent.</p>
+
+<p>These are refused with <code>usage</code>, before anything is written, pulled or restarted:</p>
+
+<ul>
+  <li>a name that is not a letter or <code>_</code> followed by letters, digits and <code>_</code>, a name that begins <code>TOON_</code> (those belong to the contract between <code>toon</code> and an app), and a name given twice across <code>--env</code> and <code>--secret</code>;</li>
+  <li>a file that does not exist, cannot be read, is empty or is larger than 64 KiB;</li>
+  <li>for <code>--secret</code>, contents that are not UTF-8 or that hold a NUL byte or a newline other than the trailing one;</li>
+  <li>for <code>--secret-file</code>, a path that is not absolute or that holds <code>:</code>, <code>,</code> or <code>..</code>, a path at or under <code>/data</code>, <code>/tmp</code> or one of the app's <code>--scratch</code> paths, and a path given twice, in any spelling.</li>
+</ul>
+
+<p>A variable or a secret is not an allowance: it tells the app something and lets it reach nothing more. They are set when the app is added, and <code>toon change</code> changes them (below). The relay takes none: what it is started with comes from its settings and the agent identity. An agent key cannot supply a secret. It can name one an app needs, with <code>--secret NAME</code> or <code>--secret-file &lt;path&gt;</code> and no file; the add is then held as a pending app, and the operator supplies each file on <code>toon approve &lt;app&gt; --secret NAME=&lt;file&gt; --secret-file &lt;path&gt;=&lt;file&gt;</code>. The approval must give exactly the secrets named, no fewer and no more, or it is refused with <code>usage</code>.</p>
+
+<h2>What an app may and may not do</h2>
+
+<p>Every app runs confined (ADR 0011), and so does the relay, except that the relay stays on the host's network. An app has:</p>
+
+<ul>
+  <li>a docker network of its own, made when the app starts and removed when it stops. It is an internal network: the app opens no connection out and reaches no other app. No port is published; <code>toon</code> reaches the app at its container's address on that network;</li>
+  <li>no capabilities and no way to gain any;</li>
+  <li>the user and group of the process that runs <code>toon</code>, whatever the image names;</li>
+  <li>a read-only root filesystem. It can write only <code>/data</code>, a 64 MB <code>/tmp</code> and its scratch paths;</li>
+  <li>512 MB of memory with no swap, 1 CPU and 256 processes.</li>
+</ul>
+
+<p><code>toon status --json</code> reports this as <code>confinement</code> for each app.</p>
+
+<p>An operator can make an allowance for one app when adding it, with <code>toon add</code> or <code>toon create</code> (and only with <code>--image</code>; any of them with <code>--url</code> is refused with <code>usage</code>):</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Flag</th><th>Allows</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>--allow-egress</code></td><td>The app opens connections out: its network is an ordinary one of its own</td><td><code>toon add oracle --to relay --image oracle --allow-egress --yes</code></td></tr>
+<tr><td><code>--scratch &lt;path&gt;</code></td><td>A further writable tmpfs at an absolute path in the container, emptied on every restart; repeatable</td><td><code>--scratch /var/cache/app --scratch /run</code></td></tr>
+<tr><td><code>--memory &lt;size&gt;</code></td><td>A memory limit in place of 512m</td><td><code>--memory 2g</code></td></tr>
+<tr><td><code>--cpus &lt;number&gt;</code></td><td>A CPU limit in place of 1</td><td><code>--cpus 0.5</code></td></tr>
+<tr><td><code>--pids &lt;number&gt;</code></td><td>A limit on processes in place of 256</td><td><code>--pids 1024</code></td></tr>
+</tbody></table></div>
+
+<p>A value that cannot be used (a relative scratch path, <code>/data</code> or <code>/tmp</code> as one, a size that does not parse, zero) is refused with <code>usage</code> and nothing changes. The allowances are kept with the app across <code>toon down</code>, <code>toon up</code> and restarts. To change them, use <code>toon change</code> (below).</p>
+
+<p>There is no allowance for a capability, for another user or for running unconfined. An image that needs root or a capability is not supported, and fails with <code>app_failed</code>. Rootless docker is not supported: there the host cannot reach a container's address. Each app takes one docker network, and docker's default address pools hold about thirty.</p>
+
+<p>An app that was added before apps were confined has no allowances and is confined with the defaults from the next <code>toon up</code>. If it no longer starts, or its calls out now fail, it may need an allowance (most often <code>--allow-egress</code>: <code>toon change &lt;app&gt; --allow-egress --yes</code>) or a new image; an image is changed by removing the app and adding it again. When an app does not start or does not answer its health check, <code>app_failed</code> says it runs confined; <code>toon logs &lt;app&gt;</code> shows what it wrote.</p>
+
+<h2>A runtime for an app</h2>
+
+<p>A confined app still shares the machine's kernel. A <strong>runtime</strong> starts its container under a sandbox such as gVisor's <code>runsc</code>, so that the kernel the app talks to is not the machine's. A runtime is not an allowance: it lets the app do nothing more, and an app with a runtime and nothing else has no allowances.</p>
+
+<pre>toon add oracle --to relay --image example.com/team/oracle --runtime runsc --yes</pre>
+
+<p><code>--runtime &lt;name&gt;</code> on <code>toon add --image</code> and <code>toon create --image</code> starts that app's container with <code>docker run --runtime &lt;name&gt;</code>. It is kept with the app, so it holds across <code>toon down</code>, <code>toon up</code> and restarts, and <code>toon status --json</code> reports it as <code>confinement.runtime</code> (<code>null</code> for docker's own); plain <code>toon status</code> names it. <code>--runtime default</code> means docker's own runtime: no <code>--runtime</code> reaches docker. A name holds letters, digits, <code>.</code>, <code>_</code> and <code>-</code> and does not start with <code>-</code>; anything else, and <code>--runtime</code> with <code>--url</code>, is refused with <code>usage</code> and nothing changes.</p>
+
+<p>The agent node can have a runtime too. If the home holds <code>untrusted-runtime</code>, a text file you edit by hand (<code>toon init</code> does not write it), the first line that is not blank and does not start with <code>#</code> is its name:</p>
+
+<pre><span class="c"># gVisor, for every image off the list of trusted images</span>
+runsc</pre>
+
+<p>When you add or create an app from an image that is not on the list of trusted images (<code>trusted-images</code>, see <a href="agent-keys.html">agent-keys.md</a>) and give no <code>--runtime</code>, the app gets the node's runtime. An explicit <code>--runtime</code>, <code>default</code> included, always wins. The list never refuses your add; this is the only thing it does to it. An unusable name in the file refuses the add with <code>usage</code>.</p>
+
+<p>The runtime is <strong>settled when the app is added</strong> and recorded with it. Editing or removing <code>untrusted-runtime</code>, or editing <code>trusted-images</code>, changes no app already added, and no app in a home made before runtimes. To change one app's, run <code>toon change &lt;app&gt; --runtime &lt;name&gt;</code> (or <code>--runtime default</code>); the app restarts alone, as for a change of a limit, and keeps its allowances, variables and secrets. The relay has no runtime: <code>toon change relay --runtime</code> is refused with <code>usage</code>.</p>
+
+<p><code>toon</code> does not check that the runtime is installed. Where it is not, docker refuses to start the container and the add fails with <code>app_failed</code>, whose message names the runtime beside what docker said. Installing gVisor and registering <code>runsc</code> with docker is yours to do. An agent key cannot name a runtime and have the app added at once (see <a href="agent-keys.html">agent-keys.md</a>).</p>
+
+<h2>Change an app</h2>
+
+<p><code>toon change &lt;app&gt;</code> gives an app that is already added other variables, secrets or allowances and keeps everything else about it: its image, address, price, request and whatever no flag names. It takes the flags of <code>toon add</code> (<code>--runtime</code>, <code>--allow-egress</code>, <code>--scratch</code>, <code>--memory</code>, <code>--cpus</code>, <code>--pids</code>, <code>--env</code>, <code>--secret</code>, <code>--secret-file</code>), with the same meaning and the same checks, and flags that take something away: <code>--no-allow-egress</code>, <code>--unset-scratch &lt;path&gt;</code>, <code>--unset-env &lt;name&gt;</code>, <code>--unset-secret &lt;name&gt;</code>, <code>--unset-secret-file &lt;path&gt;</code>. <code>--memory</code>, <code>--cpus</code> and <code>--pids</code> each accept <code>default</code>, which returns the limit to its default.</p>
+
+<pre>toon change oracle --secret API_KEY=./new-key --unset-env DEBUG --memory 2g --yes</pre>
+
+<p>A name is one thing the app is started with: <code>--secret NAME=&lt;file&gt;</code> over a variable <code>NAME</code> replaces the variable with the secret, and <code>--env NAME=value</code> over a secret <code>NAME</code> replaces the secret. A name given twice in one command is refused. A secret given again is always a change.</p>
+
+<p>It restarts the app, so it refuses with <code>confirmation_required</code> without <code>--yes</code>. Packets to the app are rejected until it is back; packets to the other apps behind its connector are delivered. The connector restarts too, and drops the packets it holds in flight, only if the app comes back somewhere else: the app keeps its docker network across the restart (granting or withdrawing <code>--allow-egress</code> remakes it), and the relay keeps its ports if they are still free. Otherwise the connector is left running, with its pid and its count of restarts as they were. <code>--json</code> and the sentence it prints say which happened (<code>restarted</code>). If the agent node is not running, the change is checked and recorded, and the app starts with it at the next <code>toon up</code>. If the app does not start with the change, the change is put back, the app starts again as it was (and its connector restarts only if the app comes back somewhere else), and the command fails with <code>app_failed</code>; the copy of a secret that was replaced stays in the home until the app has started with the change, and is deleted then. <code>--json</code> prints the app, its TOON app, what was set and what was taken away by name (never a secret's contents) and whether a connector restarted.</p>
+
+<p>It is refused with <code>usage</code>, with nothing recorded and nothing restarted, when no flag is given, when the change leaves the app as it is, when it takes away a variable, secret, secret file or scratch path the app does not have (the message names what it has), and when the app is at a <code>--url</code>, which is not run. The relay takes only <code>--memory</code>, <code>--cpus</code> and <code>--pids</code>. An unknown app is <code>unknown_name</code>.</p>
+
+<h2>What it refuses</h2>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Error code</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>confirmation_required</code></td><td>The connector is running and <code>--yes</code> was not given; nothing changed</td></tr>
+<tr><td><code>name_taken</code></td><td>A TOON app or an app of this agent node already has that name, or it is not usable</td></tr>
+<tr><td><code>unknown_name</code></td><td><code>--to</code> does not name a TOON app of this agent node</td></tr>
+<tr><td><code>one_relay</code></td><td>The image is the relay's: an agent node runs one relay, the one <code>init</code> made</td></tr>
+<tr><td><code>app_failed</code></td><td>The app did not start or did not answer <code>/health</code>; <code>toon logs &lt;app&gt;</code> shows what it wrote</td></tr>
+</tbody></table></div>
+
+<p class="source">Written from <code>toon_cli/docs/guide/adding-an-app.md</code> at commit <code>cc23333f90c4</code>.</p>

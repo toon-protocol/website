@@ -35,6 +35,18 @@
     "assets/site.css": {
       "id": "<arweave tx id of this file>"
     },
+    "docs/adding-an-app.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/agent-keys.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/agent-node.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/backup-and-restore.html": {
+      "id": "<arweave tx id of this file>"
+    },
     "docs/channels.html": {
       "id": "<arweave tx id of this file>"
     },
@@ -44,10 +56,19 @@
     "docs/concepts.html": {
       "id": "<arweave tx id of this file>"
     },
+    "docs/creating-a-toon-app.html": {
+      "id": "<arweave tx id of this file>"
+    },
     "docs/devnet.html": {
       "id": "<arweave tx id of this file>"
     },
     "docs/errors.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/exit-codes.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/first-agent-node.html": {
       "id": "<arweave tx id of this file>"
     },
     "docs/get-paid.html": {
@@ -59,10 +80,25 @@
     "docs/index.html": {
       "id": "<arweave tx id of this file>"
     },
+    "docs/install.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/money.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/networks-and-reachability.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/operations.html": {
+      "id": "<arweave tx id of this file>"
+    },
     "docs/operator-surface.html": {
       "id": "<arweave tx id of this file>"
     },
     "docs/pay-a-node.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/peering-by-hand.html": {
       "id": "<arweave tx id of this file>"
     },
     "docs/peering.html": {
@@ -72,6 +108,9 @@
       "id": "<arweave tx id of this file>"
     },
     "docs/put-your-app-behind-it.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/relay.html": {
       "id": "<arweave tx id of this file>"
     },
     "docs/run-a-node.html": {

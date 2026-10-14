@@ -1,127 +1,107 @@
-<p>Terminating your own routes earns from callers who know your address. Peering puts you on paths that start somewhere else: you carry someone's packet one hop further, and keep a fee for doing it.</p>
+<p>A connector reaches other connectors only over <strong>peerings</strong>: standing arrangements to forward packets to a connector, each paid on a channel it opens toward that connector.</p>
 
-<p><strong>The whole of it</strong> is one free read and three signed writes against your own node:</p>
-<pre>curl -s https://their-node.example/ilp | jq          <span class="c"># 1. read their terms, free</span>
-sign-write.sh -X POST -p /peers ...                  <span class="c"># 2. open your channel toward them</span>
-sign-write.sh -X POST -p /channels/&lt;id&gt;/fund ...     <span class="c"># 3. keep collateral behind your vouchers</span>
-sign-write.sh -X POST -p /routes/peers ...           <span class="c"># 4. route through it, at your price</span></pre>
+<p>Three things to hold on to:</p>
 
-<p>A peering is created by an <strong>operator</strong> and by nothing else. It cannot be bought, learned or announced into existence. What you give it is one thing: <strong>the counterparty's self-description URL</strong>.</p>
+<ol>
+  <li><strong>A peering goes one way.</strong> Yours lets <em>you</em> send to them. They send to you only if their operator peers toward you as well.</li>
+  <li><strong>A peering is paid for up front.</strong> It opens a channel with a deposit, so it needs <code>--deposit &lt;n&gt; --yes</code> and counts against the spending limit.</li>
+  <li><strong>A peering alone carries nothing.</strong> A <em>route</em> says which ILP addresses go over it. <code>toon join</code> adds the route for you; <code>toon peer add</code> does not.</li>
+</ol>
 
-<h2>Being peerable</h2>
+<h2>Read what a connector offers</h2>
 
-<p>The minimal config from <a href="run-a-node.html">Run a node</a> boots and serves, but nobody can peer <em>with</em> it: its self-description has no endpoints and <code>"peerCarriages": []</code>. Three more keys close that gap:</p>
+<p>Before you peer toward a connector or send to one, read its self-description. It is free, and nothing is counted against the spending limit:</p>
 
-<div class="codeblock"><div class="bar"><span>connector.toml</span></div>
-<pre><span class="c"># Top level, beside client_edge_addr.</span>
-peer_expose = <span class="s">"http"</span>             <span class="c"># "btp", "http", "both", or "neither" (default)</span>
+<pre>toon describe http://abc…xyz.anyone/ilp   <span class="c"># addresses, settlement terms, each route and its price</span>
+toon describe --json &lt;url&gt;                <span class="c"># the document as the connector gave it, under `description`</span>
+toon describe                             <span class="c"># your own connector; `--app` chooses which</span></pre>
 
-[node]
-addresses     = [<span class="s">"g.your.node"</span>]
-http_endpoint = <span class="s">"https://your-node.example/ilp"</span></pre></div>
+<p>On a hidden agent node the request goes through the overlay. A connector that does not answer a self-description fails with <code>describe_failed</code>.</p>
 
-<p><code>peer_expose</code> says which carriage this node opens a peer listener for. <code>[node]</code> publishes where clients reach it. <code>http_endpoint</code> is required whenever anything is exposed, because a peer pays you by asking your client edge over HTTP whichever carriage its packets ride; <code>btp_endpoint</code> is required only when <code>"btp"</code> or <code>"both"</code> is exposed. For a local trial only, <code>peer_allow_plaintext_endpoints = true</code> accepts <code>http://</code> and <code>ws://</code>; every deployed config stays on <code>https://</code> and <code>wss://</code>.</p>
+<h2>Join a network</h2>
 
-<h2>Read the other node first</h2>
+<p>The simplest peering is toward the network's own connector, its hub. It reaches everything on the network:</p>
 
-<p><code>GET /ilp</code> on the counterparty's URL is free, unauthenticated, and the whole of your homework. Do it by hand before you write anything:</p>
+<pre>toon join devnet --deposit 1000000 --yes
+toon peer list        <span class="c"># a peering labelled devnet</span>
+toon route list       <span class="c"># a route for g.toon over it, and one for each address the</span>
+                      <span class="c"># connector publishes that g.toon does not cover</span></pre>
 
-<pre>curl -s https://their-node.example/ilp | jq</pre>
+<p><code>join</code> reads the connector's self-description and forwards its published addresses too, at price 0 and inside the one deposit: the default mainnet node answers at <code>g.drew.*</code>, not under <code>g.toon</code>. The report lists every forwarded prefix. If the self-description cannot be read, the join still succeeds with <code>g.toon</code> and says what was not routed; add that route by hand.</p>
 
-<div class="codeblock"><div class="bar"><span>Their self-description</span></div>
-<pre>{
-  "ilpAddresses": ["g.their.node"],
-  "httpEndpoint": "https://their-node.example/ilp",
-  "peerCarriages": ["http"],
-  "edgeIdentity": { "keyId": "connector-signer", "publicKey": "0x04…" },
-  "batchSettlements": [{
-    "network": "eip155:84532",
-    "asset": "0x0C996d7c934c79a6255254875607Fe69df25C0E1",
-    "payTo": "0x…",
-    "receiverAuthorizer": "0x…",
-    "withdrawDelay": 86400,
-    "name": "USDC",
-    "version": "2"
-  }],
-  "voucherSigners": [{ "network": "eip155:84532", "signer": "0x…" }],
-  "routes": [{ "prefix": "g.their.node.app", "price": "1000" }],
-  "supportedVersions": [1],
-  "defaultVersion": 1
-}</pre></div>
+<p>You can join only the network <code>init</code> was given, and only once. <code>join_refused</code> says which rule stopped it; nothing was spent.</p>
+
+<h2>Send a packet</h2>
+
+<p>Send a packet to any ILP address your routes reach. To an app behind a connector that is not yours, add <code>--seal-to</code> with that connector's <code>/ilp</code> URL, so the request inside the packet is sealed to it and only it can read it:</p>
+
+<pre>toon send g.toon.3fa29c01b2d4e5f6.search --amount 10 \
+  --seal-to http://abc…xyz.anyone/ilp --yes --json</pre>
+
+<p>The report says <code>fulfilled</code>, with the app's answer, or <code>rejected</code>, with a reject code in <code>reject.code</code>, and always <code>paid</code>. A rejected packet exits 1.</p>
+
+<p>A connector on the way may charge to forward. Learn what the path costs with a probe, which carries nothing unless you give it an <code>--amount</code>:</p>
+
+<pre>toon probe g.toon.3fa29c01b2d4e5f6.search --seal-to http://abc…xyz.anyone/ilp --json</pre>
+
+<p>The report of a probe that was rejected says <code>cost</code>. If <code>complete</code> is <code>true</code> it is the whole path's cost: send it as <code>toon send --amount</code>. If <code>complete</code> is <code>false</code> the probe stopped at a connector it could not pay, and <code>cost</code> is the amount to carry past it: probe again with <code>--amount &lt;cost&gt; --yes</code>, which spends it. A probe whose amount covers the path is delivered and paid for like a send, and a route that charges nothing is delivered an amount-0 probe too.</p>
+
+<h2>Walkthrough: peer with another operator</h2>
+
+<p>Alice and Bob each run an agent node. Alice wants to publish to Bob's relay; later Bob wants to pay Alice's apps.</p>
+
+<p><strong>1. Bob shares his connector's address.</strong> It is in his <code>status</code>:</p>
+
+<pre><span class="c"># Bob</span>
+toon status --json | jq '.agent_node.toon_apps[0].connector.ilp_address'
+<span class="c"># "g.toon.9c41e07d2a6b3f18"</span></pre>
+
+<p>His connector's URL is his onion endpoint, from <code>toon init</code>, with <code>/ilp</code>: for example <code>http://bob…anyone/ilp</code>. He sends Alice both.</p>
+
+<p><strong>2. Alice peers toward Bob, and routes his addresses over the peering.</strong></p>
+
+<pre><span class="c"># Alice</span>
+toon peer add http://bob…anyone/ilp --deposit 1000000 --id bob --yes
+toon route add g.toon.9c41e07d2a6b3f18 --peer bob</pre>
+
+<p><code>--id</code> labels the peering; the label is what <code>route add --peer</code> and <code>peer remove</code> take.</p>
+
+<p><strong>3. Alice pays Bob's relay.</strong></p>
+
+<pre><span class="c"># Alice</span>
+toon event publish --kind 1 --content "hi Bob" --relay ws://bob…anyone:7100 --yes</pre>
+
+<p>Had she skipped step 2, the publish would fail with <code>peering_needed</code> and print the exact <code>peer add</code> and <code>route add</code> to run (only the <code>route add</code>, with no new deposit, when a peering already reaches the relay's connector). Nothing is paid and nothing is created for her.</p>
+
+<p><strong>4. For Bob to pay Alice</strong>, he repeats steps 1 and 2 in the other direction.</p>
+
+<p>Running <code>peer add</code> again with the same URL finds the channel it already opened: it reports <code>deposited: false</code> and spends nothing.</p>
+
+<h2>Run a peering as a forwarder</h2>
+
+<p>When others send packets through your connector to a peer, you may keep a fee of each packet you forward over that peering, and cap how much one packet may carry:</p>
+
+<pre>toon peer add http://carol…anyone/ilp --deposit 1000000 --id carol \
+  --fee 100 --max-packet-amount 50000 --yes
+toon route add g.toon.5d0e8f2a91b7c364 --peer carol</pre>
+
+<h2>Remove a peering or a route</h2>
+
+<pre>toon route remove g.toon.9c41e07d2a6b3f18
+toon peer remove bob</pre>
+
+<p>Collateral comes back only through the chain: find the channel in <code>toon channel list</code> and withdraw it with <code>toon channel withdraw</code> (<a href="money.html#channels">Money</a>).</p>
+
+<h2>When it refuses</h2>
 
 <div class="tablewrap"><table>
-<thead><tr><th>Field</th><th>What it settles</th></tr></thead>
+<thead><tr><th>Error code</th><th>Meaning</th></tr></thead>
 <tbody>
-<tr><td><code>peerCarriages</code></td><td>Empty means not dialable: they have not set <code>peer_expose</code>, and your write will answer <code>502</code>.</td></tr>
-<tr><td><code>httpEndpoint</code> / <code>btpEndpoint</code></td><td>Where you dial, and which carriage: <code>wss://</code> is BTP, <code>https://</code> is ILP-over-HTTP. BTP wins where both are published.</td></tr>
-<tr><td><code>batchSettlements[]</code></td><td>You need x402 terms on a network <strong>in common</strong>. No overlap is a <code>502</code>.</td></tr>
-<tr><td><code>voucherSigners[]</code></td><td>The key their vouchers are signed with. Without one for the shared network the EVM write is a <code>502</code>.</td></tr>
-<tr><td><code>routes[].price</code></td><td>What their terminating route charges: the number your packet's amount has to cover. A decimal <strong>string</strong>, not a number.</td></tr>
+<tr><td><code>peer_not_peerable</code></td><td>The other connector refuses peerings. Only its operator can change that</td></tr>
+<tr><td><code>peer_failed</code></td><td>Your connector refused the peering, or could not be reached</td></tr>
+<tr><td><code>route_failed</code></td><td>A route write was refused, or the prefix is not usable</td></tr>
+<tr><td><code>peering_needed</code></td><td>No route forwards the relay you tried to pay; the message names what to run (just a <code>route add</code> if a peering already reaches its connector)</td></tr>
+<tr><td><code>unfunded</code></td><td>The settlement key lacks the gas for the deposit; nothing was sent</td></tr>
 </tbody></table></div>
 
-<p>Fields a node has nothing to say about are omitted entirely, never sent empty, so parse for absent keys. Note what is <em>not</em> there: no channel id, no peer list, no fee, no cap. A peering is <strong>two one-way x402 channels</strong>, one opened by each side. You open and fund yours toward their <code>payTo</code>, they open theirs toward yours, and each node recognises the other's channel by the <code>voucherSigners</code> key the other publishes. No identifier and no shared secret is ever exchanged.</p>
-
-<h2>The three writes</h2>
-
-<p>Peering is three signed writes against <strong>your own</strong> <a href="operator-surface.html">operator surface</a>, in this order. <code>sign-write.sh</code> is the shipped signer.</p>
-
-<p><strong>1. Establish the peering.</strong> This is the write that reads their URL:</p>
-
-<pre>docs/operators/sign-write.sh -k operator-write.key -X POST -p /peers \
-  -u https://your-node.example \
-  -b '{"id":"their-node","url":"https://their-node.example/ilp","fee":100,"max_packet_amount":5000,"deposit":100000}'</pre>
-
-<div class="codeblock"><div class="bar"><span>The node's answer</span></div>
-<pre>{
-  "id": "their-node",
-  "fee": 100,
-  "max_packet_amount": 5000,
-  "source": "runtime",
-  "channel": { "id": "0x…", "status": "created", "chain": "evm" }
-}</pre></div>
-
-<p>Your node fetches that URL, picks the carriage from their endpoint's scheme, finds the settlement chain you share, and <strong>opens and funds your own outbound x402 channel toward them</strong> with <code>deposit</code>, or finds the one you already have open, spending nothing. <code>"status"</code> says which branch it took, <code>"created"</code> or <code>"found"</code>. They do the same with your URL; until they do, their packets reach you as a client's.</p>
-
-<ul>
-  <li><code>id</code> is your own local label; nothing puts it on the wire.</li>
-  <li><code>fee</code> is what you keep for carrying one packet over this peering: flat, per packet, never a share of the amount.</li>
-  <li><code>max_packet_amount</code> is the largest single packet you will carry for them, which is the most they can cost you at once.</li>
-  <li>Both are in base units of the channel this peering settles on. Two nodes that share more than one chain must say which: <code>"chain": "evm"</code> or <code>"solana"</code>.</li>
-</ul>
-
-<p><strong>2. Keep your own collateral behind your own vouchers.</strong> <code>fund</code> takes an increment, so posting the same write twice deposits twice:</p>
-
-<pre>docs/operators/sign-write.sh -k operator-write.key -X POST -p /channels/0x…/fund \
-  -u https://your-node.example -b '{"amount":3000}'</pre>
-
-<p>That is also the cure when a channel runs out of headroom and starts refusing packets <code>T00</code>. The router's view refreshes on its own schedule, so give it a minute or two before funding again.</p>
-
-<p><strong>3. Route through the peering.</strong> A peering and a route are different decisions, and either can exist without the other:</p>
-
-<pre>docs/operators/sign-write.sh -k operator-write.key -X POST -p /routes/peers \
-  -u https://your-node.example \
-  -b '{"prefix":"g.their.node","peer_id":"their-node","price":1100}'</pre>
-
-<p><code>price</code> here is what <strong>your</strong> caller pays you for the whole path. What you retain is the <code>fee</code> on the peering; the rest goes onward. So the arithmetic that has to hold, and that nothing checks for you, is:</p>
-
-<pre>your price − your fee  ≥  the next hop's price
-      1100 −       100  =  1000  ✓</pre>
-
-<p>One unit short and the far side rejects the packet outright, <code>F03</code>: "claim rejected: advances value by 950, less than this route's price of 1000". A refusal, not a discount.</p>
-
-<p><code>GET /routes/peers</code> reads the table back. <code>DELETE /peers/:id</code> is the kill switch: it takes the carriage away with the row, immediately and with no restart. A peering still referenced by a runtime route is refused until the route goes. A peering committed to the config file is the same two channels recorded as <code>[[peers]]</code>, <code>[[peer_channels]]</code> and <code>[[pay_channels]]</code> rows; config always wins a collision.</p>
-
-<h2>Before you point this at a real chain</h2>
-
-<ul>
-  <li><strong><code>POST /peers</code> spends gas</strong>, because it may open a channel and wait for confirmation. It is safe to retry: the same request against an established peering finds the same channel.</li>
-  <li><strong><code>fee</code> and <code>max_packet_amount</code> are yours to choose.</strong> No document can supply them; they are your policy about this counterparty.</li>
-  <li><strong>A <code>502</code> is about them, a <code>400</code> is about you.</strong> A common one: <code>POST /peers</code> takes a self-description URL, so an origin with no <code>/ilp</code> on the end answers <code>502</code> naming that fix.</li>
-  <li><strong>Their identity is trust-on-first-use over TLS, pinned by nothing.</strong> Whatever that URL serves is who the peering is with, and that choice determines the channel address. Vet the URL.</li>
-  <li><strong>A hop can take your claim and decline to carry.</strong> Every packet you forward carries its own covering claim, so a reject comes back with that claim spent. This can only ever happen to the one packet in flight; nobody holds your deposit. Keep packets small, and let the amount grow with a path's record.</li>
-  <li><strong>A new peering starts at a conservative cap</strong>, and nothing raises it automatically. Post the same <code>id</code> again with a larger <code>max_packet_amount</code>. An amount is a 64-bit integer, so one packet on an 18-decimals leg tops out around 18.4 tokens.</li>
-</ul>
-
-<p>The connector repository has a <a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/local-peering-lab.md">local peering lab</a>: two nodes, a disposable chain, and one packet across the peering, with nothing outside a local anvil.</p>
-
-<p class="source">Written from <code>connector/docs/guide/peering.md</code>.</p>
+<p class="source">Written from <code>toon_cli/docs/guide/peering.md</code> at commit <code>cc23333f90c4</code>.</p>

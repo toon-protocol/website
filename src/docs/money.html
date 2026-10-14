@@ -1,0 +1,89 @@
+<p>Amounts are always in the token's <strong>base units</strong>. On the devnet the token has 6 decimals, so <code>1000000</code> is one token.</p>
+
+<h2>The wallet</h2>
+
+<p><code>toon init</code> generates one mnemonic and derives every key from it: a settlement key per connector and chain, each connector's identity, the agent identity that signs events, and the key that signs your spending limit.</p>
+
+<pre>toon wallet show        <span class="c"># addresses by chain, the identities (needs the passphrase)</span>
+toon wallet balances    <span class="c"># what each address holds, by TOON app and chain</span></pre>
+
+<h2>Funding</h2>
+
+<p>Each connector's settlement key needs two things:</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>What</th><th>Needed for</th><th>If missing</th></tr></thead>
+<tbody>
+<tr><td>At least one whole token</td><td><code>toon up</code> to start that connector</td><td><code>toon up</code> fails with <code>unfunded</code></td></tr>
+<tr><td>A little ETH for gas</td><td>Anything that sends a transaction: <code>join</code>, <code>peer add</code> and <code>create</code> with a deposit, <code>channel open</code>, <code>fund</code>, <code>withdraw</code>, <code>land</code></td><td>That command fails with <code>unfunded</code>, before anything is charged or sent</td></tr>
+</tbody></table></div>
+
+<p>The <code>unfunded</code> message names each address and the amount it needs. Where the funds come from depends on the network:</p>
+
+<ul>
+  <li><strong>devnet</strong>: <code>toon wallet fund</code> asks the faucet for the token. The faucet sends no ETH; get Base Sepolia ETH from a public faucet.</li>
+  <li><strong>sandbox</strong> and <strong>mainnet</strong>: there is no faucet (<code>faucet_unavailable</code>). Send funds to the addresses <code>toon wallet show</code> lists.</li>
+</ul>
+
+<p>With <code>--solana</code> at <code>init</code>, the Solana key also needs the token and 0.01 SOL before <code>up</code>.</p>
+
+<h2>Commands that move money</h2>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Command</th><th>What it moves</th></tr></thead>
+<tbody>
+<tr><td><code>toon send &lt;address&gt; --amount &lt;n&gt; --yes</code></td><td>One packet of <code>n</code></td></tr>
+<tr><td><code>toon probe &lt;address&gt; --amount &lt;n&gt; --yes</code></td><td>Up to <code>n</code>; with no <code>--amount</code> a probe moves nothing and needs no <code>--yes</code></td></tr>
+<tr><td><code>toon peer add &lt;url&gt; --deposit &lt;n&gt; --yes</code></td><td><code>n</code> into a new channel</td></tr>
+<tr><td><code>toon join &lt;network&gt; --deposit &lt;n&gt; --yes</code></td><td><code>n</code> into a channel toward the network's hub</td></tr>
+<tr><td><code>toon create &lt;name&gt; --deposit &lt;n&gt; --yes</code></td><td><code>n</code> into each of two channels: <code>2n</code></td></tr>
+<tr><td><code>toon event publish --relay &lt;url&gt; --yes</code></td><td>The relay's price, or <code>--amount</code></td></tr>
+<tr><td><code>toon relay subscribe &lt;url&gt; --amount &lt;n&gt; --yes</code></td><td>Up to <code>n</code>, in whole packets</td></tr>
+</tbody></table></div>
+
+<p>The three peerings take an optional <code>--chain evm|solana</code>. It is needed when your connector and the other settle on more than one chain: the connector refuses to choose for you, the command fails with <code>peer_failed</code> and says to run it again with <code>--chain</code>, and nothing is counted against the spending limit. <code>create</code> applies its one <code>--chain</code> to both peerings.</p>
+
+<p>Each states its amount and does nothing without <code>--yes</code>: it fails with <code>not_confirmed</code> and prints what it would have moved. So the safe way to see what a command costs is to run it without <code>--yes</code>:</p>
+
+<pre>$ toon send g.toon.3fa29c01b2d4e5f6.search --amount 5
+error: This moves 5 base units. Add `--yes` to say that you mean it.</pre>
+
+<p><code>toon channel open</code> and <code>toon channel fund</code> lock collateral but take no <code>--yes</code>; check <code>toon limit show</code> and <code>toon wallet balances</code> before you run them.</p>
+
+<h2>The spending limit</h2>
+
+<p>The wallet pays out at most <code>--max-per-command</code> in one command and <code>--max-per-day</code> in one UTC day. A payment over either is refused with <code>spending_limit</code> before anything is sent.</p>
+
+<pre>toon limit show
+<span class="c"># Per command: 10000000. Per day: 100000000. Remaining today: 100000000. ...</span>
+
+toon limit set --max-per-command 5000000 --max-per-day 50000000</pre>
+
+<p>The defaults are set at <code>toon init</code> and can be given there too. <code>limit set</code> needs the wallet passphrase, and the limits are signed by a key the wallet derives. An agent that can run commands but does not hold the passphrase cannot raise its own limit, and an edited <code>limits.json</code> stops every payment until <code>limit set</code> signs it again.</p>
+
+<h3>What a failed payment costs</h3>
+
+<p>A packet that is rejected may still have cost something: a connector farther along may have been paid to forward it. <code>toon</code> measures what your outbound channels moved by across the packet and reports it as <code>paid</code>, and counts that against the limit:</p>
+
+<pre>toon send g.toon.3fa29c01b2d4e5f6.search --amount 5 --yes --json | jq '{outcome, paid, reject}'</pre>
+
+<p><code>paid</code> is <code>0</code> when your own connector rejected the packet before signing anything. A packet that was never sent (the key could not be read, the packet could not be sealed) is not counted either. Any other failure stays counted, because the packet may have left.</p>
+
+<h2>Channels</h2>
+
+<p>Peerings open channels for you. These commands manage them directly:</p>
+
+<pre>toon channel list                       <span class="c"># both directions, with collateral, watermark, status</span>
+toon channel fund &lt;id&gt; --amount 500000  <span class="c"># add to an outbound channel</span>
+toon channel withdraw &lt;id&gt;              <span class="c"># start withdrawing; run again to finish</span>
+toon channel land &lt;id&gt;                  <span class="c"># land the latest voucher on an inbound channel now</span></pre>
+
+<p>The outbound <strong>watermark</strong> is how much you have signed away on a channel so far. Watching it move is the most direct way to see what payments cost.</p>
+
+<p>To open a channel toward a counterparty you are not peering with, save its <code>batchSettlements</code> entry for one chain, as its self-description publishes it, to a file:</p>
+
+<pre>toon channel open --terms their-terms.json --deposit 1000000</pre>
+
+<p><code>--app &lt;name&gt;</code> points any channel command at a TOON app other than the first.</p>
+
+<p class="source">Written from <code>toon_cli/docs/guide/money.md</code> at commit <code>cc23333f90c4</code>.</p>

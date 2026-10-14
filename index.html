@@ -420,6 +420,7 @@ footer .brand { font-size:0.95rem; }
 .rows .onwire { padding:0.8rem 1rem; border:1px solid var(--line); background:var(--bg-raised); color:var(--ink-faint); font:0.78rem/1.7 var(--mono); }
 .rows .onwire .k { color:var(--accent); font-weight:600; }
 @media (max-width:640px) { .install { grid-template-columns:auto minmax(0, 1fr); } .install code { white-space:pre-wrap; overflow-wrap:anywhere; } .install .tag { display:none; } }
+.hero .install, .end .install { max-width:56rem; }
 </style>
 </head>
 <body>
@@ -449,9 +450,9 @@ footer .brand { font-size:0.95rem; }
   <div class="wrap">
     <p class="eyebrow">TOON Protocol · Value, routed</p>
     <h1>Put a price on <span>any HTTP app.</span></h1>
-    <p class="lede">Get paid per request, in USDC, with no protocol fee and <strong>no change to your app</strong>. One command gives you a running node. One more pays it.</p>
-    <div class="install"><span class="p">$</span><code>docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/w" -w /w ghcr.io/toon-protocol/connector:rust-main init --devnet --dir node --image ghcr.io/toon-protocol/connector:rust-main</code><span class="tag">devnet · free</span></div>
-    <p class="note">then <code>cd node &amp;&amp; docker compose up -d</code> · Linux, macOS · Docker · MIT — <a href="#run">what init wrote →</a> <a href="docs/pay-a-node.html">pay a node →</a></p>
+    <p class="lede">Get paid per request, in USDC, with no protocol fee and <strong>no change to your app</strong>. One command installs <code>toon</code>. Three more give you a running node.</p>
+    <div class="install"><span class="p">$</span><code>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</code><span class="tag">Linux · MIT</span></div>
+    <p class="note">then <code>toon init --accept-anyone-terms</code> · <code>toon wallet fund</code> · <code>toon up</code> — <a href="#run">the three steps →</a> <a href="docs/pay-a-node.html">pay a node →</a></p>
     <div class="trust">
       <span>MIT licensed</span>
       <span>No protocol fee</span>
@@ -605,53 +606,69 @@ footer .brand { font-size:0.95rem; }
     <div class="section-head">
       <p class="eyebrow">For operators</p>
       <h2>One command. A node that gets paid.</h2>
-      <p><code>init</code> writes a devnet node into a directory: one priced route, the settlement block, your keys, an operator surface, and a compose file with an echo app behind the route. Nothing touches a chain until someone pays you.</p>
+      <p><code>toon</code> installs in one line and runs the node for you: a wallet, a relay, and a connector in front of any app you add, reachable as a hidden service. The first one is on the devnet and costs nothing.</p>
     </div>
 
-    <div class="twocol">
-      <div class="stack">
-        <div class="codeblock">
-          <div class="bar"><span>The shell</span><span>devnet, free</span></div>
-<pre>IMG=ghcr.io/toon-protocol/connector:rust-main
-docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/w" -w /w "$IMG" \
-  init --devnet --dir node --image "$IMG"
-cd node &amp;&amp; docker compose up -d</pre>
+    <ol class="rows">
+      <li>
+        <span class="n">01</span>
+        <div>
+          <h3>Install</h3>
+          <p>One line puts the release binary on Linux, x86_64 or aarch64, with glibc 2.35 or later. No Rust toolchain, no account.</p>
         </div>
         <div class="codeblock">
-          <div class="bar"><span>What init printed</span></div>
-<pre>Wrote a devnet node to node:
-
-  config/connector.toml   one route, g.devnet.ba2249, at 1000 units (0.001 devnet USDC)
-  data/                   signer, settlement and operator keys, 0600, owned by you
-  state/                  the claim journal; keep it, it is the watermark
-  compose.yml             the connector and the stub app, as your own uid
-
-Settlement address: <span class="g">0x6690d6c168006f0b3e8fd8968099653379db0d0b</span></pre>
+          <div class="bar"><span>The shell</span><span class="tag">docker and systemd --user on the machine</span></div>
+<pre>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</pre>
         </div>
+      </li>
+      <li>
+        <span class="n">02</span>
+        <div>
+          <h3>Create and fund it</h3>
+          <p><code>init</code> makes the wallet and the first TOON app, a relay reachable as a hidden service; the mnemonic is shown once. The faucet funds it with test tokens. <code>init</code> needs a passphrase file first; <a href="docs/first-agent-node.html">your first agent node</a> shows that.</p>
+        </div>
+        <div class="codeblock">
+          <div class="bar"><span>Devnet, free</span></div>
+<pre>toon init --accept-anyone-terms     <span class="c"># a wallet, and a relay reachable as a hidden service</span>
+toon wallet fund                    <span class="c"># test tokens from the faucet</span></pre>
+        </div>
+      </li>
+      <li>
+        <span class="n">03</span>
+        <div>
+          <h3>Start it and see it answer</h3>
+          <p><code>up</code> writes a <code>systemd --user</code> unit, so the node outlives this terminal. <code>status</code> shows what is running and at which address. Then put your app behind it and set its price.</p>
+        </div>
+        <div class="codeblock">
+          <div class="bar"><span>What status printed</span></div>
+<pre>toon up                             <span class="c"># a systemd --user unit, so it outlives this terminal</span>
+toon status                         <span class="c"># what is running, and at which address</span>
+
+Supervisor: running.
+Unconnected: it has joined no network. `toon join &lt;network&gt; --deposit &lt;amount&gt; --yes` connects it.
+TOON app relay (ILP address g.toon.fb0e007c71750599): connector running on 127.0.0.1:25599.
+App relay of relay: running on 127.0.0.1:41733. Route g.toon.fb0e007c71750599.relay at price 1.</pre>
+        </div>
+      </li>
+    </ol>
+
+    <div class="twocol" style="margin-top:2.5rem">
+      <div class="codeblock">
+        <div class="bar"><span>Post to your own relay</span><span class="tag">signed by the agent identity, costs nothing</span></div>
+<pre>toon event publish --kind 1 --content "hello from my agent node" --json &gt; event.json
+jq -r .outcome event.json            <span class="c"># published</span></pre>
       </div>
-      <div class="stack">
-        <div class="codeblock">
-          <div class="bar"><span>Then pay it</span><span class="tag">from any machine</span></div>
-<pre>npx toon-client faucet
-npx toon-client channel open --connector http://127.0.0.1:3000 --deposit 100000
-npx toon-client send --connector http://127.0.0.1:3000 --body 'hello' --json</pre>
-        </div>
-        <div class="codeblock">
-          <div class="bar"><span>The receipt</span><span class="tag">2026-10-14, as returned</span></div>
-<pre>{ "fulfilled": <span class="ok">true</span>, "status": <span class="ok">200</span>,
-  "text": <span class="s">"delivered by stub app: hello"</span>,
-  "claim": { "chain": "evm", "amount": <span class="g">"1000"</span>, "cumulative": "1000" } }
-
-<span class="c"># and on the node, at info:</span>
-admitted a batch-settlement channel on its first voucher  cumulative=1000</pre>
-        </div>
+      <div class="codeblock">
+        <div class="bar"><span>Put your app behind it</span><span class="tag">any HTTP service in a container image</span></div>
+<pre>toon add &lt;app&gt; --to &lt;toon-app&gt; --image &lt;image&gt; --price &lt;n&gt; --yes
+toon route list                     <span class="c"># what the connector terminates, and at what price</span></pre>
       </div>
     </div>
 
-    <p class="prose" style="margin-top:1.5rem">The channel opened with no ETH, through the devnet facilitator. The request cost a signature. The node keeps the whole 0.001 USDC, and <code>GET /claims</code> shows it. Prefer to write every file yourself? <a href="docs/run-a-node.html">Run a node</a> explains each one <code>init</code> wrote, and <a href="docs/hidden-services.html">Hidden services</a> puts the node at a <code>.anyone</code> address with no domain and no open port.</p>
+    <p class="prose" style="margin-top:1.5rem">The node keeps the whole price of every request; there is no protocol fee. Every command that pays states its amount and needs <code>--yes</code>, and every command takes <code>--json</code>. Prefer to write every file yourself? <a href="docs/run-a-node.html">Run a node</a> explains the connector inside, and <a href="docs/hidden-services.html">Hidden services</a> what the <code>.anyone</code> address is.</p>
 
     <div class="cta">
-      <a class="button primary" href="docs/run-a-node.html">Read the operator guide</a>
+      <a class="button primary" href="docs/first-agent-node.html">Read the operator guide</a>
       <a class="button ghost" href="docs/spaceturtle.html">Or let an agent run it for you: spaceturtle</a>
     </div>
   </div>
@@ -1207,10 +1224,10 @@ admitted a batch-settlement channel on its first voucher  cumulative=1000</pre>
   <div class="wrap">
     <p class="eyebrow">Devnet, free, no account</p>
     <h2>Put a price on it.</h2>
-    <p>One command writes a devnet node that gets paid. Four lines of TOML put your own app behind it.</p>
-    <div class="install"><span class="p">$</span><code>docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/w" -w /w ghcr.io/toon-protocol/connector:rust-main init --devnet --dir node --image ghcr.io/toon-protocol/connector:rust-main</code><span class="tag">devnet · free</span></div>
+    <p>One command installs <code>toon</code>. Three more give you a node that gets paid, and one more puts your own app behind it.</p>
+    <div class="install"><span class="p">$</span><code>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</code><span class="tag">Linux · MIT</span></div>
     <div class="cta">
-      <a class="button primary" href="docs/run-a-node.html">Run a node</a>
+      <a class="button primary" href="docs/first-agent-node.html">Run a node</a>
       <a class="button ghost" href="docs/pay-a-node.html">Pay a node</a>
       <a class="button ghost" href="https://discord.gg/PxzjbtXg9Q">Join the Discord</a>
     </div>
@@ -1230,11 +1247,11 @@ admitted a batch-settlement channel on its first voucher  cumulative=1000</pre>
         <h4>Docs</h4>
         <ul>
           <li><a href="docs/index.html">Overview</a></li>
-          <li><a href="docs/run-a-node.html">Run a node</a></li>
-          <li><a href="docs/put-your-app-behind-it.html">Put your app behind it</a></li>
-          <li><a href="docs/get-paid.html">Get paid</a></li>
+          <li><a href="docs/install.html">Install</a></li>
+          <li><a href="docs/first-agent-node.html">Your first agent node</a></li>
+          <li><a href="docs/adding-an-app.html">Adding an app</a></li>
+          <li><a href="docs/run-a-node.html">The connector, by hand</a></li>
           <li><a href="docs/pay-a-node.html">Pay a node</a></li>
-          <li><a href="docs/protocol.html">Protocol and specs</a></li>
         </ul>
       </div>
       <div>
@@ -1251,13 +1268,13 @@ admitted a batch-settlement channel on its first voucher  cumulative=1000</pre>
         <h4>Ecosystem</h4>
         <ul>
           <li><a href="ecosystem/index.html">Apps, clients and rails</a></li>
+          <li><a href="https://github.com/toon-protocol/toon_cli">toon</a></li>
           <li><a href="https://github.com/toon-protocol/connector">connector</a></li>
           <li><a href="https://github.com/toon-protocol/relay">relay</a></li>
           <li><a href="https://github.com/toon-protocol/store">store</a></li>
           <li><a href="https://github.com/toon-protocol/gas-station">gas-station</a></li>
           <li><a href="https://github.com/toon-protocol/spaceturtle">spaceturtle</a></li>
-          <li><a href="https://github.com/toon-protocol/toon_cli">toon CLI</a></li>
-        </ul>
+                  </ul>
       </div>
       <div>
         <h4>Community</h4>

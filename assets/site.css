@@ -404,3 +404,4 @@ footer .brand { font-size:0.95rem; }
 .rows .onwire { padding:0.8rem 1rem; border:1px solid var(--line); background:var(--bg-raised); color:var(--ink-faint); font:0.78rem/1.7 var(--mono); }
 .rows .onwire .k { color:var(--accent); font-weight:600; }
 @media (max-width:640px) { .install { grid-template-columns:auto minmax(0, 1fr); } .install code { white-space:pre-wrap; overflow-wrap:anywhere; } .install .tag { display:none; } }
+.hero .install, .end .install { max-width:56rem; }

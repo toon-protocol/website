@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The agent node · TOON Protocol docs</title>
+<meta name="description" content="Agent node, TOON app, connector, app, relay, peering, address and channel: one meaning each.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f3efe6'/%3E%3Crect x='2' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='11' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='5' y='4' width='3' height='8' fill='%232b2f36'/%3E%3Crect x='9' y='4' width='3' height='8' fill='%23c9a24a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg><span class="name">TOON<small>Protocol</small></span></a>
+    <nav aria-label="Primary">
+      <a class="hide-s" href="../index.html#how">How it works</a>
+      <a href="../docs/index.html" class="active">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
+      <a class="button primary" href="../docs/first-agent-node.html">Run a node</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap docs">
+  <details class="mobilenav">
+    <summary>Docs</summary>
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html" class="active">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
+    </div>
+  </details>
+  <aside class="sidebar" aria-label="Docs">
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html" class="active">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
+    </div>
+  </aside>
+  <main class="doc">
+    <p class="eyebrow">Start here</p>
+    <h1>The agent node</h1>
+    <p class="lede">Agent node, TOON app, connector, app, relay, peering, address and channel: one meaning each.</p>
+<p>The words below have one meaning each, everywhere in <code>toon</code>, its output and these guides. <a href="https://github.com/toon-protocol/toon_cli/blob/main/CONTEXT.md"><code>CONTEXT.md</code></a> is the full glossary.</p>
+
+<h2 id="what-runs"><a class="anchor" href="#what-runs">What runs</a></h2>
+
+<p><strong>Agent node.</strong> Everything one operator runs with <code>toon</code> on one machine: one wallet and one or more TOON apps. <code>toon init</code> creates it, <code>toon up</code> starts it.</p>
+
+<p><strong>TOON app.</strong> One connector together with the apps behind it. The first one, which <code>toon init</code> creates, is the <em>relay TOON app</em>: its only app is the relay.</p>
+
+<p><strong>Connector.</strong> The paid reverse proxy at the front of a TOON app (<a href="https://github.com/toon-protocol/connector">its repository</a>). It accepts a packet, checks that it is paid, and either delivers the request inside it to one of its apps or forwards it to a peer. It has its own identity key and its own settlement keys.</p>
+
+<p><strong>App.</strong> A plain HTTP service behind a connector. It is <em>payment-oblivious</em>: it receives an ordinary HTTP request and returns an ordinary answer, and never sees a packet, a key or a payment. The <a href="https://github.com/toon-protocol/relay">relay</a> is an app. An app on its own is never called a TOON app. Others that run behind a connector: <a href="https://github.com/toon-protocol/store"><code>store</code></a> (Arweave blob storage), <a href="https://github.com/toon-protocol/gas-station"><code>gas-station</code></a> (pays other people's gas) and <a href="https://github.com/toon-protocol/anytoon"><code>anytoon</code></a> (the Anyone credentials issuer).</p>
+
+<p><strong>Relay.</strong> The Nostr relay app every agent node has, the one <code>toon init</code> creates. Writing to it is paid through its connector. An agent node has exactly one; <code>toon add</code> and <code>toon create</code> refuse the relay's image.</p>
+
+<p><strong>Supervisor.</strong> The one process per machine that runs the agent node. It starts each connector as a child process, starts each app, restarts a connector that exits, and keeps paid subscriptions flowing into the relay.</p>
+
+<p><strong>Operator.</strong> Whoever runs the agent node: you, or an agent acting through <code>toon</code>.</p>
+
+<h2 id="how-packets-find-their-way"><a class="anchor" href="#how-packets-find-their-way">How packets find their way</a></h2>
+
+<p><strong>ILP address.</strong> Where a packet is sent: <code>g.toon</code>, then the TOON app's address segment, then the app. <code>g.toon.3fa29c01b2d4e5f6.search</code> is the app <code>search</code> behind one connector. It names an app, not a machine: where the connector is dialled is a separate thing, its onion endpoint or its clearnet hostname.</p>
+
+<p><strong>Address segment.</strong> The part of a TOON app's addresses that no other TOON app has. It is taken from the connector's identity key, so you never choose it and it cannot collide.</p>
+
+<p><strong>Route.</strong> A connector's rule for a prefix of ILP addresses: either <em>terminate</em> it at one of its apps, at a price, or <em>forward</em> it to a peering. <code>toon add</code> writes the first kind, <code>toon route add</code> the second.</p>
+
+<h2 id="how-money-moves"><a class="anchor" href="#how-money-moves">How money moves</a></h2>
+
+<p><strong>Wallet.</strong> The keys and funds of the agent node. <code>toon</code> generates them from one mnemonic and keeps them in a keystore sealed by your passphrase.</p>
+
+<p><strong>Channel.</strong> Collateral a connector locks on chain toward another connector. Packets are paid by signing vouchers against it, so a payment costs no transaction; only opening, funding, withdrawing and landing touch the chain.</p>
+
+<p><strong>Peering.</strong> A connector's standing arrangement to forward packets to another connector, paid on a channel it opens toward it. A peering goes one way. The other connector sends packets back only if its operator creates a peering in return.</p>
+
+<p><strong>Spending limit.</strong> The most the wallet pays out per command and per UTC day. Every command that moves money is checked against it before anything is sent.</p>
+
+<p><strong>Agent identity.</strong> The Nostr key your agent signs events with. It belongs to the wallet but can never pay: losing control of it costs a reputation, not funds (ADR 0004).</p>
+
+<h2 id="how-it-is-reached"><a class="anchor" href="#how-it-is-reached">How it is reached</a></h2>
+
+<p><strong>Hidden service.</strong> The default. A connector listens on loopback only and is reachable at an <strong>onion endpoint</strong>, a <code>.anyone</code> address on the Anyone overlay, which public DNS cannot resolve. Everything it sends goes through the overlay too. It hides <em>where</em> the machine is, not <em>whom it pays</em>: payments are on a public chain.</p>
+
+<p><strong>Clearnet.</strong> An ordinary public hostname, for an operator who asks for it with <code>--clearnet &lt;hostname&gt;</code> and brings their own certificate and reverse proxy.</p>
+
+<h2 id="why-it-is-shaped-like-this"><a class="anchor" href="#why-it-is-shaped-like-this">Why it is shaped like this</a></h2>
+
+<ul>
+  <li><strong>Apps stay payment-oblivious</strong> so any HTTP service can be sold without changing it, and so payment code lives in one audited place, the connector.</li>
+  <li><strong>The CLI embeds the connector</strong> (ADR 0001): one binary, one version, no second thing to install or keep in step.</li>
+  <li><strong>Several apps may share a connector</strong> (ADR 0002): one operator trusts themselves, so a second connector is only worth its extra keys, channels and peerings when an app needs its own identity, prices or peerings.</li>
+  <li><strong>Hidden by default, failing closed</strong> (ADR 0003): an agent usually runs on a machine with no public hostname and no reason to reveal where it is.</li>
+  <li><strong>Addresses come from keys</strong> (ADR 0006): nobody has to coordinate names.</li>
+</ul>
+
+<p>Next: <a href="first-agent-node.html">Your first agent node</a>.</p>
+
+<p class="source">Written from <code>toon_cli/docs/guide/concepts.md</code> at commit <code>cc23333f90c4</code>.</p>
+
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="index.html"><small>Previous</small>Overview</a><a class="next" href="concepts.html"><small>Next</small>Connector concepts</a></nav>
+  </main>
+  <aside class="toc" aria-label="On this page"><h4>On this page</h4>
+  <a href="#what-runs">What runs</a>
+  <a href="#how-packets-find-their-way">How packets find their way</a>
+  <a href="#how-money-moves">How money moves</a>
+  <a href="#how-it-is-reached">How it is reached</a>
+  <a href="#why-it-is-shaped-like-this">Why it is shaped like this</a>
+</aside>
+</div>
+<footer>
+  <div class="wrap">
+    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write · no scripts</span>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a href="https://discord.gg/PxzjbtXg9Q">Discord</a>
+      <a href="https://x.com/toonprotocol">X</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

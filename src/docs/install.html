@@ -1,0 +1,65 @@
+<h2>What the machine needs</h2>
+
+<ul>
+  <li>Linux, x86_64 or aarch64, with glibc 2.35 or later, for a release binary.</li>
+  <li><code>docker</code>, to run the relay and any app given as an image.</li>
+  <li><code>systemd --user</code>, for <code>toon up</code> to keep the agent node running after you log out. <code>toon up --foreground</code> works without it.</li>
+</ul>
+
+<h2>With the install script</h2>
+
+<pre>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</pre>
+
+<p><a href="https://github.com/toon-protocol/toon_cli/blob/main/install.sh"><code>install.sh</code></a> downloads the latest release for this machine, checks it against the release's <code>SHA256SUMS</code>, and puts <code>toon</code> in <code>~/.local/bin</code>. It refuses a machine without glibc 2.35 or later. <code>TOON_VERSION=v0.2.0</code> installs that release instead, and <code>TOON_INSTALL_DIR</code> puts <code>toon</code> somewhere else. Run it again to upgrade.</p>
+
+<h2>From a release, by hand</h2>
+
+<p>No Rust toolchain needed. Pick a tag from the <a href="https://github.com/toon-protocol/toon_cli/releases">releases page</a>:</p>
+
+<pre>version=v0.2.0
+arch=$(uname -m)    <span class="c"># x86_64 or aarch64</span>
+base=https://github.com/toon-protocol/toon_cli/releases/download/$version
+curl -fsSLO "$base/toon-$version-linux-$arch.tar.gz"
+curl -fsSLO "$base/SHA256SUMS"
+sha256sum --check --ignore-missing SHA256SUMS
+tar -xzf "toon-$version-linux-$arch.tar.gz"
+install -D "toon-$version-linux-$arch/toon" ~/.local/bin/toon</pre>
+
+<p>Do not skip the checksum: this binary holds your keys.</p>
+
+<h2>From source</h2>
+
+<pre>cargo install --locked --git https://github.com/toon-protocol/toon_cli --tag v0.2.0</pre>
+
+<h2>Check it</h2>
+
+<pre>toon --version</pre>
+
+<p>It prints the release, the connector revision it embeds, and the relay image it runs:</p>
+
+<pre>toon 0.2.0 (connector 7d0582e2…, relay ghcr.io/toon-protocol/relay:rust-sha-1b02f2e@sha256:3eea…)</pre>
+
+<h2>Upgrading</h2>
+
+<p>Install the new binary over the old one, then restart the agent node so the supervisor runs it:</p>
+
+<pre>toon down
+install -D toon ~/.local/bin/toon
+toon up</pre>
+
+<p>Your wallet and TOON apps live in <code>~/.toon/agent-node</code> and are kept.</p>
+
+<h2>The agent skills</h2>
+
+<p><code>toon</code>'s skills teach an agent harness its commands: operating an agent node, authoring a NIP, and social posting over Nostr. Install them with the <a href="https://skills.sh/">skills CLI</a>, which asks which skills and which agents, and <code>npx skills update</code> keeps them current:</p>
+
+<pre>npx skills add toon-protocol/toon_cli</pre>
+
+<p>The binary also ships them, matched to its own version. This needs no Node; run it again after every upgrade:</p>
+
+<pre>toon skill install                    <span class="c"># into ~/.claude/skills</span>
+toon skill install --dir ./skills     <span class="c"># or anywhere else</span></pre>
+
+<p>Next: <a href="first-agent-node.html">Your first agent node</a>.</p>
+
+<p class="source">Written from <code>toon_cli/docs/guide/install.md</code> at commit <code>cc23333f90c4</code>.</p>

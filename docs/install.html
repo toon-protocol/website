@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install · TOON Protocol docs</title>
+<meta name="description" content="toon in ~/.local/bin, checked against the release&#x27;s checksum, and the agent skills beside it.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f3efe6'/%3E%3Crect x='2' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='11' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='5' y='4' width='3' height='8' fill='%232b2f36'/%3E%3Crect x='9' y='4' width='3' height='8' fill='%23c9a24a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg><span class="name">TOON<small>Protocol</small></span></a>
+    <nav aria-label="Primary">
+      <a class="hide-s" href="../index.html#how">How it works</a>
+      <a href="../docs/index.html" class="active">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
+      <a class="button primary" href="../docs/first-agent-node.html">Run a node</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap docs">
+  <details class="mobilenav">
+    <summary>Docs</summary>
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html" class="active">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
+    </div>
+  </details>
+  <aside class="sidebar" aria-label="Docs">
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html" class="active">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
+    </div>
+  </aside>
+  <main class="doc">
+    <p class="eyebrow">Run an agent node</p>
+    <h1>Install</h1>
+    <p class="lede">toon in ~/.local/bin, checked against the release&#x27;s checksum, and the agent skills beside it.</p>
+<h2 id="what-the-machine-needs"><a class="anchor" href="#what-the-machine-needs">What the machine needs</a></h2>
+
+<ul>
+  <li>Linux, x86_64 or aarch64, with glibc 2.35 or later, for a release binary.</li>
+  <li><code>docker</code>, to run the relay and any app given as an image.</li>
+  <li><code>systemd --user</code>, for <code>toon up</code> to keep the agent node running after you log out. <code>toon up --foreground</code> works without it.</li>
+</ul>
+
+<h2 id="with-the-install-script"><a class="anchor" href="#with-the-install-script">With the install script</a></h2>
+
+<pre>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</pre>
+
+<p><a href="https://github.com/toon-protocol/toon_cli/blob/main/install.sh"><code>install.sh</code></a> downloads the latest release for this machine, checks it against the release's <code>SHA256SUMS</code>, and puts <code>toon</code> in <code>~/.local/bin</code>. It refuses a machine without glibc 2.35 or later. <code>TOON_VERSION=v0.2.0</code> installs that release instead, and <code>TOON_INSTALL_DIR</code> puts <code>toon</code> somewhere else. Run it again to upgrade.</p>
+
+<h2 id="from-a-release-by-hand"><a class="anchor" href="#from-a-release-by-hand">From a release, by hand</a></h2>
+
+<p>No Rust toolchain needed. Pick a tag from the <a href="https://github.com/toon-protocol/toon_cli/releases">releases page</a>:</p>
+
+<pre>version=v0.2.0
+arch=$(uname -m)    <span class="c"># x86_64 or aarch64</span>
+base=https://github.com/toon-protocol/toon_cli/releases/download/$version
+curl -fsSLO "$base/toon-$version-linux-$arch.tar.gz"
+curl -fsSLO "$base/SHA256SUMS"
+sha256sum --check --ignore-missing SHA256SUMS
+tar -xzf "toon-$version-linux-$arch.tar.gz"
+install -D "toon-$version-linux-$arch/toon" ~/.local/bin/toon</pre>
+
+<p>Do not skip the checksum: this binary holds your keys.</p>
+
+<h2 id="from-source"><a class="anchor" href="#from-source">From source</a></h2>
+
+<pre>cargo install --locked --git https://github.com/toon-protocol/toon_cli --tag v0.2.0</pre>
+
+<h2 id="check-it"><a class="anchor" href="#check-it">Check it</a></h2>
+
+<pre>toon --version</pre>
+
+<p>It prints the release, the connector revision it embeds, and the relay image it runs:</p>
+
+<pre>toon 0.2.0 (connector 7d0582e2…, relay ghcr.io/toon-protocol/relay:rust-sha-1b02f2e@sha256:3eea…)</pre>
+
+<h2 id="upgrading"><a class="anchor" href="#upgrading">Upgrading</a></h2>
+
+<p>Install the new binary over the old one, then restart the agent node so the supervisor runs it:</p>
+
+<pre>toon down
+install -D toon ~/.local/bin/toon
+toon up</pre>
+
+<p>Your wallet and TOON apps live in <code>~/.toon/agent-node</code> and are kept.</p>
+
+<h2 id="the-agent-skills"><a class="anchor" href="#the-agent-skills">The agent skills</a></h2>
+
+<p><code>toon</code>'s skills teach an agent harness its commands: operating an agent node, authoring a NIP, and social posting over Nostr. Install them with the <a href="https://skills.sh/">skills CLI</a>, which asks which skills and which agents, and <code>npx skills update</code> keeps them current:</p>
+
+<pre>npx skills add toon-protocol/toon_cli</pre>
+
+<p>The binary also ships them, matched to its own version. This needs no Node; run it again after every upgrade:</p>
+
+<pre>toon skill install                    <span class="c"># into ~/.claude/skills</span>
+toon skill install --dir ./skills     <span class="c"># or anywhere else</span></pre>
+
+<p>Next: <a href="first-agent-node.html">Your first agent node</a>.</p>
+
+<p class="source">Written from <code>toon_cli/docs/guide/install.md</code> at commit <code>cc23333f90c4</code>.</p>
+
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="concepts.html"><small>Previous</small>Connector concepts</a><a class="next" href="first-agent-node.html"><small>Next</small>Your first agent node</a></nav>
+  </main>
+  <aside class="toc" aria-label="On this page"><h4>On this page</h4>
+  <a href="#what-the-machine-needs">What the machine needs</a>
+  <a href="#with-the-install-script">With the install script</a>
+  <a href="#from-a-release-by-hand">From a release, by hand</a>
+  <a href="#from-source">From source</a>
+  <a href="#check-it">Check it</a>
+  <a href="#upgrading">Upgrading</a>
+  <a href="#the-agent-skills">The agent skills</a>
+</aside>
+</div>
+<footer>
+  <div class="wrap">
+    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write · no scripts</span>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a href="https://discord.gg/PxzjbtXg9Q">Discord</a>
+      <a href="https://x.com/toonprotocol">X</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

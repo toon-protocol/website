@@ -1,0 +1,119 @@
+<h2>Start, stop, inspect</h2>
+
+<pre>toon up                  <span class="c"># install and start the systemd --user unit, then return</span>
+toon up --foreground     <span class="c"># run the supervisor in this terminal instead</span>
+toon status              <span class="c"># supervisor, each TOON app and app, restarts, peerings</span>
+toon logs echo           <span class="c"># what the app echo wrote to its output</span>
+toon logs echo --connector  <span class="c"># the log of the connector echo is behind</span>
+toon logs echo -n 200    <span class="c"># the last 200 lines</span>
+toon down                <span class="c"># stop everything, and the unit</span></pre>
+
+<p><code>toon logs &lt;name&gt;</code> shows an app's own log if the name is an app's, and the connector's log if it is only a TOON app's. The default <code>relay</code> is both, so it shows the app's; <code>--connector</code> shows the connector's. The report says which in <code>source</code>. An app's log is kept in its data directory, an image app's once its container stops, so it is readable after a failed start and while the agent node is stopped. An app served at a URL has none.</p>
+
+<p><code>toon up</code> writes <code>~/.config/systemd/user/toon-agent-node.service</code>, which runs <code>toon up --foreground</code>, and starts it. The supervisor:</p>
+
+<ul>
+  <li>starts the relay's container and every app, then every connector, each a child process of the same binary;</li>
+  <li>restarts a connector that exits, and <code>toon status</code> counts how often, with the last reason;</li>
+  <li>stops, and exits 1, if the relay stops;</li>
+  <li>keeps every paid subscription's feed flowing into the relay.</li>
+</ul>
+
+<p>To keep it running after you log out, let your user's services outlive the session:</p>
+
+<pre>loginctl enable-linger "$USER"</pre>
+
+<h2>Counting, listing and watching packets</h2>
+
+<pre>toon packet count          <span class="c"># fulfilled, rejected, rejects by code, fees earned</span>
+toon packet count --json
+toon --app second packet count</pre>
+
+<p><code>toon packet count</code> is free: it needs no passphrase and moves no money. It reads the connector's metrics and prints the packets it fulfilled and rejected, the rejects by RFC-0027 code such as <code>F02</code>, and the fees earned in the token's base units. A connector that has carried nothing prints zeros. The counts are since the connector last started: <code>toon</code> keeps no totals, so a restart of the connector, which <code>toon add</code> and <code>toon remove</code> cause, begins again at 0. It fails as <code>toon peer list</code> does when the agent node is not running.</p>
+
+<pre>toon packet list           <span class="c"># the last 20 rejected packets, newest first</span>
+toon packet list -n 5 --json</pre>
+
+<p><code>toon packet list</code> is free too: it needs no passphrase and moves no money. It reads the connector's log, as <code>toon logs --connector</code> does, so it works while the agent node is stopped, and the log keeps the rejects from before a restart. A line shows the time, the destination, the reject code and the reject message. Only rejected packets are listed: the connector logs a fulfilled packet only at <code>debug</code>, so <code>toon packet count</code> has those, as a count. <code>-n</code> / <code>--limit</code> says how many to show. A connector that has rejected nothing prints an empty list and exits 0.</p>
+
+<pre>toon packet history        <span class="c"># the last 20 packets the connector handled, newest first</span>
+toon packet history -n 5 --json</pre>
+
+<p><code>toon packet history</code> is free too: it needs no passphrase and moves no money. It reads the connector's packet history, which <code>toon</code> turns on at 1,000 packets in every connector config it writes, so an agent node set up earlier has it after its next <code>toon up</code>. Unlike <code>toon packet list</code>, which reads rejects from the log, it lists fulfilled and rejected packets alike, and a line shows the time, the packet's <strong>direction</strong>, the destination, the peering or channel it came <code>from</code> and the peering it went <code>to</code>, the amount, the fee of a fulfilled forward, the outcome and, for a reject, its code and message. The direction is <code>delivered</code> when the packet ended at one of the connector's apps, <code>forwarded</code> when it arrived from one side and left toward a peer, and <code>sent</code> when you originated it. A packet that expired or could not be routed has no direction, and a field a row lacks is left out. The history is recent packets only and is forgotten when the connector restarts; <code>toon packet count</code> has the totals. When the connector had to drop rows, the text says how many (<code>dropped</code> in <code>--json</code>). It needs the agent node running and fails with <code>not_running</code> otherwise. <code>-n</code> / <code>--limit</code> says how many to show; a connector that has handled nothing prints an empty list and exits 0.</p>
+
+<h2>Scripting with <code>--json</code></h2>
+
+<p>Every command takes <code>--json</code> and then prints <strong>exactly one JSON document</strong> on standard output and nothing on standard error, whether it succeeded or not. No command prompts or reads standard input. That makes every command safe to drive from a script or an agent:</p>
+
+<pre>if ! out=$(toon send "$ADDR" --amount 10 --yes --json); then
+  case $(jq -r '.error.code // .outcome' &lt;&lt;&lt;"$out") in
+    spending_limit) echo "over the limit"; exit 1 ;;
+    not_running)    toon up ;;
+    rejected)       jq -r '.reject.code' &lt;&lt;&lt;"$out" ;;
+  esac
+fi</pre>
+
+<p>Branch on <code>error.code</code> and the exit code, never on <code>message</code>, which may be reworded.</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Exit code</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>Done</td></tr>
+<tr><td>1</td><td>Failed; <code>error.code</code> says why</td></tr>
+<tr><td>2</td><td>The command line was not understood</td></tr>
+<tr><td>3</td><td>There is no agent node on this machine</td></tr>
+</tbody></table></div>
+
+<p>Every error code, with its meaning, is in <a href="exit-codes.html"><code>docs/exit-codes.md</code></a>.</p>
+
+<h2>Environment</h2>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Variable</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>TOON_PASSPHRASE_FILE</code></td><td>The file holding the wallet passphrase (preferred)</td></tr>
+<tr><td><code>TOON_PASSPHRASE</code></td><td>The passphrase itself, when there is no file</td></tr>
+<tr><td><code>TOON_MNEMONIC_FILE</code>, <code>TOON_MNEMONIC</code></td><td>The mnemonic for <code>toon init --from-mnemonic</code></td></tr>
+<tr><td><code>TOON_ANON_MIRROR</code></td><td>Where the <code>anon</code> release is downloaded from</td></tr>
+<tr><td><code>TOON_TRUSTED_ROOT</code></td><td>A PEM file of extra roots to trust for <code>wss://</code> relays</td></tr>
+</tbody></table></div>
+
+<h2>Where things live</h2>
+
+<p>Everything is under <code>~/.toon/agent-node</code>:</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Path</th><th>What it is</th></tr></thead>
+<tbody>
+<tr><td><code>keystore.json</code></td><td>The wallet, sealed by the passphrase</td></tr>
+<tr><td><code>limits.json</code></td><td>The spending limit, signed by the wallet</td></tr>
+<tr><td><code>state.json</code></td><td>The TOON apps, their apps, routes and prices, the network</td></tr>
+<tr><td><code>connectors/&lt;n&gt;/</code></td><td>Each connector's config, keys, state and log</td></tr>
+<tr><td><code>apps/&lt;name&gt;/</code></td><td>Each app's identity key, and its <code>data/</code>, mounted at <code>/data</code></td></tr>
+<tr><td><code>overlay/</code></td><td>The <code>anon</code> daemon and its state</td></tr>
+</tbody></table></div>
+
+<p>Change it with <code>toon</code> commands, not by hand. An edited <code>limits.json</code> stops every payment.</p>
+
+<h2>When something goes wrong</h2>
+
+<div class="tablewrap"><table>
+<thead><tr><th>You see</th><th>Do this</th></tr></thead>
+<tbody>
+<tr><td><code>no_agent_node</code>, exit 3</td><td><code>toon init</code></td></tr>
+<tr><td><code>passphrase_missing</code></td><td>Set <code>TOON_PASSPHRASE_FILE</code></td></tr>
+<tr><td><code>not_running</code></td><td><code>toon up</code></td></tr>
+<tr><td><code>already_running</code></td><td>It is up already; <code>toon down</code> first if you meant to restart</td></tr>
+<tr><td><code>unfunded</code></td><td>Fund the address the message names (<a href="money.html#funding">Money</a>)</td></tr>
+<tr><td><code>not_confirmed</code></td><td>The command moves money; read the amount, then add <code>--yes</code></td></tr>
+<tr><td><code>confirmation_required</code></td><td>The command restarts a connector; add <code>--yes</code> when that is fine</td></tr>
+<tr><td><code>spending_limit</code></td><td>Report it, or have the passphrase holder run <code>toon limit set</code></td></tr>
+<tr><td><code>peering_needed</code></td><td>Run the <code>peer add</code> (if the message prints one) and <code>route add</code> the message prints</td></tr>
+<tr><td><code>overlay_unavailable</code></td><td>The Anyone network did not carry: try again later</td></tr>
+<tr><td><code>describe_failed</code></td><td>The connector at that <code>/ilp</code> URL gave no self-description: check the URL, or try again later</td></tr>
+<tr><td><code>connector_failed</code></td><td><code>toon logs &lt;TOON app&gt; --connector</code></td></tr>
+<tr><td><code>app_failed</code></td><td><code>toon logs &lt;app&gt;</code></td></tr>
+<tr><td><code>systemd_failed</code></td><td><code>systemctl --user status toon-agent-node</code></td></tr>
+</tbody></table></div>
+
+<p class="source">Written from <code>toon_cli/docs/guide/operations.md</code> at commit <code>cc23333f90c4</code>.</p>

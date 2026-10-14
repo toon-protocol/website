@@ -130,7 +130,7 @@ price       = { base = <span class="g">1000</span>, per_kib = <span class="g">30
 
 <pre>curl http://localhost:3000/ilp</pre>
 
-<p>That free, unauthenticated <code>GET</code> returns the node's <strong>self-description</strong>: its addresses, endpoints, identity key and settlement facts. A connector answers; it never announces. It is also the whole of what another operator needs to <a href="peering.html">peer with you</a>, once <code>[node]</code> and <code>peer_expose</code> are set. This minimal config's own self-description has no endpoints and nothing to dial.</p>
+<p>That free, unauthenticated <code>GET</code> returns the node's <strong>self-description</strong>: its addresses, endpoints, identity key and settlement facts. A connector answers; it never announces. It is also the whole of what another operator needs to <a href="peering-by-hand.html">peer with you</a>, once <code>[node]</code> and <code>peer_expose</code> are set. This minimal config's own self-description has no endpoints and nothing to dial.</p>
 
 <div class="callout"><strong>This node can be curled but not yet paid, or even described by the client.</strong> Until it has a settlement block, <code>toon-client describe</code> and <code>price</code> refuse it with "publishes no settlement chains at all", because a client cannot pay a node that does not say how. <a href="get-paid.html">Get paid</a> is the next page; its devnet block is eight lines and costs nothing.</div>
 

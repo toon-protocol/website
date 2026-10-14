@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Concepts · TOON Protocol docs</title>
-<meta name="description" content="After this page the rest of the docs read without a glossary.">
+<title>Connector concepts · TOON Protocol docs</title>
+<meta name="description" content="After this page the connector pages read without a glossary.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f3efe6'/%3E%3Crect x='2' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='11' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='5' y='4' width='3' height='8' fill='%232b2f36'/%3E%3Crect x='9' y='4' width='3' height='8' fill='%23c9a24a'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="../assets/site.css">
 </head>
@@ -17,7 +17,7 @@
       <a href="../docs/index.html" class="active">Docs</a>
       <a href="../ecosystem/index.html">Ecosystem</a>
       <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
-      <a class="button primary" href="../docs/run-a-node.html">Run a node</a>
+      <a class="button primary" href="../docs/first-agent-node.html">Run a node</a>
     </nav>
   </div>
 </header>
@@ -27,14 +27,29 @@
     <div class="group">
       <h4>Start here</h4>
       <a href="index.html">Overview</a>
-      <a href="concepts.html" class="active">Concepts</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html" class="active">Connector concepts</a>
     </div>
     <div class="group">
-      <h4>Operators</h4>
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
       <a href="run-a-node.html">Run a node</a>
       <a href="put-your-app-behind-it.html">Put your app behind it</a>
       <a href="get-paid.html">Get paid</a>
-      <a href="peering.html">Peer with another node</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
       <a href="hidden-services.html">Hidden services</a>
     </div>
@@ -53,20 +68,36 @@
       <h4>Reference</h4>
       <a href="devnet.html">Devnet reference</a>
       <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
     </div>
   </details>
   <aside class="sidebar" aria-label="Docs">
     <div class="group">
       <h4>Start here</h4>
       <a href="index.html">Overview</a>
-      <a href="concepts.html" class="active">Concepts</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html" class="active">Connector concepts</a>
     </div>
     <div class="group">
-      <h4>Operators</h4>
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
       <a href="run-a-node.html">Run a node</a>
       <a href="put-your-app-behind-it.html">Put your app behind it</a>
       <a href="get-paid.html">Get paid</a>
-      <a href="peering.html">Peer with another node</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
       <a href="hidden-services.html">Hidden services</a>
     </div>
@@ -85,12 +116,13 @@
       <h4>Reference</h4>
       <a href="devnet.html">Devnet reference</a>
       <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
     </div>
   </aside>
   <main class="doc">
     <p class="eyebrow">Start here</p>
-    <h1>Concepts</h1>
-    <p class="lede">After this page the rest of the docs read without a glossary.</p>
+    <h1>Connector concepts</h1>
+    <p class="lede">After this page the connector pages read without a glossary.</p>
 <p>Read everything below through one sentence: <strong>the connector terminates payments the way nginx terminates TLS.</strong> It is a paid reverse proxy, and there are exactly two roles, connector and app. The connector's own glossary, <a href="https://github.com/toon-protocol/connector/blob/main/CONTEXT.md"><code>CONTEXT.md</code></a>, is the canonical one; this page is the short form.</p>
 
 <h2 id="the-two-roles"><a class="anchor" href="#the-two-roles">The two roles</a></h2>
@@ -169,7 +201,7 @@
 
 <p class="source">Written from <code>connector/CONTEXT.md</code> and <code>toon-meta/context/glossary.md</code>.</p>
 
-<nav class="pager" aria-label="Previous and next"><a class="prev" href="index.html"><small>Previous</small>Overview</a><a class="next" href="run-a-node.html"><small>Next</small>Run a node</a></nav>
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="agent-node.html"><small>Previous</small>The agent node</a><a class="next" href="install.html"><small>Next</small>Install</a></nav>
   </main>
   <aside class="toc" aria-label="On this page"><h4>On this page</h4>
   <a href="#the-two-roles">The two roles</a>

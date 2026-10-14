@@ -17,7 +17,7 @@
       <a href="../docs/index.html" class="active">Docs</a>
       <a href="../ecosystem/index.html">Ecosystem</a>
       <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
-      <a class="button primary" href="../docs/run-a-node.html">Run a node</a>
+      <a class="button primary" href="../docs/first-agent-node.html">Run a node</a>
     </nav>
   </div>
 </header>
@@ -27,14 +27,29 @@
     <div class="group">
       <h4>Start here</h4>
       <a href="index.html">Overview</a>
-      <a href="concepts.html">Concepts</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
     </div>
     <div class="group">
-      <h4>Operators</h4>
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
       <a href="run-a-node.html" class="active">Run a node</a>
       <a href="put-your-app-behind-it.html">Put your app behind it</a>
       <a href="get-paid.html">Get paid</a>
-      <a href="peering.html">Peer with another node</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
       <a href="hidden-services.html">Hidden services</a>
     </div>
@@ -53,20 +68,36 @@
       <h4>Reference</h4>
       <a href="devnet.html">Devnet reference</a>
       <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
     </div>
   </details>
   <aside class="sidebar" aria-label="Docs">
     <div class="group">
       <h4>Start here</h4>
       <a href="index.html">Overview</a>
-      <a href="concepts.html">Concepts</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
     </div>
     <div class="group">
-      <h4>Operators</h4>
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
       <a href="run-a-node.html" class="active">Run a node</a>
       <a href="put-your-app-behind-it.html">Put your app behind it</a>
       <a href="get-paid.html">Get paid</a>
-      <a href="peering.html">Peer with another node</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
       <a href="hidden-services.html">Hidden services</a>
     </div>
@@ -85,10 +116,11 @@
       <h4>Reference</h4>
       <a href="devnet.html">Devnet reference</a>
       <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
     </div>
   </aside>
   <main class="doc">
-    <p class="eyebrow">Operators</p>
+    <p class="eyebrow">The connector, by hand</p>
     <h1>Run a node</h1>
     <p class="lede">A node running on your machine and answering GET /ilp, in one command or by hand.</p>
 <p>The connector is one static binary that reads one TOML file. Three ways to get it running: <code>init</code> writes a devnet node for you, Docker runs the one you write, and source is for changing the connector rather than running it.</p>
@@ -223,7 +255,7 @@ price       = { base = <span class="g">1000</span>, per_kib = <span class="g">30
 
 <pre>curl http://localhost:3000/ilp</pre>
 
-<p>That free, unauthenticated <code>GET</code> returns the node's <strong>self-description</strong>: its addresses, endpoints, identity key and settlement facts. A connector answers; it never announces. It is also the whole of what another operator needs to <a href="peering.html">peer with you</a>, once <code>[node]</code> and <code>peer_expose</code> are set. This minimal config's own self-description has no endpoints and nothing to dial.</p>
+<p>That free, unauthenticated <code>GET</code> returns the node's <strong>self-description</strong>: its addresses, endpoints, identity key and settlement facts. A connector answers; it never announces. It is also the whole of what another operator needs to <a href="peering-by-hand.html">peer with you</a>, once <code>[node]</code> and <code>peer_expose</code> are set. This minimal config's own self-description has no endpoints and nothing to dial.</p>
 
 <div class="callout"><strong>This node can be curled but not yet paid, or even described by the client.</strong> Until it has a settlement block, <code>toon-client describe</code> and <code>price</code> refuse it with "publishes no settlement chains at all", because a client cannot pay a node that does not say how. <a href="get-paid.html">Get paid</a> is the next page; its devnet block is eight lines and costs nothing.</div>
 
@@ -243,7 +275,7 @@ price       = { base = <span class="g">1000</span>, per_kib = <span class="g">30
 
 <p class="source">Written from <code>connector/docs/guide/run-a-node.md</code>. The release handle is the connector's latest GitHub release.</p>
 
-<nav class="pager" aria-label="Previous and next"><a class="prev" href="concepts.html"><small>Previous</small>Concepts</a><a class="next" href="put-your-app-behind-it.html"><small>Next</small>Put your app behind it</a></nav>
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="backup-and-restore.html"><small>Previous</small>Backup and restore</a><a class="next" href="put-your-app-behind-it.html"><small>Next</small>Put your app behind it</a></nav>
   </main>
   <aside class="toc" aria-label="On this page"><h4>On this page</h4>
   <a href="#the-fastest-start-init">The fastest start: init</a>

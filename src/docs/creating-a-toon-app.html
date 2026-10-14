@@ -1,0 +1,70 @@
+<p><code>toon create</code> starts a new <strong>TOON app</strong>: a second connector, with its own identity, its own settlement keys, its own address segment and, by default, its own onion endpoint, and an app behind it. Both are named after the TOON app.</p>
+
+<h2>Add, or create?</h2>
+
+<div class="tablewrap"><table>
+<thead><tr><th>You want</th><th>Use</th></tr></thead>
+<tbody>
+<tr><td>Another service sold under the connector you already run</td><td><a href="adding-an-app.html"><code>toon add</code></a></td></tr>
+<tr><td>A service with its own identity, address segment and onion endpoint</td><td><code>toon create</code></td></tr>
+<tr><td>Its own peerings, channels, or forwarding fees</td><td><code>toon create</code></td></tr>
+<tr><td>One connector's packets not to affect another's (restarts, load)</td><td><code>toon create</code></td></tr>
+</tbody></table></div>
+
+<p>A second connector costs a second set of keys to fund and, unless you say otherwise, two channels' worth of deposits.</p>
+
+<h2>Walkthrough: create a TOON app</h2>
+
+<p><strong>1. Pick an app.</strong> Any image that follows the <a href="adding-an-app.html#what-an-app-is">app contract</a>, or <code>--url</code> for one you already serve.</p>
+
+<p><strong>2. Create it.</strong> By default the new connector peers with the first TOON app in both directions, a channel each way opened with <code>--deposit</code>, plus a route each way. That moves money twice:</p>
+
+<pre>toon create search --image search-app --price 10 \
+  --deposit 1000000 --accept-anyone-terms --yes --json &gt; create.json</pre>
+
+<p>The first attempt usually fails with <code>unfunded</code>: the new connector's settlement key is empty. Its message names the address. Fund it as you funded the first (<a href="money.html#funding">Money</a>), then run the same command again. Nothing was created by the failed attempt.</p>
+
+<p><strong>3. Look at what you made.</strong></p>
+
+<pre>jq .created create.json         <span class="c"># what was created: its ILP address, where it listens, ...</span>
+toon status                     <span class="c"># two TOON apps</span>
+toon --app search peer list     <span class="c"># its peering back toward the first</span>
+toon limit show                 <span class="c"># down by 2 × the deposit</span></pre>
+
+<p><strong>4. Pay the new app from the first connector.</strong> It is behind another connector now, so seal to that one:</p>
+
+<pre>SEARCH=$(jq -r .created.listen create.json)
+toon send "$(jq -r .created.address create.json).search" --amount 10 \
+  --seal-to "http://$SEARCH/ilp" --yes</pre>
+
+<p><code>--seal-to</code> is only where <code>toon</code> reads the key to seal to; on this machine the new connector's loopback address answers that.</p>
+
+<h2>Options</h2>
+
+<ul>
+  <li><code>--app &lt;from&gt;</code>: the TOON app to peer with, instead of the first one.</li>
+  <li><code>--no-peer</code>: create no peerings and deposit nothing. The new connector then reaches no one until you <a href="peering.html">peer it</a> yourself, with <code>--app &lt;name&gt;</code> on <code>peer add</code>.</li>
+  <li><code>--clearnet &lt;hostname&gt;</code> and <code>--listen</code>: reach it at a public hostname instead of as a hidden service, as for <code>init</code> (<a href="networks-and-reachability.html">Networks and reachability</a>).</li>
+</ul>
+
+<h2>Work on a second TOON app</h2>
+
+<p>Every command that talks to a connector takes <code>--app &lt;name&gt;</code>, and without it talks to the first TOON app:</p>
+
+<pre>toon --app search route list
+toon --app search channel list
+toon add notes --to search --image notes-app --yes   <span class="c"># add puts the app where --to says</span></pre>
+
+<h2>Destroy a TOON app</h2>
+
+<pre>toon destroy search</pre>
+
+<p><code>destroy</code> stops the connector and removes its files and its app's data, but not its onion endpoint's key. It needs the agent node running, to read the channels, and refuses with <code>funds_held</code>, naming each channel, while any channel still holds collateral or an unlanded voucher. Withdraw and land them first (<a href="money.html#channels">Money</a>):</p>
+
+<pre>toon --app search channel list
+toon --app search channel withdraw &lt;id&gt;     <span class="c"># outbound</span>
+toon --app search channel land &lt;id&gt;         <span class="c"># inbound</span></pre>
+
+<p>An agent node always keeps one TOON app: <code>destroy</code> refuses the last one with <code>last_toon_app</code>.</p>
+
+<p class="source">Written from <code>toon_cli/docs/guide/creating-a-toon-app.md</code> at commit <code>cc23333f90c4</code>.</p>

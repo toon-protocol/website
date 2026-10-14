@@ -1,0 +1,33 @@
+<p>Your agent node is its keys. Lose them and you lose its funds, its identities and its onion endpoints, which every peer has bound to.</p>
+
+<h2>Back up</h2>
+
+<pre>toon wallet backup --out ~/toon-backup.sealed</pre>
+
+<p>The file holds the mnemonic and the address key of every onion endpoint, sealed under the wallet passphrase. It refuses to overwrite a file. Keep the file and the passphrase in different places: either alone is useless, together they are everything.</p>
+
+<p>A backup holds keys and nothing about your apps. Apps, their variables and their secrets are not in it: after a restore, add each app again from your own files.</p>
+
+<p>Back up again after <code>toon create</code>, so the new TOON app's onion key is in it.</p>
+
+<h2>Restore from a backup</h2>
+
+<p>On a machine with no agent node:</p>
+
+<pre>export TOON_PASSPHRASE_FILE=~/.config/toon/passphrase    <span class="c"># the passphrase of the backup</span>
+toon wallet restore ~/toon-backup.sealed
+toon init --accept-anyone-terms</pre>
+
+<p><code>restore</code> recreates the wallet and the address keys; <code>init</code> then builds the TOON app on the keys it finds, at the <strong>same onion endpoints</strong>. A wrong passphrase fails with <code>passphrase_wrong</code>, a file that is not a backup with <code>keystore_corrupt</code>, and a home that already has a wallet with <code>io</code>.</p>
+
+<h2>Restore from the mnemonic alone</h2>
+
+<pre>printf '%s\n' 'word1 word2 … word12' &gt; /tmp/mnemonic &amp;&amp; chmod 600 /tmp/mnemonic
+TOON_MNEMONIC_FILE=/tmp/mnemonic toon init --from-mnemonic --accept-anyone-terms
+rm /tmp/mnemonic</pre>
+
+<p>The funds and identities come back. The <strong>onion endpoints do not</strong>: a mnemonic does not hold their address keys, so the hidden service gets new ones and <code>init</code> says so (<code>"onion_endpoints_changed": true</code>). Tell your peers the new addresses.</p>
+
+<p>The mnemonic is never a flag, so it does not land in your shell history.</p>
+
+<p class="source">Written from <code>toon_cli/docs/guide/backup-and-restore.md</code> at commit <code>cc23333f90c4</code>.</p>

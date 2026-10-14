@@ -17,7 +17,7 @@
       <a href="../docs/index.html" class="active">Docs</a>
       <a href="../ecosystem/index.html">Ecosystem</a>
       <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
-      <a class="button primary" href="../docs/run-a-node.html">Run a node</a>
+      <a class="button primary" href="../docs/first-agent-node.html">Run a node</a>
     </nav>
   </div>
 </header>
@@ -27,14 +27,29 @@
     <div class="group">
       <h4>Start here</h4>
       <a href="index.html">Overview</a>
-      <a href="concepts.html">Concepts</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
     </div>
     <div class="group">
-      <h4>Operators</h4>
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
       <a href="run-a-node.html">Run a node</a>
       <a href="put-your-app-behind-it.html">Put your app behind it</a>
       <a href="get-paid.html">Get paid</a>
-      <a href="peering.html">Peer with another node</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
       <a href="operator-surface.html" class="active">The operator surface</a>
       <a href="hidden-services.html">Hidden services</a>
     </div>
@@ -53,20 +68,36 @@
       <h4>Reference</h4>
       <a href="devnet.html">Devnet reference</a>
       <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
     </div>
   </details>
   <aside class="sidebar" aria-label="Docs">
     <div class="group">
       <h4>Start here</h4>
       <a href="index.html">Overview</a>
-      <a href="concepts.html">Concepts</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
     </div>
     <div class="group">
-      <h4>Operators</h4>
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
       <a href="run-a-node.html">Run a node</a>
       <a href="put-your-app-behind-it.html">Put your app behind it</a>
       <a href="get-paid.html">Get paid</a>
-      <a href="peering.html">Peer with another node</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
       <a href="operator-surface.html" class="active">The operator surface</a>
       <a href="hidden-services.html">Hidden services</a>
     </div>
@@ -85,10 +116,11 @@
       <h4>Reference</h4>
       <a href="devnet.html">Devnet reference</a>
       <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
     </div>
   </aside>
   <main class="doc">
-    <p class="eyebrow">Operators</p>
+    <p class="eyebrow">The connector, by hand</p>
     <h1>The operator surface</h1>
     <p class="lede">A token that reads what you were paid, and a key that moves it.</p>
 <p>How you inspect a running node and how you move its money. It mounts <strong>only</strong> when <code>[operator]</code> is configured, and merges onto <code>client_edge_addr</code>: there is no second port and no second listener.</p>
@@ -174,7 +206,7 @@ write_keys_file   = <span class="s">"/app/data/operator-write-keys"</span></pre>
 
 <p class="source">Written from <code>connector/docs/guide/operator-surface.md</code> and <code>operations.md</code>. The rules are numbered in <code>docs/protocol/operator-spec.md</code>.</p>
 
-<nav class="pager" aria-label="Previous and next"><a class="prev" href="peering.html"><small>Previous</small>Peer with another node</a><a class="next" href="hidden-services.html"><small>Next</small>Hidden services</a></nav>
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="peering-by-hand.html"><small>Previous</small>Peer with another node</a><a class="next" href="hidden-services.html"><small>Next</small>Hidden services</a></nav>
   </main>
   <aside class="toc" aria-label="On this page"><h4>On this page</h4>
   <a href="#read-and-write-are-different-authorities">Read and write are different authorities</a>

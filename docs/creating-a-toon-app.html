@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Creating a TOON app · TOON Protocol docs</title>
+<meta name="description" content="A second connector with its own keys and onion endpoint, peered with the first, and how to destroy it.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f3efe6'/%3E%3Crect x='2' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='11' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='5' y='4' width='3' height='8' fill='%232b2f36'/%3E%3Crect x='9' y='4' width='3' height='8' fill='%23c9a24a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg><span class="name">TOON<small>Protocol</small></span></a>
+    <nav aria-label="Primary">
+      <a class="hide-s" href="../index.html#how">How it works</a>
+      <a href="../docs/index.html" class="active">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
+      <a class="button primary" href="../docs/first-agent-node.html">Run a node</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap docs">
+  <details class="mobilenav">
+    <summary>Docs</summary>
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html" class="active">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
+    </div>
+  </details>
+  <aside class="sidebar" aria-label="Docs">
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html" class="active">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
+    </div>
+  </aside>
+  <main class="doc">
+    <p class="eyebrow">Run an agent node</p>
+    <h1>Creating a TOON app</h1>
+    <p class="lede">A second connector with its own keys and onion endpoint, peered with the first, and how to destroy it.</p>
+<p><code>toon create</code> starts a new <strong>TOON app</strong>: a second connector, with its own identity, its own settlement keys, its own address segment and, by default, its own onion endpoint, and an app behind it. Both are named after the TOON app.</p>
+
+<h2 id="add-or-create"><a class="anchor" href="#add-or-create">Add, or create?</a></h2>
+
+<div class="tablewrap"><table>
+<thead><tr><th>You want</th><th>Use</th></tr></thead>
+<tbody>
+<tr><td>Another service sold under the connector you already run</td><td><a href="adding-an-app.html"><code>toon add</code></a></td></tr>
+<tr><td>A service with its own identity, address segment and onion endpoint</td><td><code>toon create</code></td></tr>
+<tr><td>Its own peerings, channels, or forwarding fees</td><td><code>toon create</code></td></tr>
+<tr><td>One connector's packets not to affect another's (restarts, load)</td><td><code>toon create</code></td></tr>
+</tbody></table></div>
+
+<p>A second connector costs a second set of keys to fund and, unless you say otherwise, two channels' worth of deposits.</p>
+
+<h2 id="walkthrough-create-a-toon-app"><a class="anchor" href="#walkthrough-create-a-toon-app">Walkthrough: create a TOON app</a></h2>
+
+<p><strong>1. Pick an app.</strong> Any image that follows the <a href="adding-an-app.html#what-an-app-is">app contract</a>, or <code>--url</code> for one you already serve.</p>
+
+<p><strong>2. Create it.</strong> By default the new connector peers with the first TOON app in both directions, a channel each way opened with <code>--deposit</code>, plus a route each way. That moves money twice:</p>
+
+<pre>toon create search --image search-app --price 10 \
+  --deposit 1000000 --accept-anyone-terms --yes --json &gt; create.json</pre>
+
+<p>The first attempt usually fails with <code>unfunded</code>: the new connector's settlement key is empty. Its message names the address. Fund it as you funded the first (<a href="money.html#funding">Money</a>), then run the same command again. Nothing was created by the failed attempt.</p>
+
+<p><strong>3. Look at what you made.</strong></p>
+
+<pre>jq .created create.json         <span class="c"># what was created: its ILP address, where it listens, ...</span>
+toon status                     <span class="c"># two TOON apps</span>
+toon --app search peer list     <span class="c"># its peering back toward the first</span>
+toon limit show                 <span class="c"># down by 2 × the deposit</span></pre>
+
+<p><strong>4. Pay the new app from the first connector.</strong> It is behind another connector now, so seal to that one:</p>
+
+<pre>SEARCH=$(jq -r .created.listen create.json)
+toon send "$(jq -r .created.address create.json).search" --amount 10 \
+  --seal-to "http://$SEARCH/ilp" --yes</pre>
+
+<p><code>--seal-to</code> is only where <code>toon</code> reads the key to seal to; on this machine the new connector's loopback address answers that.</p>
+
+<h2 id="options"><a class="anchor" href="#options">Options</a></h2>
+
+<ul>
+  <li><code>--app &lt;from&gt;</code>: the TOON app to peer with, instead of the first one.</li>
+  <li><code>--no-peer</code>: create no peerings and deposit nothing. The new connector then reaches no one until you <a href="peering.html">peer it</a> yourself, with <code>--app &lt;name&gt;</code> on <code>peer add</code>.</li>
+  <li><code>--clearnet &lt;hostname&gt;</code> and <code>--listen</code>: reach it at a public hostname instead of as a hidden service, as for <code>init</code> (<a href="networks-and-reachability.html">Networks and reachability</a>).</li>
+</ul>
+
+<h2 id="work-on-a-second-toon-app"><a class="anchor" href="#work-on-a-second-toon-app">Work on a second TOON app</a></h2>
+
+<p>Every command that talks to a connector takes <code>--app &lt;name&gt;</code>, and without it talks to the first TOON app:</p>
+
+<pre>toon --app search route list
+toon --app search channel list
+toon add notes --to search --image notes-app --yes   <span class="c"># add puts the app where --to says</span></pre>
+
+<h2 id="destroy-a-toon-app"><a class="anchor" href="#destroy-a-toon-app">Destroy a TOON app</a></h2>
+
+<pre>toon destroy search</pre>
+
+<p><code>destroy</code> stops the connector and removes its files and its app's data, but not its onion endpoint's key. It needs the agent node running, to read the channels, and refuses with <code>funds_held</code>, naming each channel, while any channel still holds collateral or an unlanded voucher. Withdraw and land them first (<a href="money.html#channels">Money</a>):</p>
+
+<pre>toon --app search channel list
+toon --app search channel withdraw &lt;id&gt;     <span class="c"># outbound</span>
+toon --app search channel land &lt;id&gt;         <span class="c"># inbound</span></pre>
+
+<p>An agent node always keeps one TOON app: <code>destroy</code> refuses the last one with <code>last_toon_app</code>.</p>
+
+<p class="source">Written from <code>toon_cli/docs/guide/creating-a-toon-app.md</code> at commit <code>cc23333f90c4</code>.</p>
+
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="adding-an-app.html"><small>Previous</small>Adding an app</a><a class="next" href="relay.html"><small>Next</small>The relay</a></nav>
+  </main>
+  <aside class="toc" aria-label="On this page"><h4>On this page</h4>
+  <a href="#add-or-create">Add, or create?</a>
+  <a href="#walkthrough-create-a-toon-app">Walkthrough: create a TOON app</a>
+  <a href="#options">Options</a>
+  <a href="#work-on-a-second-toon-app">Work on a second TOON app</a>
+  <a href="#destroy-a-toon-app">Destroy a TOON app</a>
+</aside>
+</div>
+<footer>
+  <div class="wrap">
+    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write · no scripts</span>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a href="https://discord.gg/PxzjbtXg9Q">Discord</a>
+      <a href="https://x.com/toonprotocol">X</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

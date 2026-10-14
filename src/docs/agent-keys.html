@@ -1,0 +1,149 @@
+<p>An agent key is an operator write key with a <strong>scope</strong> and a <strong>spending limit</strong>, which you hand to an agent that does not hold the wallet. The agent works the agent node with it and can do nothing outside its scope (<a href="https://github.com/toon-protocol/toon_cli/blob/main/docs/adr/0010-an-agent-key-works-an-agent-node-without-its-home.md">ADR 0010</a>).</p>
+
+<p>The home holds the record of agent keys, <code>agent-keys.json</code>. It never holds a private key. <code>toon</code> writes each connector's list of agent keys from the record, to <code>connectors/&lt;n&gt;/operator-controller-keys</code>, and the connector reads that file again on every signed request. So <code>create</code>, <code>set</code> and <code>revoke</code> reach a running connector at once, without a restart. (A connector started before this version rendered its config needs one restart to learn the file's name.)</p>
+
+<h2>Commands</h2>
+
+<pre>toon agent-key create [--scope a,b] [--max-per-command N] [--max-per-day N] \
+    [--max-restarts N] [--expires 2026-12-31T00:00:00Z] [--toon-app NAME]... [--out FILE]
+toon agent-key list
+toon agent-key set &lt;public key&gt; [the same options] [--no-expiry]
+toon agent-key revoke &lt;public key&gt;</pre>
+
+<ul>
+  <li><code>create</code> and <code>set</code> need the wallet passphrase, as <code>toon limit set</code> does. <code>list</code> and <code>revoke</code> do not.</li>
+  <li><code>list</code> shows each key's public half, scope, limits, expiry and TOON apps. It never prints a private key.</li>
+  <li><code>revoke</code> removes the key from the record and from every connector's list. The connector refuses the key's next request, a read as well as a write.</li>
+  <li><code>set</code> changes only what you name. <code>--scope</code> and <code>--toon-app</code> replace the whole list.</li>
+</ul>
+
+<h2>Scope</h2>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Scope</th><th>What it lets the key do</th></tr></thead>
+<tbody>
+<tr><td><code>status</code>, <code>logs</code>, <code>apps</code>, <code>route-price</code>, <code>sign</code>, <code>read-messages</code></td><td>The orders the supervisor answers for the key. They move no money.</td></tr>
+<tr><td><code>send</code></td><td>Originate packets (<code>POST /packets</code>)</td></tr>
+<tr><td><code>peer</code></td><td>Add and remove peerings</td></tr>
+<tr><td><code>routes</code></td><td>Write forwarding routes, runtime and leased</td></tr>
+<tr><td><code>channels-open</code>, <code>channels-fund</code>, <code>channels-withdraw</code>, <code>channels-land</code></td><td>The channel writes, as the connector names them</td></tr>
+</tbody></table></div>
+
+<p>With no <code>--scope</code> the key gets every order scope and <code>send</code>, <code>peer</code> and <code>routes</code>: nothing that withdraws from or closes a channel. The channel scopes must be named. A key whose scope holds only orders is on no connector's list, because a connector's list takes only writes.</p>
+
+<p><code>sign</code> lets the agent sign anything as the agent identity; the secret stays in the home.</p>
+
+<h2>Limits and expiry</h2>
+
+<p><code>--max-per-command</code> and <code>--max-per-day</code> are in the token's base units, and the wallet's limits if omitted. The connector holds them: it counts what the key sends in packets and what peering and channel writes deposit, per write and per UTC day, so the limit holds although the agent never opens the home. A key granted on several TOON apps has the limit on each, so it can spend that much per day on each. <code>--max-restarts</code> is how many times an hour the key may restart a connector, which setting a route's price does (six if omitted; change it with <code>toon agent-key set</code>). Past it the order is refused with <code>rate_limited</code>. <code>--expires</code> is an RFC 3339 time after which the connector refuses the key.</p>
+
+<h2>Which TOON apps</h2>
+
+<p><code>--toon-app</code> names a TOON app the key is granted on, and may be repeated. With none, the key is granted on the relay TOON app only. The key is on the list of the TOON apps it is granted on and of no other.</p>
+
+<h2>The key file</h2>
+
+<p><code>create</code> writes one file, readable by its owner only, to <code>--out</code> or to <code>agent-key-&lt;first 8 hex of the public key&gt;.json</code> in the current directory. It refuses to overwrite a file. The file is JSON:</p>
+
+<pre>{
+  "private_key": "&lt;64 hex: the ed25519 secret key&gt;",
+  "public_key": "&lt;64 hex&gt;",
+  "supervisor": "http://127.0.0.1:12345",
+  "toon_apps": { "relay": "http://127.0.0.1:4000" }
+}</pre>
+
+<ul>
+  <li><code>private_key</code> is the only copy. Hand the file to the agent and keep none where it can read it; if it leaks, <code>toon agent-key revoke</code> the key.</li>
+  <li><code>supervisor</code> is where the supervisor listens for orders, on loopback.</li>
+  <li><code>toon_apps</code> holds the operator-surface address of each TOON app the key is granted on.</li>
+  <li>The file is written once. <code>toon agent-key set --toon-app</code> changes which connectors accept the key but not a file already handed out: give the agent the address of a newly granted TOON app, or revoke the key and create a new one.</li>
+</ul>
+
+<h2>Orders</h2>
+
+<p>The supervisor answers orders: HTTP requests signed with an agent key (RFC 9421, the signature a connector wants of a write: <code>@method</code>, <code>@path</code> and <code>content-digest</code>, with <code>created</code>, <code>expires</code> and <code>keyid</code> the key's public half). It listens on the <code>supervisor</code> address of the key file, on loopback only, beside its local socket. An address in the record that is not loopback is never bound.</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Order</th><th>Scope</th><th>Body</th><th>Answer</th></tr></thead>
+<tbody>
+<tr><td><code>POST /orders/status</code></td><td><code>status</code></td><td>none</td><td>The TOON apps the key is granted on, with their connector and apps. No file paths.</td></tr>
+<tr><td><code>POST /orders/logs</code></td><td><code>logs</code></td><td><code>{"toon_app": NAME, "lines": N}</code>, both optional</td><td>The last lines of that TOON app's connector log.</td></tr>
+<tr><td><code>POST /orders/add</code></td><td><code>apps</code></td><td><code>{"name", "to", "image", "address", "price", "request", "yes"}</code>, and the flags <code>toon add</code> takes that an agent key may not use</td><td>What <code>toon add</code> reports, as <code>{"result", "text"}</code>. See the list of trusted images below.</td></tr>
+<tr><td><code>POST /orders/remove</code></td><td><code>apps</code></td><td><code>{"app", "yes"}</code></td><td>What <code>toon remove</code> reports, as <code>{"result", "text"}</code>.</td></tr>
+<tr><td><code>POST /orders/sign</code></td><td><code>sign</code></td><td><code>{"kind": N, "content": "", "tags": [], "toon_app": NAME}</code>, <code>toon_app</code> optional</td><td><code>{"event": &lt;signed event&gt;, "relay": &lt;the relay's write address&gt;}</code>, the relay when <code>toon_app</code> is named. Any kind: signing is not bounded by it.</td></tr>
+<tr><td><code>POST /orders/seal</code></td><td><code>sign</code></td><td><code>{"recipients": [...], "content": "", "reply_to", "subject", "toon_app"}</code></td><td>The rumor and the sealed, signed wraps of a private message (<code>to_recipients</code>, <code>to_sender</code>), and the relay as above. Nothing is sent.</td></tr>
+<tr><td><code>POST /orders/messages</code></td><td><code>read-messages</code></td><td><code>{"with": [...], "since": N, "limit": N}</code>, all optional</td><td>What <code>toon message list</code> prints with the home, and its <code>text</code>.</td></tr>
+</tbody></table></div>
+
+<p>No answer holds the agent identity's secret. The supervisor signs with the copy kept in the home (ADR 0008); <code>toon agent-key create</code> and <code>set</code> keep it when the scope holds <code>sign</code> or <code>read-messages</code>. An order that finds none is answered <code>agent_key_not_kept</code>.</p>
+
+<p>The supervisor reads the record on every order, so a revoke or a change takes effect on the next one. It refuses, with <code>401</code>, an unsigned order, a key not on the record, a signature that does not verify or has expired, and a signature it has already answered. It refuses with <code>403</code> a key past its <code>--expires</code>, and a key whose scope lacks the order's; that answer names the scope (<code>error.scope</code>). A refused order does not spend its signature. An order it cannot carry out, such as logs of a TOON app the key is not granted on, is answered <code>400</code>. Every refusal is <code>{"error": {"code", "message"}}</code>.</p>
+
+<h2>Running <code>toon</code> with an agent key</h2>
+
+<p><code>TOON_AGENT_KEY=&lt;key file&gt;</code> or <code>--agent-key &lt;key file&gt;</code> makes <code>toon</code> run as the agent: it reads the key file and nothing else. It never looks for a home or a keystore, even if <code>$HOME</code> holds one, and it holds no bearer token. A command goes out either as an order to the supervisor (<code>status</code>, <code>logs</code>) or as a signed write to the operator surface of a TOON app the key file names (<code>send</code>, <code>peer add</code>). The reads those need are signed with the key too.</p>
+
+<pre>export TOON_AGENT_KEY=/run/secrets/agent-key.json
+toon status
+toon logs relay --connector -n 20
+toon send g.toon.&lt;segment&gt;.relay --amount 10 --yes
+toon peer add https://other.example/ilp --deposit 1000 --yes
+toon limit show</pre>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Command</th><th>What it does with a key</th></tr></thead>
+<tbody>
+<tr><td><code>toon status</code></td><td>The <code>status</code> order: only the TOON apps the key is granted on</td></tr>
+<tr><td><code>toon logs &lt;toon app&gt; --connector</code></td><td>The <code>logs</code> order: that TOON app's connector log. An app's own log is not offered, so without <code>--connector</code> it answers <code>usage</code></td></tr>
+<tr><td><code>toon send</code></td><td>A packet originated by a write signed with the key (<code>send</code> scope); sealed to the TOON app's connector unless <code>--seal-to</code> names another, dialled directly</td></tr>
+<tr><td><code>toon peer add</code></td><td>A peering written with the key (<code>peer</code> scope)</td></tr>
+<tr><td><code>toon add --image &lt;image&gt; --to &lt;toon app&gt;</code></td><td>The <code>add</code> order (<code>apps</code> scope): the app is added at once if its image is on the list of trusted images, as <code>toon add</code> does with the home. Any other image, and every <code>--url</code>, becomes a pending app and answers <code>approval_pending</code></td></tr>
+<tr><td><code>toon remove &lt;app&gt;</code></td><td>The <code>remove</code> order (<code>apps</code> scope): any app behind a TOON app the key is granted on, but the relay</td></tr>
+<tr><td><code>toon route price &lt;prefix&gt; &lt;price&gt; --yes</code></td><td>The <code>route-price</code> order: sets the price of the route to an app on a TOON app the key is granted on, and restarts that connector. Under the key's restart limit: past it, <code>rate_limited</code>, and the message says when the next restart is allowed</td></tr>
+<tr><td><code>toon event publish</code></td><td>The <code>sign</code> order, then the packet is sent with the key (<code>send</code> scope) to the relay of the TOON app, so the connector counts <code>--amount</code> against the key. <code>--relay</code> needs the home</td></tr>
+<tr><td><code>toon event sign</code></td><td>The <code>sign</code> order: prints the signed event and sends nothing</td></tr>
+<tr><td><code>toon message send</code></td><td>The <code>seal</code> order, then each wrap is sent with the key as above. <code>--relay</code> needs the home</td></tr>
+<tr><td><code>toon message list</code></td><td>The <code>messages</code> order (<code>read-messages</code> scope)</td></tr>
+<tr><td><code>toon limit show</code></td><td>The key's spending limit and what is left of today's, read from each connector the key file names (<code>--app</code> picks one)</td></tr>
+</tbody></table></div>
+
+<p><code>--app &lt;toon app&gt;</code> picks which TOON app's connector <code>send</code> and <code>peer add</code> use. Without it, the key file's only TOON app is used, else <code>relay</code>.</p>
+
+<ul>
+  <li><code>--yes</code> is still required to pay; without it nothing is sent (<code>not_confirmed</code>).</li>
+  <li><code>toon</code> keeps no count of spending in this mode. The connector counts and refuses: a write over the key's spending limit (or deposit limit) exits with <code>spending_limit</code>; one outside the key's scope says <code>scope</code> in the connector's refusal, with the code of the command (<code>send_failed</code>, <code>peer_failed</code>).</li>
+  <li>After <code>toon agent-key revoke</code> the same key file is refused by the supervisor and by every connector, for reads and writes.</li>
+  <li>Every other command answers <code>needs_home</code> (exit 1) before anything else is tried, and the message names the command and says the operator must run it: <code>wallet</code>, <code>limit set</code>, <code>init</code>, <code>create</code>, <code>up</code>, <code>down</code>, <code>agent-key</code>, and also, until their tickets land, <code>route</code> (except <code>route price</code>), <code>event query</code>, <code>event watch</code>, <code>nip</code> and the subscribe commands, and <code>event publish</code> and <code>message send</code> with <code>--relay</code>.</li>
+  <li>An agent whose loopback cannot reach the supervisor's order address needs a tunnel the deployer provides; reaching an agent node on another host is not offered.</li>
+</ul>
+
+<h2>The list of trusted images</h2>
+
+<p>The home holds <code>trusted-images</code>, a text file <code>toon init</code> writes seeded with one line, <code>ghcr.io/toon-protocol/*</code>. It decides what an agent key may add at once. The operator edits it with any editor; the supervisor reads it on every add, so a change needs no restart. A home that has no such file trusts the seed, and an empty file trusts nothing.</p>
+
+<pre><span class="c"># Blank lines and lines that start with # are ignored.</span>
+ghcr.io/toon-protocol/*          <span class="c"># every repository below that prefix</span>
+example.com:5000/team/app        <span class="c"># exactly this repository</span></pre>
+
+<ul>
+  <li>An entry is a repository, or a prefix ending in <code>/*</code>. A line that is neither is ignored.</li>
+  <li>An image matches by its repository, so <code>ghcr.io/toon-protocol/echo</code>, <code>…/echo:1.2</code> and <code>…/echo@sha256:…</code> are one entry's. A <code>..</code> or empty path part never matches.</li>
+  <li>The list is checked for an agent key only. An operator running <code>toon add</code> with the home is never refused by it. The one thing it does to an operator's add is to decide whether the node's runtime applies to the app (<code>untrusted-runtime</code>, see <a href="adding-an-app.html">adding-an-app.md</a>).</li>
+</ul>
+
+<p>An add by an agent key, with <code>apps</code> in its scope and granted on the TOON app it goes behind (<code>--to</code>), is added at once only if its image is on the list <strong>and</strong> it carries no allowance (<code>--allow-egress</code>, <code>--scratch</code>, <code>--memory</code>, <code>--cpus</code>, <code>--pids</code>), no variable (<code>--env</code>) and no runtime (<code>--runtime</code>), and names no secret: a trusted image is trusted as shipped. An agent key cannot name a runtime and have the app added at once, since a name may be a runtime that confines less than docker's own; such an add is held as a pending app, and <code>toon change</code> stays the operator's. Anything else, and every <code>--url</code>, becomes a <strong>pending app</strong>: it is recorded in the home, nothing is pulled, started or routed, and the add answers <code>approval_pending</code>, exit 1, naming the app. The same add again gives the same answer and records nothing more. A key holds at most 8 pending apps; the ninth is refused with <code>needs_operator</code> and not recorded. An agent key may <em>name</em> a secret the app needs, with <code>--secret NAME</code> (a variable) or <code>--secret-file &lt;path&gt;</code> (a file at <code>&lt;path&gt;</code> in the container), and give nothing for it; an add that names one is always a pending app, even for a trusted image. A secret given with its file (<code>--secret NAME=&lt;file&gt;</code>, <code>--secret-file &lt;path&gt;=&lt;file&gt;</code>) is refused with <code>needs_home</code>: an agent key cannot supply a secret. <code>toon remove</code> with a key refuses the relay with <code>needs_operator</code>.</p>
+
+<h3>Pending apps</h3>
+
+<p><code>toon status</code> shows a pending app to the operator, with the image or URL, the TOON app, the allowances, variables and secrets asked for (<code>"secrets": {"variables": [...], "files": [...]}</code> in <code>--json</code>; names and paths, never contents), and which key asked. An agent key's <code>toon status</code> shows only the ones that key asked for, as <code>pending</code>, or as <code>refused</code> with the operator's reason.</p>
+
+<ul>
+  <li><code>toon approve &lt;app&gt;</code> (home only) adds the app exactly as it was asked for: the same image reference or URL, allowances and variables, behind the same TOON app. It restarts that connector, as <code>toon add --yes</code> does. If the app names secrets, the approval gives a file for each, <code>--secret NAME=&lt;file&gt;</code> and <code>--secret-file &lt;path&gt;=&lt;file&gt;</code>, with the meaning and the checks they have on <code>toon add</code>, and gives exactly those the app names: one missing, or one not named, is refused with <code>usage</code> and the app stays pending. An app that names none is refused with <code>usage</code> if given one. Approving does not put the image on the list of trusted images; that is an edit to the <code>trusted-images</code> file.</li>
+  <li><code>toon refuse &lt;app&gt; [--reason &lt;text&gt;]</code> (home only) records the refusal. The app is not added. The key may ask again, which replaces the refusal with a new pending app. The home keeps the latest 8 refusals of each key and forgets older ones.</li>
+  <li>A name held by a pending app is not taken by another key's add, nor by the same key's add of something else: both answer <code>name_taken</code>.</li>
+  <li>With an agent key both answer <code>needs_home</code>.</li>
+</ul>
+
+<p>Pending apps do not expire. Revoking a key drops its pending apps, and so does adding an app of the same name with the home. The supervisor logs each pending app, approval and refusal.</p>
+
+<p class="source">Written from <code>toon_cli/docs/guide/agent-keys.md</code> at commit <code>cc23333f90c4</code>.</p>

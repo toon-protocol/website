@@ -1,0 +1,62 @@
+<p>Two choices are made at <code>toon init</code>: which <strong>network</strong> the agent node settles on and joins, and how its connectors are <strong>reached</strong>.</p>
+
+<h2>Networks</h2>
+
+<pre>toon init --network devnet  --accept-anyone-terms    <span class="c"># the default</span>
+toon init --network sandbox --accept-anyone-terms --connector-url … --relay-url …
+toon init --network mainnet --accept-anyone-terms</pre>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Network</th><th>Chain</th><th>Faucet</th><th>Network to join</th></tr></thead>
+<tbody>
+<tr><td><code>devnet</code></td><td>Base Sepolia, a test token</td><td><code>toon wallet fund</code> sends the token, no ETH</td><td>The devnet's hub and relay</td></tr>
+<tr><td><code>sandbox</code></td><td>The local chain of the <code>infra</code> sandbox</td><td>None: fund from the sandbox's tooling</td><td>Its hub, which you name</td></tr>
+<tr><td><code>mainnet</code></td><td>Real funds</td><td>None</td><td>Drew's node (ILP address <code>g.drew</code>, relay <code>g.drew.relay</code>); name another with <code>--connector-url</code> and <code>--relay-url</code> at <code>init</code></td></tr>
+</tbody></table></div>
+
+<p><code>toon join &lt;network&gt;</code> only joins the network <code>init</code> was given, and is refused with <code>join_refused</code>, spending nothing, when this agent node records no connector for it. It forwards <code>g.toon</code> and every other address the network's connector publishes in its self-description (the mainnet node's <code>g.drew.*</code>) over the new peering.</p>
+
+<p>An agent node initialised with <code>--solana</code> settles on two chains, as may the network's hub. Then <code>toon join &lt;network&gt; --deposit &lt;n&gt; --yes</code> is refused (<code>peer_failed</code>, nothing spent) until you name one: add <code>--chain evm</code> or <code>--chain solana</code>. No chain is chosen for you.</p>
+
+<p><strong>Sandbox.</strong> It allows plaintext <code>http://</code> peers by itself. A hidden agent node cannot reach <code>localhost</code>, so name the hub at its onion endpoint:</p>
+
+<pre>toon init --network sandbox --accept-anyone-terms \
+  --connector-url http://&lt;hub&gt;.anyone:3200/ilp --relay-url ws://&lt;hub&gt;.anyone:7100</pre>
+
+<p><a href="https://github.com/toon-protocol/toon_cli/blob/main/docs/end-to-end.md"><code>docs/end-to-end.md</code></a> runs a whole agent node against the sandbox.</p>
+
+<p><strong>Overrides.</strong> <code>--evm-rpc-url</code>, <code>--solana-rpc-url</code>, <code>--evm-token</code>, <code>--faucet-url</code>, <code>--connector-url</code> and <code>--relay-url</code> replace one setting of the profile; <code>toon init --help</code> lists the rest. <code>--solana</code> settles on Solana too, and <code>--solana-rpc-url</code> replaces its JSON-RPC endpoint.</p>
+
+<h2>Hidden service</h2>
+
+<p>The default. Each connector:</p>
+
+<ul>
+  <li>listens on loopback only, and is reached at its own <strong>onion endpoint</strong>, a <code>.anyone</code> address on the Anyone overlay, on port 80. The relay is read at the same address on port 7100.</li>
+  <li>sends everything it sends through the overlay, chain RPC included. So do the requests <code>toon</code> itself makes on a hidden agent node: the faucet, the chain, other relays. Only a plain <code>http://</code> or <code>ws://</code> endpoint on this machine is dialled directly.</li>
+  <li>keeps its address across restarts. The address key is derived by the wallet and sealed into a <a href="backup-and-restore.html">backup</a>.</li>
+</ul>
+
+<p>It <strong>fails closed</strong>. If the overlay cannot come up, <code>init</code> and <code>create</code> create nothing, and a command that needs the overlay fails with <code>overlay_unavailable</code>. Nothing ever falls back to clearnet, because that would publish where the machine is without your asking.</p>
+
+<p><code>toon</code> downloads the pinned <code>anon</code> release, checks its SHA-256 and runs one daemon per agent node. <code>TOON_ANON_MIRROR</code> replaces where it is downloaded from; the checksum still applies.</p>
+
+<p>A hidden service hides where a TOON app is reachable, not whom it pays: payments are on a public chain.</p>
+
+<h2>Clearnet</h2>
+
+<pre>toon init --clearnet node.example.com --listen 127.0.0.1:8080</pre>
+
+<p>The connector binds <code>--listen</code> (a free loopback port if omitted) and is published as <code>node.example.com</code>. The certificate and the reverse proxy that answer there and pass to the listen address are yours to provide, for example with Caddy:</p>
+
+<pre>node.example.com {
+    reverse_proxy 127.0.0.1:8080
+}</pre>
+
+<p>A clearnet TOON app needs no overlay and no <code>--accept-anyone-terms</code>. <code>toon create</code> takes the same <code>--clearnet</code> and <code>--listen</code>, so one agent node can mix hidden and clearnet TOON apps.</p>
+
+<h2>Relay URLs</h2>
+
+<p>A relay URL is always <code>ws://</code> or <code>wss://</code>. <code>wss://</code> verifies the certificate against the roots compiled into <code>toon</code>. For a private deployment, <code>TOON_TRUSTED_ROOT</code> names a PEM file of extra roots to trust; it never turns verification off.</p>
+
+<p class="source">Written from <code>toon_cli/docs/guide/networks-and-reachability.md</code> at commit <code>cc23333f90c4</code>.</p>
