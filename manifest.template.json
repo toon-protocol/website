@@ -5,6 +5,9 @@
     "path": "index.html"
   },
   "paths": {
+    "__pycache__/build.cpython-314.pyc": {
+      "id": "<arweave tx id of this file>"
+    },
     "agents/index.html": {
       "id": "<arweave tx id of this file>"
     },

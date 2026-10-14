@@ -493,15 +493,30 @@ footer .out { margin-left:auto; }
 .shelf-head { padding-top:2rem; margin-bottom:1.5rem; border-top:1px solid var(--line); }
 .shelf-head h2 { font-size:1.5rem; letter-spacing:-0.03em; }
 .shelf-head p { margin-top:0.3rem; color:var(--ink-faint); font-size:0.9rem; }
-.appgrid { list-style:none; padding:1px; margin:0; display:grid; gap:1px; grid-template-columns:repeat(auto-fill, minmax(19rem, 1fr)); }
-.appgrid li { display:flex; flex-direction:column; gap:0.7rem; padding:1.3rem 1.4rem 1.2rem; background:var(--bg-raised); box-shadow:0 0 0 1px var(--line); color:var(--ink-dim); font-size:0.93rem; transition:background .12s ease; }
+.appgrid { list-style:none; padding:1px; margin:0; display:grid; gap:1px; grid-template-columns:repeat(auto-fill, minmax(21rem, 1fr)); }
+.appgrid li { position:relative; display:flex; flex-direction:column; gap:0.75rem; padding:1.2rem 1.3rem 1.1rem; background:var(--bg-raised); box-shadow:0 0 0 1px var(--line); color:var(--ink-dim); font-size:0.92rem; transition:background .12s ease; }
 .appgrid li:hover { background:color-mix(in srgb, var(--gold) 5%, var(--bg-raised)); }
-.appgrid .top { display:flex; justify-content:space-between; align-items:center; gap:0.6rem; }
-.appgrid .top a { font:700 1.02rem/1.2 var(--mono); letter-spacing:-0.02em; color:var(--ink); text-decoration:none; }
-.appgrid li:hover .top a { color:var(--accent); }
+.appgrid .head { display:flex; align-items:center; gap:0.7rem; color:var(--ink); text-decoration:none; min-width:0; }
+.appgrid .head::after { content:""; position:absolute; inset:0; }
+.appgrid .av { flex:none; width:2rem; height:2rem; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line-strong); background:var(--bg); overflow:hidden; }
+.appgrid .av svg { width:1.25rem; height:1.25rem; display:block; }
+.appgrid .av.turtle svg { width:1.5rem; height:1.5rem; fill:var(--ink); }
+.appgrid .av.letter { font:700 0.95rem/1 var(--mono); color:var(--gold); }
+.appgrid .title { font:400 0.95rem/1.25 var(--mono); letter-spacing:-0.01em; min-width:0; overflow-wrap:anywhere; }
+.appgrid .title .owner { color:var(--ink-faint); }
+.appgrid .title b { font-weight:700; color:var(--ink); }
+.appgrid .go { margin-left:auto; color:var(--ink-faint); font:400 1rem/1 var(--body); transition:color .12s ease; }
+.appgrid li:hover .title b, .appgrid li:hover .go { color:var(--accent); }
+.appgrid .badge { align-self:flex-start; }
 .appgrid p { margin:0; }
-.appgrid .foot { margin-top:auto; padding-top:0.8rem; border-top:1px dashed var(--line); display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.3rem 1rem; color:var(--ink-faint); font:0.74rem/1.6 var(--mono); }
+.appgrid .meta { display:flex; flex-wrap:wrap; gap:0.4rem 1rem; margin-top:auto; padding-top:0.8rem; color:var(--ink-dim); font:0.76rem/1.5 var(--mono); }
+.appgrid .stat { display:inline-flex; align-items:center; gap:0.4rem; }
+.appgrid .star { font-style:normal; color:var(--gold); }
+.appgrid .lang { width:0.6rem; height:0.6rem; border-radius:50%; display:inline-block; }
+.appgrid .ver { color:var(--ink-faint); }
+.appgrid .foot { padding-top:0.7rem; border-top:1px dashed var(--line); display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.3rem 1rem; color:var(--ink-faint); font:0.74rem/1.6 var(--mono); }
 .appgrid .foot b { color:var(--accent); font-weight:600; }
+.appgrid .foot a, .appgrid p a { position:relative; z-index:1; }
 .appgrid .foot a { color:var(--accent); text-decoration:none; }
 .appgrid .foot code { background:none; border:0; padding:0; color:var(--ink-dim); font-size:1em; }
 .publish { padding:1.8rem 2rem 2rem; border:1px solid var(--line-strong); background:var(--bg-raised); }

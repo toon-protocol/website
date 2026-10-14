@@ -39,7 +39,8 @@ before it.
   repository file it was written from, so the next editor can check it against the source.
 - **The apps, agents and ecosystem pages** are `src/apps.html`, `src/agents.html` and
   `src/ecosystem.html`. A new app or agent is one `<li>` in the grid and a bump of the count
-  in the page header.
+  in the page header. Each card's stars, language and version are typed by hand from
+  `gh api repos/<owner>/<name>`; reread them before a publish.
 - Then run the build:
 
   ```sh
