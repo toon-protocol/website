@@ -118,7 +118,7 @@ p { margin:0; }
 .note a { color:var(--accent); }
 
 /* ===== sections ===== */
-section { padding:5rem 0; }
+section { padding:4rem 0; }
 section + section, section + div { border-top:1px solid var(--line); }
 section.tint { background:var(--bg-tint); }
 .cta { display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:1.75rem; }
@@ -198,7 +198,7 @@ pre.sel button:hover, pre.sel button.done { color:var(--term-ink); }
    demo. Each line is one absolutely placed span; `--n` is its length in characters and
    `--i` its turn. One shared timeline per line: type at one step per character, hold,
    erase, then stay hidden until the cycle comes round. Reduced motion holds line one. */
-.tape { --slot:4.6s; --cycle:32.2s; display:flex; align-items:baseline; gap:0.7rem; white-space:nowrap; overflow:hidden; }
+.tape { --slot:4.6s; --cycle:32.2s; display:flex; align-items:flex-start; gap:0.7rem; white-space:nowrap; overflow:hidden; }
 .tape > b { color:var(--gold); font-weight:600; }
 .tape .lines { position:relative; flex:1; min-width:0; height:1.75em; }
 .tape .lines span { position:absolute; left:0; top:0; display:block; box-sizing:content-box; max-width:0; overflow:hidden; white-space:nowrap; color:var(--ink-dim);
@@ -492,7 +492,7 @@ footer.site-foot { padding-bottom:0; }
       <a href="#run" class="hide-m">Run a node</a>
       <a href="#pay" class="hide-m">Pay</a>
       <a href="#pricing" class="hide-m">Pricing</a>
-      <a href="#faq" class="hide-m">FAQ</a>
+      <a href="docs/faq.html" class="hide-m">FAQ</a>
       <a href="docs/index.html">Docs</a>
       <a href="ecosystem/index.html">Ecosystem</a>
       <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
@@ -511,7 +511,6 @@ footer.site-foot { padding-bottom:0; }
     <h1>Put a price on <span>any HTTP app.</span></h1>
     <p class="lede">Get paid per request, in USDC, with no protocol fee and <strong>no change to your app</strong>. One command installs <code>toon</code>. Three more give you a running node.</p>
     <div class="cmd"><code>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</code><button type="button" aria-label="Copy install command">copy</button></div>
-    <p class="meta">then <code>toon init --accept-anyone-terms</code> · <code>toon wallet fund</code> · <code>toon up</code> &nbsp;—&nbsp; <a href="#run">the three steps →</a> &nbsp; <a href="docs/pay-a-node.html">pay a node →</a></p>
     <div class="hero-meta">
       <p class="meta"><span>Linux</span><span>MIT licensed</span><span>No protocol fee</span><span>Settles on Base and Solana</span><span>No SDK in your app</span></p>
       <a class="new" href="docs/first-agent-node.html"><b>New</b>Your first agent node, with <code>toon</code> <i>→</i></a>
@@ -653,7 +652,6 @@ footer.site-foot { padding-bottom:0; }
       </a></li>
     </ol>
 
-    <p class="prose" style="margin-top:2rem">It is built for machines that transact thousands of times a day: agents paying for inference, storage and relays; services metering each other; apps that want to charge per call without building billing. It is not a consumer checkout, and does not try to be.</p>
   </div>
 </section>
 
@@ -663,7 +661,7 @@ footer.site-foot { padding-bottom:0; }
     <div class="section-head">
       <p class="eyebrow">For operators</p>
       <h2>One command. A node that gets paid.</h2>
-      <p><code>toon</code> installs in one line and runs the node for you: a wallet, a relay, and a connector in front of any app you add, reachable as a hidden service. The first one is on the devnet and costs nothing.</p>
+      <p><code>toon</code> runs the node for you: a wallet, a relay, and a connector in front of any app you add. The first one is on the devnet and costs nothing.</p>
     </div>
 
     <ol class="rows">
@@ -725,21 +723,6 @@ App relay of relay: running on 127.0.0.1:41733. Route g.toon.fb0e007c71750599.re
       </a></li>
     </ol>
 
-    <div class="twocol" style="margin-top:2.5rem">
-      <div class="codeblock">
-        <div class="bar"><span>Post to your own relay</span><span class="tag">signed by the agent identity, costs nothing</span></div>
-<pre>toon event publish --kind 1 --content "hello from my agent node" --json &gt; event.json
-jq -r .outcome event.json            <span class="c"># published</span></pre>
-      </div>
-      <div class="codeblock">
-        <div class="bar"><span>Put your app behind it</span><span class="tag">any HTTP service in a container image</span></div>
-<pre>toon add &lt;app&gt; --to &lt;toon-app&gt; --image &lt;image&gt; --price &lt;n&gt; --yes
-toon route list                     <span class="c"># what the connector terminates, and at what price</span></pre>
-      </div>
-    </div>
-
-    <p class="prose" style="margin-top:1.5rem">The node keeps the whole price of every request; there is no protocol fee. Prefer to write every file yourself? <a href="docs/run-a-node.html">Run a node</a> explains the connector inside, and <a href="docs/hidden-services.html">Hidden services</a> what the <code>.anyone</code> address is.</p>
-
     <div class="cta">
       <a class="button primary" href="docs/first-agent-node.html">Read the operator guide</a>
       <a class="button ghost" href="docs/spaceturtle.html">Or let an agent run it for you: spaceturtle</a>
@@ -755,11 +738,6 @@ toon route list                     <span class="c"># what the connector termina
         <p class="eyebrow">For callers</p>
         <h2>Paying is one install</h2>
         <p class="lede" style="font-size:1.05rem">The client asks a node what it charges, opens the channel once, and does the sealing and the vouchers on every request after that. A refusal comes back as a value, not an exception.</p>
-        <ul class="cards" style="margin-top:1.5rem; grid-template-columns:1fr">
-          <li><h3>No account anywhere</h3>A wallet and a deposit are the whole onboarding. The node never learns who you are.</li>
-          <li><h3>One channel, many apps</h3>Routes chain across nodes. Fund one channel and reach apps behind other operators' nodes through it.</li>
-          <li><h3>Works from any language</h3>The wire is x402 v2 over HTTP. The TypeScript client is the reference; the <a href="https://github.com/toon-protocol/connector/blob/main/docs/protocol/client-edge-spec.md">client-edge spec</a> is the contract.</li>
-        </ul>
       </div>
       <div class="codeblock">
         <div class="bar"><span>TypeScript</span><span class="tag">npm install @toon-protocol/client</span></div>
@@ -793,7 +771,7 @@ toon route list                     <span class="c"># what the connector termina
     <div class="section-head">
       <p class="eyebrow">Already behind a node</p>
       <h2>Real apps, real prices, open source</h2>
-      <p>Each of these is an ordinary HTTP service with no payment code. The node in front of it does the charging. Four of them are priced on the live node today; all of them are yours to run.</p>
+      <p>Ordinary HTTP services with no payment code, priced on the live node today. The node in front of them does the charging. spaceturtle, swap, provider, toon and every rail underneath are on the <a href="ecosystem/index.html">ecosystem page →</a></p>
     </div>
 
     <ul class="apps">
@@ -817,39 +795,8 @@ toon route list                     <span class="c"># what the connector termina
         <p>Pays other people's gas. A peer holding no SOL gets a Solana transaction landed; a peer holding no ETH gets an EVM call mined.</p>
         <div class="price">Solana fee paid for you <b>$0.012</b></div>
       </li>
-      <li>
-        <div class="top"><a href="https://github.com/toon-protocol/spaceturtle">spaceturtle</a><span class="badge src">Agent</span></div>
-        <p>An agent that serves your apps from your own machine, and is paid for each request. No cloud, no domain, no open port.</p>
-        <div class="price">one line installs it, no root, no account</div>
-      </li>
-      <li>
-        <div class="top"><a href="https://github.com/toon-protocol/swap">swap</a><span class="badge src">Source</span></div>
-        <p>Swap tokens across chains through a relay, with no server in between. Small fills, each side verifies the other's signed claim.</p>
-        <div class="price">EVM, Solana, Mina</div>
-      </li>
-      <li>
-        <div class="top"><a href="https://github.com/toon-protocol/provider">provider</a><span class="badge src">Source</span></div>
-        <p>A compute provider that sells leases on OCI workloads over TOON payment channels, with a gateway that follows a workload across hosts.</p>
-        <div class="price">spec: TOON_Network</div>
-      </li>
-      <li>
-        <div class="top"><a href="https://github.com/toon-protocol/toon_cli">toon</a><span class="badge src">CLI</span></div>
-        <p>Runs and manages an agent node: wallet, funding, apps, peers, routes, prices, channels and the relay, from one binary.</p>
-        <div class="price">Linux x86_64 and aarch64</div>
-      </li>
     </ul>
 
-    <div class="rails" aria-label="Chains and rails">
-      <span><i style="background:#0052ff"></i>Base mainnet</span>
-      <span><i style="background:#9945ff"></i>Solana mainnet</span>
-      <span><i style="background:#2775ca"></i>USDC</span>
-      <span><i style="background:var(--accent)"></i>x402 batch-settlement</span>
-      <span><i style="background:var(--gold)"></i>Interledger</span>
-      <span><i style="background:#222"></i>Arweave</span>
-      <span><i style="background:#6b7486"></i>Anyone network</span>
-      <span class="dev">Base Sepolia · Solana devnet</span>
-    </div>
-    <p class="prose" style="margin-top:1rem; font-size:0.9rem">The <a href="ecosystem/index.html">ecosystem page</a> lists every app, client and rail, with what each is used for. The live node settles on Base mainnet and Solana mainnet. On EVM the channel contract is x402's <code>x402BatchSettlement</code>, one address the x402 Foundation has deployed on Base, Arbitrum, Polygon, Optimism, Avalanche, Celo, Linea, Unichain, Monad and World Chain; on Solana it is the Solana Foundation's <code>payment-channels</code> program. TOON deploys no contract of its own.</p>
   </div>
 </section>
 
@@ -863,7 +810,6 @@ toon route list                     <span class="c"># what the connector termina
         <div class="prose" style="margin-top:1rem">
           <p>A route charges a flat amount per request, plus an optional rate per KiB for large bodies, in the token you settle in. Prices count the token's smallest unit, the way a card terminal counts cents: in USDC, <strong>1,000 units is a tenth of a cent</strong>.</p>
           <p>There is <strong>no protocol fee and no percentage cut</strong>. Vouchers are redeemed onchain in batches, on the channel contracts the x402 ecosystem already runs, so one transaction settles thousands of requests. The cost of a request is the price you set, not a gas fee.</p>
-          <p>The software is MIT licensed. There is no plan, no tier, no minimum and no payout schedule. Nobody sits between the caller's channel and your key.</p>
         </div>
       </div>
       <div>
@@ -891,36 +837,12 @@ toon route list                     <span class="c"># what the connector termina
     <div class="section-head">
       <p class="eyebrow">Why it is better</p>
       <h2>Sending a message and sending money are the same action.</h2>
+      <p>Against paying onchain per call, API keys, metered billing and a plain reverse proxy: <a href="docs/compared.html">where TOON sits →</a></p>
     </div>
-    <ul class="cards">
-      <li>
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
-        <h3>Against paying onchain per call</h3>
-        A TOON request costs a signature, not a transaction. No gas per request, no block to wait for, and a tenth of a cent is a real price, not a rounding error.
-      </li>
-      <li>
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <h3>Against API keys and invoices</h3>
-        Nothing to provision and nothing to chase. The caller pays with the request, and an unpaid request is refused before it reaches your app.
-      </li>
-      <li>
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h3.75a1.75 1.75 0 0 1 0 3.5H10.75a1.75 1.75 0 0 0 0 3.5H14.5"/></svg>
-        <h3>Against metered billing services</h3>
-        No percentage cut, no minimums, no payout schedule. Vouchers settle to a key you hold, in the token and on the chain you chose.
-      </li>
-      <li>
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 11l3-4M7 13l3 4M14 7l3 4M14 17l3-4"/></svg>
-        <h3>Against a plain reverse proxy</h3>
-        Routes chain. A node can forward to another node's paid route and keep a fee, so one caller reaches apps behind other nodes through one channel. Forwarding hops carry the payload sealed and cannot read it.
-      </li>
-    </ul>
-
-    <div class="twocol" style="margin-top:3rem; align-items:center">
+    <div class="twocol" style="align-items:center">
       <div class="prose">
-        <p class="eyebrow">Only TOON</p>
-        <h3 style="font-size:1.4rem; color:var(--ink); margin-bottom:0.8rem">Fund one channel, reach many apps.</h3>
+        <h3 style="font-size:1.4rem; color:var(--ink); margin-bottom:0.8rem">Only TOON: fund one channel, reach many apps.</h3>
         <p>Routes chain across nodes with the payload sealed. Each hop keeps its own fee, a hop can convert between tokens at a rate it declares, and a node can run as a hidden service at a <code>.anyone</code> address on the Anyone network, with no domain and no open port. The app never sees a payment, and an intermediate hop never sees the request.</p>
-        <p>Pay-per-request protocols answer "what does this cost, and is it paid?" TOON settles on them and adds the one thing they do not have: <strong>a route</strong>.</p>
       </div>
       <svg class="diagram" viewBox="0 0 560 190" role="img" aria-labelledby="route-d-title" xmlns="http://www.w3.org/2000/svg">
         <title id="route-d-title">One caller with one channel reaches apps behind two different nodes. The first node forwards to the second and keeps a fee.</title>
@@ -951,37 +873,6 @@ toon route list                     <span class="c"># what the connector termina
         <text class="m hi" x="300" y="30" text-anchor="middle">voucher, sealed</text>
         <text class="m ok" x="300" y="175" text-anchor="middle">plain HTTP</text>
       </svg>
-    </div>
-  </div>
-</section>
-
-<!-- ============ WHERE IT SITS ============ -->
-<section id="compare" class="tint">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">Where it sits</p>
-      <h2>Two kinds of agent payment protocol. TOON is the first kind, with a route.</h2>
-    </div>
-    <div class="tablewrap compare">
-      <table>
-        <thead><tr><th style="width:26%">Protocols</th><th style="width:37%">What they answer</th><th>And TOON</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><strong>Pay per request</strong><span>x402, L402, Circle Nanopayments</span></td>
-            <td>"What does this request cost, and is it paid?" A 402 names a price; the caller pays onchain, over Lightning, or through a batching service.</td>
-            <td>ILP routes, x402 settles. Every TOON channel is an x402 batch-settlement channel, and an unpaid request gets an x402 document. What TOON adds is the path: ILP carries the voucher from node to node, so a caller is not limited to the seller it opened a channel with.</td>
-          </tr>
-          <tr>
-            <td><strong>Authorize a purchase</strong><span>Google AP2, Stripe and OpenAI ACP, Visa Trusted Agent Protocol, Mastercard Agent Pay</span></td>
-            <td>"Did a human authorize this cart?" Mandates, checkout sessions and agent credentials on card rails, with refunds and disputes.</td>
-            <td>A different question. TOON answers "was this packet paid for before the app saw it?" No cart, no card, no chargeback.</td>
-          </tr>
-          <tr class="toon">
-            <td><strong>Only TOON</strong><span>a route, not just a price</span></td>
-            <td colspan="2">Fund one channel, reach many apps. Routes chain across nodes with the payload sealed, each hop keeps its own fee, a hop can convert between tokens at a rate it declares, and a node can run as a hidden service at a <code>.anyone</code> address. The app never sees a payment.</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </div>
 </section>
@@ -1239,54 +1130,6 @@ toon route list                     <span class="c"># what the connector termina
 }</pre>
         </details>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ FAQ ============ -->
-<section id="faq" class="tint">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">FAQ</p>
-      <h2>Questions operators and callers ask</h2>
-    </div>
-    <div class="faq">
-      <details>
-        <summary>Is TOON an x402 facilitator?</summary>
-        <p>No. A facilitator verifies and settles payments for a seller as a hosted service, usually for a fee per settlement. A TOON node is software you run: it verifies vouchers itself, offchain, and settles its own channels in batches. Every TOON channel is an x402 batch-settlement channel, so the contracts and the 402 document are x402's; the node is yours. There is no fee to anyone but you.</p>
-      </details>
-      <details>
-        <summary>Do I have to change my app?</summary>
-        <p>No. Your app is an ordinary HTTP service behind a route's <code>handler_url</code>. It receives an ordinary HTTP request, holds no key on your behalf, and never sees a payment. The relay, the store and the gas station above contain no payment code at all.</p>
-      </details>
-      <details>
-        <summary>Which chains and tokens?</summary>
-        <p>The live node settles in USDC on Base mainnet and Solana mainnet. You choose the token and chain in the settlement block of your config. On EVM the channel contract is x402's <code>x402BatchSettlement</code>; on Solana it is the Solana Foundation's <code>payment-channels</code> program. Base Sepolia and Solana devnet are the devnets.</p>
-      </details>
-      <details>
-        <summary>What is the smallest payment?</summary>
-        <p>One base unit of the token. In USDC that is a millionth of a dollar. A voucher is a signature, so a tenth of a cent is a real price with no gas attached to it.</p>
-      </details>
-      <details>
-        <summary>Does a caller need an account or an API key?</summary>
-        <p>No. A caller needs a wallet with a deposit in the token the node prices in. It opens a channel once and attaches a voucher to each request. The node never learns who the caller is beyond the key that signs.</p>
-      </details>
-      <details>
-        <summary>What happens to an unpaid request?</summary>
-        <p>It is refused before it reaches your app, with an x402 <code>402 Payment Required</code> that states the exact price, token, chain and address. The caller pays and sends again. A refusal is a value in the client, not an exception. The 402 answers a well-formed packet that carries no voucher; a bare <code>curl -X POST /ilp</code> is not a packet and gets a 400. To read a price by hand, <code>GET /ilp</code> lists every route with its price.</p>
-      </details>
-      <details>
-        <summary>When does the money land?</summary>
-        <p>Claims are free and cumulative; the node lands the latest voucher on chain in batches, every ten minutes by default, and right away if the payer starts a withdrawal. One transaction settles everything since the last one.</p>
-      </details>
-      <details>
-        <summary>What does TOON itself charge?</summary>
-        <p>Nothing. The software is MIT licensed and there is no protocol fee. What a caller pays lands in the operator's channel, minus nothing. Gas for a batch settlement is paid by whoever lands it, once per batch, not per request.</p>
-      </details>
-      <details>
-        <summary>Where do I find other nodes and apps?</summary>
-        <p>There is no discovery layer by design (ADR 0046): a node answers for itself at <code>GET /ilp</code> and announces nothing. A peering is made from a URL (ADR 0058). The apps above are the ones the project runs; anyone can run the same images. The <a href="docs/devnet.html">devnet reference</a> lists three public nodes and six routes you can pay today without real money.</p>
-      </details>
     </div>
   </div>
 </section>

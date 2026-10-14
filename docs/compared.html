@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where TOON sits · TOON Protocol docs</title>
+<meta name="description" content="Pay-per-request protocols, purchase-authorization protocols, and the route only TOON has.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f3efe6'/%3E%3Crect x='2' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='11' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='5' y='4' width='3' height='8' fill='%232b2f36'/%3E%3Crect x='9' y='4' width='3' height='8' fill='%23c9a24a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg><span class="name">TOON<small>Protocol</small></span></a>
+    <nav aria-label="Primary">
+      <a class="hide-s" href="../index.html#how">How it works</a>
+      <a href="../docs/index.html" class="active">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
+      <a class="button primary" href="../docs/first-agent-node.html">Run a node</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap docs">
+  <details class="mobilenav">
+    <summary>Docs</summary>
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+      <a href="compared.html" class="active">Where TOON sits</a>
+      <a href="faq.html">FAQ</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
+    </div>
+  </details>
+  <aside class="sidebar" aria-label="Docs">
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+      <a href="compared.html" class="active">Where TOON sits</a>
+      <a href="faq.html">FAQ</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
+    </div>
+  </aside>
+  <main class="doc">
+    <p class="eyebrow">Start here</p>
+    <h1>Where TOON sits</h1>
+    <p class="lede">Pay-per-request protocols, purchase-authorization protocols, and the route only TOON has.</p>
+<p>Two kinds of agent payment protocol exist. TOON is the first kind, pay per request, with one thing the others do not have: a route.</p>
+
+<div class="tablewrap compare">
+      <table>
+        <thead><tr><th style="width:26%">Protocols</th><th style="width:37%">What they answer</th><th>And TOON</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Pay per request</strong><span>x402, L402, Circle Nanopayments</span></td>
+            <td>"What does this request cost, and is it paid?" A 402 names a price; the caller pays onchain, over Lightning, or through a batching service.</td>
+            <td>ILP routes, x402 settles. Every TOON channel is an x402 batch-settlement channel, and an unpaid request gets an x402 document. What TOON adds is the path: ILP carries the voucher from node to node, so a caller is not limited to the seller it opened a channel with.</td>
+          </tr>
+          <tr>
+            <td><strong>Authorize a purchase</strong><span>Google AP2, Stripe and OpenAI ACP, Visa Trusted Agent Protocol, Mastercard Agent Pay</span></td>
+            <td>"Did a human authorize this cart?" Mandates, checkout sessions and agent credentials on card rails, with refunds and disputes.</td>
+            <td>A different question. TOON answers "was this packet paid for before the app saw it?" No cart, no card, no chargeback.</td>
+          </tr>
+          <tr class="toon">
+            <td><strong>Only TOON</strong><span>a route, not just a price</span></td>
+            <td colspan="2">Fund one channel, reach many apps. Routes chain across nodes with the payload sealed, each hop keeps its own fee, a hop can convert between tokens at a rate it declares, and a node can run as a hidden service at a <code>.anyone</code> address. The app never sees a payment.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+<h2 id="against-the-alternatives"><a class="anchor" href="#against-the-alternatives">Against the alternatives</a></h2>
+
+<h3>Against paying onchain per call</h3>
+<p>A TOON request costs a signature, not a transaction. No gas per request, no block to wait for, and a tenth of a cent is a real price, not a rounding error.</p>
+
+<h3>Against API keys and invoices</h3>
+<p>Nothing to provision and nothing to chase. The caller pays with the request, and an unpaid request is refused before it reaches your app.</p>
+
+<h3>Against metered billing services</h3>
+<p>No percentage cut, no minimums, no payout schedule. Vouchers settle to a key you hold, in the token and on the chain you chose.</p>
+
+<h3>Against a plain reverse proxy</h3>
+<p>Routes chain. A node can forward to another node's paid route and keep a fee, so one caller reaches apps behind other nodes through one channel. Forwarding hops carry the payload sealed and cannot read it.</p>
+
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="concepts.html"><small>Previous</small>Connector concepts</a><a class="next" href="faq.html"><small>Next</small>FAQ</a></nav>
+  </main>
+  <aside class="toc" aria-label="On this page"><h4>On this page</h4>
+  <a href="#against-the-alternatives">Against the alternatives</a>
+</aside>
+</div>
+<footer>
+  <div class="wrap">
+    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write · no scripts</span>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a href="https://discord.gg/PxzjbtXg9Q">Discord</a>
+      <a href="https://x.com/toonprotocol">X</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

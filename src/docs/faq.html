@@ -1,0 +1,26 @@
+<h2>Is TOON an x402 facilitator?</h2>
+<p>No. A facilitator verifies and settles payments for a seller as a hosted service, usually for a fee per settlement. A TOON node is software you run: it verifies vouchers itself, offchain, and settles its own channels in batches. Every TOON channel is an x402 batch-settlement channel, so the contracts and the 402 document are x402's; the node is yours. There is no fee to anyone but you.</p>
+
+<h2>Do I have to change my app?</h2>
+<p>No. Your app is an ordinary HTTP service behind a route's <code>handler_url</code>. It receives an ordinary HTTP request, holds no key on your behalf, and never sees a payment. The relay, the store and the gas station on the landing page contain no payment code at all.</p>
+
+<h2>Which chains and tokens?</h2>
+<p>The live node settles in USDC on Base mainnet and Solana mainnet. You choose the token and chain in the settlement block of your config. On EVM the channel contract is x402's <code>x402BatchSettlement</code>; on Solana it is the Solana Foundation's <code>payment-channels</code> program. Base Sepolia and Solana devnet are the devnets.</p>
+
+<h2>What is the smallest payment?</h2>
+<p>One base unit of the token. In USDC that is a millionth of a dollar. A voucher is a signature, so a tenth of a cent is a real price with no gas attached to it.</p>
+
+<h2>Does a caller need an account or an API key?</h2>
+<p>No. A caller needs a wallet with a deposit in the token the node prices in. It opens a channel once and attaches a voucher to each request. The node never learns who the caller is beyond the key that signs.</p>
+
+<h2>What happens to an unpaid request?</h2>
+<p>It is refused before it reaches your app, with an x402 <code>402 Payment Required</code> that states the exact price, token, chain and address. The caller pays and sends again. A refusal is a value in the client, not an exception. The 402 answers a well-formed packet that carries no voucher; a bare <code>curl -X POST /ilp</code> is not a packet and gets a 400. To read a price by hand, <code>GET /ilp</code> lists every route with its price.</p>
+
+<h2>When does the money land?</h2>
+<p>Claims are free and cumulative; the node lands the latest voucher on chain in batches, every ten minutes by default, and right away if the payer starts a withdrawal. One transaction settles everything since the last one.</p>
+
+<h2>What does TOON itself charge?</h2>
+<p>Nothing. The software is MIT licensed and there is no protocol fee. What a caller pays lands in the operator's channel, minus nothing. Gas for a batch settlement is paid by whoever lands it, once per batch, not per request.</p>
+
+<h2>Where do I find other nodes and apps?</h2>
+<p>There is no discovery layer by design (ADR 0046): a node answers for itself at <code>GET /ilp</code> and announces nothing. A peering is made from a URL (ADR 0058). The apps on the landing page are the ones the project runs; anyone can run the same images. The <a href="devnet.html">devnet reference</a> lists three public nodes and six routes you can pay today without real money.</p>

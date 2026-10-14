@@ -53,6 +53,9 @@
     "docs/cli.html": {
       "id": "<arweave tx id of this file>"
     },
+    "docs/compared.html": {
+      "id": "<arweave tx id of this file>"
+    },
     "docs/concepts.html": {
       "id": "<arweave tx id of this file>"
     },
@@ -66,6 +69,9 @@
       "id": "<arweave tx id of this file>"
     },
     "docs/exit-codes.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/faq.html": {
       "id": "<arweave tx id of this file>"
     },
     "docs/first-agent-node.html": {

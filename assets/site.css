@@ -102,7 +102,7 @@ p { margin:0; }
 .note a { color:var(--accent); }
 
 /* ===== sections ===== */
-section { padding:5rem 0; }
+section { padding:4rem 0; }
 section + section, section + div { border-top:1px solid var(--line); }
 section.tint { background:var(--bg-tint); }
 .cta { display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:1.75rem; }
@@ -182,7 +182,7 @@ pre.sel button:hover, pre.sel button.done { color:var(--term-ink); }
    demo. Each line is one absolutely placed span; `--n` is its length in characters and
    `--i` its turn. One shared timeline per line: type at one step per character, hold,
    erase, then stay hidden until the cycle comes round. Reduced motion holds line one. */
-.tape { --slot:4.6s; --cycle:32.2s; display:flex; align-items:baseline; gap:0.7rem; white-space:nowrap; overflow:hidden; }
+.tape { --slot:4.6s; --cycle:32.2s; display:flex; align-items:flex-start; gap:0.7rem; white-space:nowrap; overflow:hidden; }
 .tape > b { color:var(--gold); font-weight:600; }
 .tape .lines { position:relative; flex:1; min-width:0; height:1.75em; }
 .tape .lines span { position:absolute; left:0; top:0; display:block; box-sizing:content-box; max-width:0; overflow:hidden; white-space:nowrap; color:var(--ink-dim);

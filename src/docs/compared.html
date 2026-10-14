@@ -1,0 +1,37 @@
+<p>Two kinds of agent payment protocol exist. TOON is the first kind, pay per request, with one thing the others do not have: a route.</p>
+
+<div class="tablewrap compare">
+      <table>
+        <thead><tr><th style="width:26%">Protocols</th><th style="width:37%">What they answer</th><th>And TOON</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Pay per request</strong><span>x402, L402, Circle Nanopayments</span></td>
+            <td>"What does this request cost, and is it paid?" A 402 names a price; the caller pays onchain, over Lightning, or through a batching service.</td>
+            <td>ILP routes, x402 settles. Every TOON channel is an x402 batch-settlement channel, and an unpaid request gets an x402 document. What TOON adds is the path: ILP carries the voucher from node to node, so a caller is not limited to the seller it opened a channel with.</td>
+          </tr>
+          <tr>
+            <td><strong>Authorize a purchase</strong><span>Google AP2, Stripe and OpenAI ACP, Visa Trusted Agent Protocol, Mastercard Agent Pay</span></td>
+            <td>"Did a human authorize this cart?" Mandates, checkout sessions and agent credentials on card rails, with refunds and disputes.</td>
+            <td>A different question. TOON answers "was this packet paid for before the app saw it?" No cart, no card, no chargeback.</td>
+          </tr>
+          <tr class="toon">
+            <td><strong>Only TOON</strong><span>a route, not just a price</span></td>
+            <td colspan="2">Fund one channel, reach many apps. Routes chain across nodes with the payload sealed, each hop keeps its own fee, a hop can convert between tokens at a rate it declares, and a node can run as a hidden service at a <code>.anyone</code> address. The app never sees a payment.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+<h2>Against the alternatives</h2>
+
+<h3>Against paying onchain per call</h3>
+<p>A TOON request costs a signature, not a transaction. No gas per request, no block to wait for, and a tenth of a cent is a real price, not a rounding error.</p>
+
+<h3>Against API keys and invoices</h3>
+<p>Nothing to provision and nothing to chase. The caller pays with the request, and an unpaid request is refused before it reaches your app.</p>
+
+<h3>Against metered billing services</h3>
+<p>No percentage cut, no minimums, no payout schedule. Vouchers settle to a key you hold, in the token and on the chain you chose.</p>
+
+<h3>Against a plain reverse proxy</h3>
+<p>Routes chain. A node can forward to another node's paid route and keep a fee, so one caller reaches apps behind other nodes through one channel. Forwarding hops carry the payload sealed and cannot read it.</p>

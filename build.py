@@ -25,6 +25,8 @@ NAV = [
         ("index", "Overview", "What you get, what to run, and what holds. Then pick a path."),
         ("agent-node", "The agent node", "Agent node, TOON app, connector, app, relay, peering, address and channel: one meaning each."),
         ("concepts", "Connector concepts", "After this page the connector pages read without a glossary."),
+        ("compared", "Where TOON sits", "Pay-per-request protocols, purchase-authorization protocols, and the route only TOON has."),
+        ("faq", "FAQ", "The questions operators and callers ask, with short answers and where to read on."),
     ]),
     ("Run an agent node", [
         ("install", "Install", "toon in ~/.local/bin, checked against the release's checksum, and the agent skills beside it."),
