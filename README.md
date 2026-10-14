@@ -9,6 +9,7 @@ docs/*.html             built from src/docs/*.html by build.py
 ecosystem/index.html    built from src/ecosystem.html by build.py
 apps/index.html         built from src/apps.html: every app, in the shape of a marketplace
 agents/index.html       built from src/agents.html: every agent that speaks TOON
+install.sh              the installer at https://toon.ar.io/install.sh: a stub that hands over to toon_cli's
 assets/site.css         the one stylesheet, shared by every page
 assets/fonts/           Archivo 800 and JetBrains Mono, self-hosted, latin subsets
 assets/icon/            the mark, as SVG and PNG
@@ -80,6 +81,14 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
    it. No page may reference another host for a stylesheet, font or image. The typing tape
    in the operators section is a CSS animation over real commands in workflow order;
    reduced motion holds its first line.
+
+## The install URL
+
+Every install command on the site reads `curl -fsSL https://toon.ar.io/install.sh | sh`.
+That path is served by the site itself, from `install.sh` in the manifest, so it only works
+once a revision that carries the file is live on Arweave. Until then the gateway answers
+the path with the landing page, and piping that into `sh` fails. Check before and after a
+publish: `curl -fsSL https://toon.ar.io/install.sh | head -1` must print `#!/bin/sh`.
 
 ## Publishing
 

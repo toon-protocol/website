@@ -143,6 +143,9 @@
     "index.html": {
       "id": "<arweave tx id of this file>"
     },
+    "install.sh": {
+      "id": "<arweave tx id of this file>"
+    },
     "manifest.template.json": {
       "id": "<arweave tx id of this file>"
     }
