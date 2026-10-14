@@ -292,7 +292,7 @@ def main():
     # A path manifest for Arweave: every file under the site, keyed by path.
     paths = {}
     for p in sorted(ROOT.rglob("*")):
-        if p.is_file() and not any(part.startswith(".") or part in ("src", "build.py", "README.md") for part in p.relative_to(ROOT).parts):
+        if p.is_file() and not any(part.startswith(".") or part in ("src", "build.py", "README.md", "CLAUDE.md") for part in p.relative_to(ROOT).parts):
             paths[str(p.relative_to(ROOT))] = {"id": "<arweave tx id of this file>"}
     manifest = {"manifest": "arweave/paths", "version": "0.2.0", "index": {"path": "index.html"}, "paths": paths}
     (ROOT / "manifest.template.json").write_text(json.dumps(manifest, indent=2) + "\n")
