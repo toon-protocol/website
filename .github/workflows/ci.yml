@@ -1,0 +1,31 @@
+name: CI
+
+# The `gate` job's `run:` steps are also the AFK factory's gate (.sandcastle/run-gate.ts),
+# run in the sandcastle-agent image, which has Python 3.11. Keep build.py runnable on 3.11.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build the site
+        run: python3 build.py
+      - name: Built pages match their sources
+        run: |
+          changed="$(git status --porcelain)"
+          if [ -n "$changed" ]; then
+            echo "python3 build.py changed files; run it and commit the result:"
+            echo "$changed"
+            git diff
+            exit 1
+          fi
+      - name: install.sh parses
+        run: sh -n install.sh
