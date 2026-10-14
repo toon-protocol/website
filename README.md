@@ -17,7 +17,8 @@ src/                    the page fragments you edit
 
 The only script on the site is the copy button on the landing page. The site is stored on Arweave and reached through the ArNS name
 `toon`. Each revision of the landing page is bought as a paid TOON write through the live
-node, and embeds the receipts of the revisions before it (the page's "Proof" section).
+node, and the docs page "Proof" (`src/docs/proof.html`) embeds the receipts of the revisions
+before it.
 
 ## Editing
 
@@ -44,16 +45,16 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
 
 ## Before publishing
 
-1. **Prices.** The pricing table on the landing page and the "Priced live" tiles on the
-   ecosystem page are a snapshot read off the live node's `GET /ilp`. Reread it and update the dates if a price
+1. **Prices.** The "Priced live" tiles and the endpoints table on the ecosystem page are a
+   snapshot read off the live node's `GET /ilp`. Reread it and update the dates if a price
    changed.
 2. **Release tags.** The version named in `src/docs/install.html` is toon_cli's latest
    release (`gh release list -R toon-protocol/toon_cli`); the Docker tag in
    `src/docs/run-a-node.html` is the connector's (`gh release list -R toon-protocol/connector`).
 3. **Docs drift.** Each docs page names the repository file it was written from. Diff that
    file against the last time the page was touched.
-4. **Receipts.** Add the landing-page revision being replaced to the "Proof" list and to
-   the JSON in the `<details>` block: its Arweave transaction id (the `x-arns-resolved-id`
+4. **Receipts.** Add the landing-page revision being replaced to the list in
+   `src/docs/proof.html` and to the JSON in its `<details>` block: its Arweave transaction id (the `x-arns-resolved-id`
    header of `curl -sI https://toon.ar.io`), `sha256sum` of the file as served, byte size,
    the claim on each hop, and the block date. A page cannot contain its own hash, so this
    is always done for the previous revision, never the current one.

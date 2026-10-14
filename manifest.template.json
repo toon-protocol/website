@@ -110,6 +110,9 @@
     "docs/peering.html": {
       "id": "<arweave tx id of this file>"
     },
+    "docs/proof.html": {
+      "id": "<arweave tx id of this file>"
+    },
     "docs/protocol.html": {
       "id": "<arweave tx id of this file>"
     },

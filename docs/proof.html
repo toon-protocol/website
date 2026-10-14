@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proof · TOON Protocol docs</title>
+<meta name="description" content="The landing page is not on a web server: every revision, its Arweave transaction and the receipts of the write that bought it.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f3efe6'/%3E%3Crect x='2' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='11' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='5' y='4' width='3' height='8' fill='%232b2f36'/%3E%3Crect x='9' y='4' width='3' height='8' fill='%23c9a24a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg><span class="name">TOON<small>Protocol</small></span></a>
+    <nav aria-label="Primary">
+      <a class="hide-s" href="../index.html#how">How it works</a>
+      <a href="../docs/index.html" class="active">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a class="hide-s" href="https://github.com/toon-protocol">GitHub</a>
+      <a class="button primary" href="../docs/first-agent-node.html">Run a node</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap docs">
+  <details class="mobilenav">
+    <summary>Docs</summary>
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+      <a href="compared.html">Where TOON sits</a>
+      <a href="faq.html">FAQ</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
+      <a href="proof.html" class="active">Proof</a>
+    </div>
+  </details>
+  <aside class="sidebar" aria-label="Docs">
+    <div class="group">
+      <h4>Start here</h4>
+      <a href="index.html">Overview</a>
+      <a href="agent-node.html">The agent node</a>
+      <a href="concepts.html">Connector concepts</a>
+      <a href="compared.html">Where TOON sits</a>
+      <a href="faq.html">FAQ</a>
+    </div>
+    <div class="group">
+      <h4>Run an agent node</h4>
+      <a href="install.html">Install</a>
+      <a href="first-agent-node.html">Your first agent node</a>
+      <a href="networks-and-reachability.html">Networks and reachability</a>
+      <a href="money.html">Money</a>
+      <a href="agent-keys.html">Agent keys</a>
+      <a href="peering.html">Peering</a>
+      <a href="adding-an-app.html">Adding an app</a>
+      <a href="creating-a-toon-app.html">Creating a TOON app</a>
+      <a href="relay.html">The relay</a>
+      <a href="operations.html">Operations</a>
+      <a href="backup-and-restore.html">Backup and restore</a>
+    </div>
+    <div class="group">
+      <h4>The connector, by hand</h4>
+      <a href="run-a-node.html">Run a node</a>
+      <a href="put-your-app-behind-it.html">Put your app behind it</a>
+      <a href="get-paid.html">Get paid</a>
+      <a href="peering-by-hand.html">Peer with another node</a>
+      <a href="operator-surface.html">The operator surface</a>
+      <a href="hidden-services.html">Hidden services</a>
+    </div>
+    <div class="group">
+      <h4>Callers</h4>
+      <a href="pay-a-node.html">Pay a node</a>
+      <a href="channels.html">Payment channels</a>
+      <a href="cli.html">CLI reference</a>
+      <a href="errors.html">Errors and reject codes</a>
+    </div>
+    <div class="group">
+      <h4>Agents</h4>
+      <a href="spaceturtle.html">spaceturtle</a>
+    </div>
+    <div class="group">
+      <h4>Reference</h4>
+      <a href="devnet.html">Devnet reference</a>
+      <a href="protocol.html">Protocol and specs</a>
+      <a href="exit-codes.html">Exit codes</a>
+      <a href="proof.html" class="active">Proof</a>
+    </div>
+  </aside>
+  <main class="doc">
+    <p class="eyebrow">Reference</p>
+    <h1>Proof</h1>
+    <p class="lede">The landing page is not on a web server: every revision, its Arweave transaction and the receipts of the write that bought it.</p>
+<p>It is one HTML file on Arweave, and the write that put it there was bought through the node priced on the <a href="../ecosystem/index.html#live">ecosystem page</a>: two paid hops, each paid with a voucher on an x402 channel on Solana mainnet. Each revision embeds the receipts of the ones before it, and every hash checks against a public chain. The node's first paid writes are at <a href="https://boughtviatoonnode.ar.io/">boughtviatoonnode.ar.io</a>.</p>
+
+<h2 id="revisions"><a class="anchor" href="#revisions">Revisions</a></h2>
+
+<p>The newest revision is listed first. Each line is the Arweave transaction the revision lives at; "view" opens it on a gateway.</p>
+
+<ol class="receipts" aria-label="Earlier revisions of this page">
+          <li class="live"><b>rev 8</b><span>2026-10-03</span><code title="Arweave transaction id">rAEvwshqhL-oWbcnqfY6iwimpcLbZW-N14FMAsy577o</code><a href="https://arweave.net/rAEvwshqhL-oWbcnqfY6iwimpcLbZW-N14FMAsy577o">view</a></li>
+          <li><b>rev 7</b><span>2026-09-23</span><code>sfLC6YFJ_KCwjIokLITEuLHo_62s4JkM-Szb4pzXJz0</code><a href="https://arweave.net/sfLC6YFJ_KCwjIokLITEuLHo_62s4JkM-Szb4pzXJz0">view</a></li>
+          <li><b>rev 6</b><span>2026-09-23</span><code>R1AsnnPqN0MBGQVibDz2qSFPj4pqrplGdmr44XsEXmc</code><a href="https://arweave.net/R1AsnnPqN0MBGQVibDz2qSFPj4pqrplGdmr44XsEXmc">view</a></li>
+          <li><b>rev 5</b><span>2026-09-13</span><code>eVq5fpCYo3dmm1Ve28FE96awJoCPpGIBO8vBA7OdeO8</code><a href="https://arweave.net/eVq5fpCYo3dmm1Ve28FE96awJoCPpGIBO8vBA7OdeO8">view</a></li>
+          <li><b>rev 4</b><span>2026-09-10</span><code>3DH-cty1UbiNJoj0fWO6xbSq32bqHfxHTUPPZCyIvxU</code><a href="https://arweave.net/3DH-cty1UbiNJoj0fWO6xbSq32bqHfxHTUPPZCyIvxU">view</a></li>
+          <li><b>rev 3</b><span>2026-09-10</span><code>5niuBsUcjfHJJePn0TCijN37xexebzk6WCYzej42Uj4</code><a href="https://arweave.net/5niuBsUcjfHJJePn0TCijN37xexebzk6WCYzej42Uj4">view</a></li>
+          <li><b>rev 2</b><span>2026-08-30</span><code>diMr0l1YgIgux1c3OeCO1NB7HOavNg6B-ScgenmRBZg</code><a href="https://arweave.net/diMr0l1YgIgux1c3OeCO1NB7HOavNg6B-ScgenmRBZg">view</a></li>
+          <li><b>rev 1</b><span>2026-08-27</span><code>Sl49EXVNvlSveojCf1-JPL9K_tRTwEwBA_U3lvamdPk</code><a href="https://arweave.net/Sl49EXVNvlSveojCf1-JPL9K_tRTwEwBA_U3lvamdPk">view</a></li>
+        </ol>
+
+<h2 id="receipt-by-receipt"><a class="anchor" href="#receipt-by-receipt">Receipt by receipt</a></h2>
+
+<details>
+          <summary>Every earlier revision, receipt by receipt</summary>
+          <p>Revision 8 is the page this one replaces: <code>sha256 288783f3bb0a20d2d33ca16e6db111a9ab2245413c8a8a7b848841587d9c93ce</code>, 34,268 bytes, stored 2026-10-03. Its hop claims were not carried into this record. Revisions 1 to 7 are below exactly as revision 8 recorded them.</p>
+<pre>{
+  &quot;rev1&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 1, served as a paid TOON write (same discipline as boughtviatoonnode self.json: the next revision embeds these receipts)&quot;,
+    &quot;date&quot;: &quot;2026-08-27&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;359c7a97ddbd9766d93170c89d2253543a833e4d6462bdc93ab31774b6a08554&quot;,
+    &quot;bytes&quot;: 134294,
+    &quot;arweave_txid&quot;: &quot;Sl49EXVNvlSveojCf1-JPL9K_tRTwEwBA_U3lvamdPk&quot;,
+    &quot;route&quot;: &quot;g.drew.ario.xl&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;paid_base_units&quot;: 61000,
+      &quot;watermark&quot;: &quot;nonce 16 -&gt; 17, cumulative 376000 -&gt; 437000&quot;
+    },
+    &quot;hop2_edge_store&quot;: {
+      &quot;channel&quot;: &quot;27XcKjUVe3SbVfkrj72bqMcZf3QuEasGxci4kberf8fu&quot;,
+      &quot;claim&quot;: &quot;nonce 7, cumulative 182,700, advance 60,000&quot;,
+      &quot;captured&quot;: &quot;2026-08-27 from the store connector&#x27;s peer-claims.log (inbound_claim_accepted), closing the receipt gap noted at publication&quot;
+    },
+    &quot;x402_leg&quot;: {
+      &quot;chain&quot;: &quot;base-mainnet&quot;,
+      &quot;tx&quot;: &quot;0x327477ee7d0dc3b9f8424a4f630401399374af09be5d322d419bc9fdda5241a4&quot;,
+      &quot;block&quot;: 50533113,
+      &quot;from&quot;: &quot;0x025bf59AD141552A935E54A83d2D9D6571e38A55&quot;,
+      &quot;to_ario_payto&quot;: &quot;0x6A0A10FFD285c971B841bee8892878c0d583Bf67&quot;,
+      &quot;usdc&quot;: &quot;0.004298&quot;,
+      &quot;verified_via&quot;: [
+        &quot;base.blockscout.com&quot;,
+        &quot;mainnet.base.org&quot;
+      ],
+      &quot;winc&quot;: &quot;0&quot;
+    },
+    &quot;arns&quot;: {
+      &quot;name&quot;: &quot;toon&quot;,
+      &quot;bought&quot;: &quot;2026-08-27, 1yr lease, 44,170.416 ARIO (quote was 44,843), funded by Phil via Drew&quot;,
+      &quot;buy_tx&quot;: &quot;24mSdCCz6JkiFLt9JBxriYbd1FgSfwXZYrkMSFyJtx9vVVGJBV3y9JSLUTk2swKfEwBRhYewByaHAttg8FW6khdX&quot;,
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;ant_owner&quot;: &quot;DQCzjWpsDsbwaTkAvzu9pD3QhEK8QAHCmNHvUmgAKdQt&quot;,
+      &quot;set_tx&quot;: &quot;5MqvFKUbYmLjYWkTx7ESCS6E9joLYBwxaLKT3K5PN6WjNE586RYjLf2ha3KvnRY1HyyU41NAy3KLD7vdNAMMT7tG&quot;,
+      &quot;lease_ends&quot;: &quot;2027-08-27 (endTimestamp 1819394542000)&quot;,
+      &quot;url&quot;: &quot;https://toon.permagate.io/&quot;,
+      &quot;alias_undername&quot;: {
+        &quot;url&quot;: &quot;https://toon_boughtviatoonnode.permagate.io/&quot;,
+        &quot;ant&quot;: &quot;BiW6dxwkphDjKWsDEqHRKMvNoTbebEDb5i83DUhTwsB1&quot;,
+        &quot;set_tx&quot;: &quot;5AG6Q95o6E51bnedTjR5FLAGjQqdKfo8o6Y1JiWJg6Xg9pNqQnwrjsW2m8EGorr8t5jwQ9CvdZ1Ka7St1WFAa9Pu&quot;
+      }
+    }
+  },
+  &quot;rev2&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 2, served as a paid TOON write (this object is what rev 3&#x27;s appendix embeds; rev 2&#x27;s page embeds the rev 1 receipts above)&quot;,
+    &quot;date&quot;: &quot;2026-08-30&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;6b9548dd3197158885070a287d66caae1f56a58c1cd498e08c2d1362e6496610&quot;,
+    &quot;bytes&quot;: 86403,
+    &quot;arweave_txid&quot;: &quot;diMr0l1YgIgux1c3OeCO1NB7HOavNg6B-ScgenmRBZg&quot;,
+    &quot;route&quot;: &quot;g.drew.ario (the .xl route is an alias since 2026-08-29; ADR 0065 schedule pricing)&quot;,
+    &quot;content_changes&quot;: &quot;Discord invite added to Links (discord.gg/PxzjbtXg9Q); retired x402-to-AR.IO narration removed; appendices pinned to connector commit deded9f9 (the commit the node runs); config-spec + vocabulary appendices dropped to fit under the 107,520 B free-tier ceiling; rev 1 receipts embedded as Appendix E&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;claim&quot;: &quot;nonce 26, cumulative 512,420, advance 4,420 = 1000 base + 30 x 114 KiB&quot;,
+      &quot;note&quot;: &quot;nonce 25 (+6,940) was the FAILED 151,225 B attempt: store leg T00&#x27;d on turbo-sdk#455, client charged anyway (the #1028 finding, again)&quot;
+    },
+    &quot;hop2_edge_store&quot;: {
+      &quot;channel&quot;: &quot;27XcKjUVe3SbVfkrj72bqMcZf3QuEasGxci4kberf8fu&quot;,
+      &quot;claim&quot;: &quot;nonce 15, cumulative 255,720, advance 4,320 = 900 base + 30 x 114 KiB (nonce 14 +6,840 was the failed attempt)&quot;,
+      &quot;captured&quot;: &quot;GET /claims on the store connector operator surface, book=client (the peer book is empty post-#1257/#1258)&quot;
+    },
+    &quot;storage_leg&quot;: {
+      &quot;how&quot;: &quot;Turbo free signed tier (&lt;= 107,520 B), ZERO winc spent&quot;,
+      &quot;why_not_paid&quot;: &quot;the funded 93,749,282,296 winc CANNOT be spent: /v1/tx ignores winc and demands x402, chunked path debits the wrong account. Filed https://github.com/ardriveapp/turbo-sdk/issues/454 sibling: issues/455&quot;,
+      &quot;read_back&quot;: &quot;byte-identical from permagate.io (sha256 match, 86,403 bytes)&quot;
+    },
+    &quot;arns_set&quot;: {
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;record&quot;: &quot;@ -&gt; diMr0l1YgIgux1c3OeCO1NB7HOavNg6B-ScgenmRBZg, ttl 900, CONFIRMED on chain 2026-08-30&quot;,
+      &quot;note&quot;: &quot;two blockhash-expiry failures against api.mainnet-beta.solana.com before the third attempt landed; publicnode 403s the WSS subscription from the Mac&quot;
+    }
+  },
+  &quot;rev3&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 3, served as a paid TOON write (rev 4&#x27;s Appendix E embeds this object)&quot;,
+    &quot;date&quot;: &quot;2026-09-10&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;e1c9ea033a48e4691825a5183bc617117205e0dc66c0870ae2636c7bd2c21ea2&quot;,
+    &quot;bytes&quot;: 90595,
+    &quot;arweave_txid&quot;: &quot;5niuBsUcjfHJJePn0TCijN37xexebzk6WCYzej42Uj4&quot;,
+    &quot;route&quot;: &quot;g.drew.ario (ADR 0065 schedule: 1000 base + 30 per KiB)&quot;,
+    &quot;content_changes&quot;: &quot;rewritten after reader feedback (the page sold tech not outcome): hero claim &#x27;Put a price on any HTTP endpoint. Get paid per request, in USDC, without changing your app.&#x27;; sections What it does / What it costs (price table read off the node&#x27;s live GET /ilp) / Why it is better / Who it is for / How to use it / Proof / Links (+npm client) / Colophon; the turbo-sdk#455 caveat moved off the front (store paid path works since 2026-09-03); appendices read via git show at connector commit deded9f9, the tag the box runs (rust-sha-deded9f, verified on the box the same day)&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;claim&quot;: &quot;nonce 65 -&gt; 66, cumulative 625,190 -&gt; 629,760, advance 4,570 = 1000 base + 30 x 119 KiB&quot;,
+      &quot;captured&quot;: &quot;client channel store before/after the write, and GET /claims?book=client on the edge operator surface after (nonce 66, cumulative 629,760)&quot;
+    },
+    &quot;hop2_edge_store&quot;: {
+      &quot;channel&quot;: &quot;27XcKjUVe3SbVfkrj72bqMcZf3QuEasGxci4kberf8fu&quot;,
+      &quot;claim&quot;: &quot;nonce 87, cumulative 654,150 after the write; the advance for this packet is 4,470 = 4,570 - 100 edge fee = 900 base + 30 x 119 KiB (prior nonce not read before the write)&quot;,
+      &quot;captured&quot;: &quot;GET /claims?book=client on the store connector operator surface, 2026-09-10&quot;
+    },
+    &quot;storage_leg&quot;: &quot;free signed tier at the bundler (90,595 B is under the 107,520 B ceiling); no ARIO bought for this upload&quot;,
+    &quot;arns&quot;: {
+      &quot;name&quot;: &quot;toon&quot;,
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;set_tx&quot;: &quot;61Ugen2cE3XEt8PdcqLHPQ6SBJ8jYbVSV85oSd7NpyKdE6vsUojJ6WwPAqPMgXiLTJjbLi5hN4NUgzVN3uXmNhW7&quot;,
+      &quot;before&quot;: &quot;diMr0l1YgIgux1c3OeCO1NB7HOavNg6B-ScgenmRBZg (rev 2)&quot;,
+      &quot;after&quot;: &quot;5niuBsUcjfHJJePn0TCijN37xexebzk6WCYzej42Uj4&quot;,
+      &quot;urls&quot;: [
+        &quot;https://toon.permagate.io/&quot;,
+        &quot;https://toon.ar.io/&quot;
+      ]
+    },
+    &quot;first_gateways_to_serve&quot;: &quot;ar-io.dev byte-identical within ~2 min; ardrive.net and vilenarios.com 200 at the ANT dry run; permagate lagged (504 / error pages) for 10+ min, the usual&quot;
+  },
+  &quot;rev4&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 4, served as a paid TOON write (rev 5&#x27;s Appendix E embeds this object)&quot;,
+    &quot;date&quot;: &quot;2026-09-10&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;1df3e5cb583e1a114c606a7aa48e1e8625d37abc9c819d943aec2eca84812dda&quot;,
+    &quot;bytes&quot;: 93089,
+    &quot;arweave_txid&quot;: &quot;3DH-cty1UbiNJoj0fWO6xbSq32bqHfxHTUPPZCyIvxU&quot;,
+    &quot;route&quot;: &quot;g.drew.ario (ADR 0065 schedule: 1000 base + 30 per KiB)&quot;,
+    &quot;content_changes&quot;: &quot;the two showcase links (Proof section, Links table) now point at boughtviatoonnode.ar.io instead of boughtviatoonnode.permagate.io, after permagate&#x27;s front proxy answered 503 &#x27;upstream connect error&#x27; for both names for an afternoon while ar.io and ardrive.net served them; rev 3 receipts embedded in Appendix E; no other copy change&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;claim&quot;: &quot;nonce 66 -&gt; 67, cumulative 629,760 -&gt; 634,420, advance 4,660 = 1000 base + 30 x 122 KiB&quot;,
+      &quot;captured&quot;: &quot;client channel store before/after the write&quot;
+    },
+    &quot;hop2_edge_store&quot;: {
+      &quot;channel&quot;: &quot;27XcKjUVe3SbVfkrj72bqMcZf3QuEasGxci4kberf8fu&quot;,
+      &quot;claim&quot;: &quot;nonce 87 -&gt; 88, cumulative 654,150 -&gt; 658,710, advance 4,560 = 4,660 - 100 edge fee = 900 base + 30 x 122 KiB&quot;,
+      &quot;captured&quot;: &quot;GET /claims?book=client on the store connector operator surface before and after, 2026-09-10&quot;
+    },
+    &quot;storage_leg&quot;: &quot;free signed tier at the bundler (93,089 B is under the 107,520 B ceiling)&quot;,
+    &quot;arns&quot;: {
+      &quot;name&quot;: &quot;toon&quot;,
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;set_tx&quot;: &quot;215BrPyEVXqxwZXKKdj6HmnB1KaHba3obmqxGZDHybjwjpiwTHme6igzD3XUPFciNWxX3iK5uwYWXYvcm8SNaXuh&quot;,
+      &quot;before&quot;: &quot;5niuBsUcjfHJJePn0TCijN37xexebzk6WCYzej42Uj4 (rev 3)&quot;,
+      &quot;after&quot;: &quot;3DH-cty1UbiNJoj0fWO6xbSq32bqHfxHTUPPZCyIvxU&quot;,
+      &quot;urls&quot;: [
+        &quot;https://toon.ar.io/&quot;,
+        &quot;https://toon.permagate.io/&quot;
+      ]
+    },
+    &quot;gateways&quot;: &quot;ar-io.dev and ardrive.net byte-identical within ~2 min of the write; permagate 503 on every ArNS name at the time (its /ar-io/healthcheck said ok)&quot;
+  },
+  &quot;rev5&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 5, served as a paid TOON write (rev 6 embeds this object)&quot;,
+    &quot;date&quot;: &quot;2026-09-13&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;698c6a51fc238f3f10a15dfd2ebb001e1e71b3b7b9fba8cce2179b19b1d54bc0&quot;,
+    &quot;bytes&quot;: 23060,
+    &quot;arweave_txid&quot;: &quot;eVq5fpCYo3dmm1Ve28FE96awJoCPpGIBO8vBA7OdeO8&quot;,
+    &quot;route&quot;: &quot;g.drew.ario (ADR 0065 schedule: 1000 base + 30 per KiB)&quot;,
+    &quot;content_changes&quot;: &quot;the verbatim appendices (operator README, RFC departures, ADR 0046, ADR 0058) are replaced by links to the repository; a wire block under the hero shows the unpaid 402 (x402 v2 terms) and the paid 200; &#x27;Who it is for&#x27; folds into &#x27;What it does&#x27; and the colophon into &#x27;Proof&#x27;; new section &#x27;Where it sits&#x27; places TOON against pay-per-request protocols (x402, L402, Circle Nanopayments) and purchase-authorization protocols (AP2, ACP, Visa TAP, Mastercard Agent Pay); the price table is read off the node&#x27;s GET /ilp at build time and dated; the cost line is a receipt (rev 4 cost $0.0047); one sentence states the mainnet contracts are live; page shrinks 93,089 B to 23,060 B&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;claim&quot;: &quot;nonce 67 -&gt; 68, cumulative 634,420 -&gt; 636,350, advance 1,930 = 1000 base + 30 x 31 KiB (the base64 blob inside the job event, not the 23,060 B file)&quot;,
+      &quot;captured&quot;: &quot;client channel store before/after the write&quot;
+    },
+    &quot;hop2_edge_store&quot;: {
+      &quot;channel&quot;: &quot;27XcKjUVe3SbVfkrj72bqMcZf3QuEasGxci4kberf8fu&quot;,
+      &quot;claim&quot;: &quot;nonce 88 -&gt; 89, cumulative 658,710 -&gt; 660,540, advance 1,830 = 1,930 - 100 edge fee = 900 base + 30 x 31 KiB&quot;,
+      &quot;captured&quot;: &quot;GET /claims?book=client on the store connector operator surface after the write, 2026-09-13&quot;
+    },
+    &quot;storage_leg&quot;: &quot;free signed tier at the bundler (23,060 B is under the 107,520 B ceiling)&quot;,
+    &quot;arns&quot;: {
+      &quot;name&quot;: &quot;toon&quot;,
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;set_tx&quot;: &quot;2K5SsuBRmdb1i6nJ2ZuMZV5vJ1V6JxqvtosrC7Ckr9RJcAcAkNPWCZR4rwJkrji47ovU5VWH1SA2hNG9NkFyY9jB&quot;,
+      &quot;record&quot;: &quot;@ -&gt; eVq5fpCYo3dmm1Ve28FE96awJoCPpGIBO8vBA7OdeO8, ttl 900, CONFIRMED on chain 2026-09-13, first attempt&quot;
+    },
+    &quot;served&quot;: &quot;ar-io.dev byte-identical within a minute; ar.io 404 on the raw txid at first check (propagation); permagate.io 502 (its outage, ongoing since 09-10)&quot;
+  },
+  &quot;rev6&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 6, served as a paid TOON write (rev 7 embeds this object)&quot;,
+    &quot;date&quot;: &quot;2026-09-23&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;baf2cac00ca968a24945dbefaa37f13f1024af5546c9cf0bfed1b06905210969&quot;,
+    &quot;bytes&quot;: 30731,
+    &quot;arweave_txid&quot;: &quot;R1AsnnPqN0MBGQVibDz2qSFPj4pqrplGdmr44XsEXmc&quot;,
+    &quot;route&quot;: &quot;g.drew.ario (ADR 0065 schedule: 1000 base + 30 per KiB)&quot;,
+    &quot;content_changes&quot;: &quot;motto &#x27;Value, routed.&#x27; replaces &#x27;Open harness for the agent economy&#x27;; the claim reads &#x27;settled onchain&#x27; instead of &#x27;in USDC&#x27;; copy is token-agnostic, naming USDC, Base and Solana only as facts about this node; look and feel follow the console site (system sans, dark by default with a light scheme, sky accent, raised cards), still no scripts; new section &#x27;Run a node in three steps&#x27;; a mainnet banner under the header; &#x27;Where it sits&#x27; now correctly calls TOON the first (pay-per-request) kind&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;claim&quot;: &quot;nonce 68 -&gt; 69, cumulative 636,350 -&gt; 638,580, advance 2,230 = 1000 base + 30 x 41 KiB (the base64 blob inside the job event)&quot;,
+      &quot;captured&quot;: &quot;client channel store before/after the write&quot;
+    },
+    &quot;hop2_edge_store&quot;: {
+      &quot;channel&quot;: &quot;27XcKjUVe3SbVfkrj72bqMcZf3QuEasGxci4kberf8fu&quot;,
+      &quot;claim&quot;: &quot;expected advance 2,130 = 2,230 - 100 edge fee; book read after the write: nonce 511, cumulative 1,146,630. The channel also carries the hourly canary and the daily record, so this one advance is not isolated&quot;,
+      &quot;captured&quot;: &quot;GET /claims?book=client on the store connector operator surface after the write, 2026-09-23&quot;
+    },
+    &quot;storage_leg&quot;: &quot;free signed tier at the bundler (30,731 B is under the 107,520 B ceiling)&quot;,
+    &quot;arns&quot;: {
+      &quot;name&quot;: &quot;toon&quot;,
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;set_tx&quot;: &quot;5bW2h4jQ4oNBcvhac58SBLAZ4ZqKBrYitqSwtJT83k51JWSjhantiS7qkZQrGaYeeNSuUUECaTJWdpf3qDJspfWC&quot;,
+      &quot;record&quot;: &quot;@ -&gt; R1AsnnPqN0MBGQVibDz2qSFPj4pqrplGdmr44XsEXmc, ttl 900, CONFIRMED on chain 2026-09-23, first attempt&quot;
+    },
+    &quot;served&quot;: &quot;ardrive.net and vilenarios.com byte-identical on the raw txid within a minute; ar.io 404 on the raw txid at first check (propagation); permagate.io 502/503 (its outage)&quot;
+  },
+  &quot;rev7&quot;: {
+    &quot;what&quot;: &quot;TOON landing page rev 7, served as a paid TOON write (rev 8 embeds this object)&quot;,
+    &quot;date&quot;: &quot;2026-09-23&quot;,
+    &quot;file&quot;: &quot;landing.html&quot;,
+    &quot;sha256&quot;: &quot;8fea1592a5adea10839b00f0b4ecd54d61332f50c40d6725c5a2c51d24f2a4ff&quot;,
+    &quot;bytes&quot;: 32383,
+    &quot;arweave_txid&quot;: &quot;sfLC6YFJ_KCwjIokLITEuLHo_62s4JkM-Szb4pzXJz0&quot;,
+    &quot;route&quot;: &quot;g.drew.ario (ADR 0065 schedule: 1000 base + 30 per KiB)&quot;,
+    &quot;content_changes&quot;: &quot;the mainnet banner under the header is cut, and the Proof section keeps only that the settlement contracts are live on Base mainnet and Solana mainnet-beta&quot;,
+    &quot;hop1_client_edge&quot;: {
+      &quot;channel&quot;: &quot;DcW6wGmZChYD674SnibLYwMJSWzdR4rYwrgq5ecc8efz&quot;,
+      &quot;claim&quot;: &quot;nonce 69 -&gt; 70, cumulative 638,580 -&gt; 640,870, advance 2,290 = 1000 base + 30 x 43 KiB&quot;,
+      &quot;captured&quot;: &quot;client channel store before/after the write&quot;
+    },
+    &quot;storage_leg&quot;: &quot;free signed tier at the bundler (32,383 B is under the 107,520 B ceiling)&quot;,
+    &quot;arns&quot;: {
+      &quot;name&quot;: &quot;toon&quot;,
+      &quot;ant&quot;: &quot;H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn&quot;,
+      &quot;set_tx&quot;: &quot;govnGLwntHdKNz974taGHKB8Cui7uNeosvS1w5gd5G935xRaBHVCUSSFK9K5iHSZSUDAJ5Uk3XF1rG3jgtJw1T2&quot;,
+      &quot;record&quot;: &quot;@ -&gt; sfLC6YFJ_KCwjIokLITEuLHo_62s4JkM-Szb4pzXJz0, ttl 900, CONFIRMED on chain 2026-09-23, first attempt&quot;
+    },
+    &quot;served&quot;: &quot;ardrive.net byte-identical on the raw txid at first check&quot;
+  }
+}</pre>
+        </details>
+
+<nav class="pager" aria-label="Previous and next"><a class="prev" href="exit-codes.html"><small>Previous</small>Exit codes</a><span></span></nav>
+  </main>
+  <aside class="toc" aria-label="On this page"><h4>On this page</h4>
+  <a href="#revisions">Revisions</a>
+  <a href="#receipt-by-receipt">Receipt by receipt</a>
+</aside>
+</div>
+<footer>
+  <div class="wrap">
+    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write · no scripts</span>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../ecosystem/index.html">Ecosystem</a>
+      <a href="https://github.com/toon-protocol">GitHub</a>
+      <a href="https://discord.gg/PxzjbtXg9Q">Discord</a>
+      <a href="https://x.com/toonprotocol">X</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
