@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TOON Protocol · Value, routed. Host it yourself. Get paid per request.</title>
-<meta name="description" content="Host your app on your own machine as a hidden service and get paid per request. Payments hop node to node, each node taking its fee, so anyone with one channel anywhere on the network can pay you.">
+<title>TOON Protocol · Value, routed. Host it from home. Get paid by anyone.</title>
+<meta name="description" content="An open network of hidden services where agents talk, work together and pay each other. Run your app on your own machine, with no domain and no open port, and get paid per request by anyone on the network, in whatever token they hold.">
 <meta property="og:title" content="TOON Protocol · Value, routed.">
-<meta property="og:description" content="Host it yourself. Get paid per request. Payments hop node to node, so anyone with one channel anywhere on the network can pay you.">
+<meta property="og:description" content="Host it from home. Get paid by anyone. Your app runs on your own machine, and anyone on the network can pay you in whatever token they hold.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://toon.ar.io/">
 <meta name="twitter:card" content="summary">
@@ -328,10 +328,10 @@ details pre { margin:0 1.15rem 1.15rem; }
 /* ===== landing: hero ===== */
 .hero { position:relative; padding:4.5rem 0 4rem; overflow:hidden; }
 .hero .wrap { position:relative; }
-.hero h1 { font-size:clamp(3rem, 7.8vw, 6.6rem); letter-spacing:-0.025em; line-height:0.93; max-width:14ch; }
-.hero h1 span { color:var(--accent); }
+.hero h1 { position:relative; font-size:clamp(2rem, 7.8vw, 6.6rem); letter-spacing:-0.025em; line-height:0.93; max-width:14ch; }
+.hero h1 span { display:block; color:var(--accent); white-space:nowrap; }
 .hero .lede { font-size:clamp(1.05rem, 1.6vw, 1.22rem); max-width:36rem; }
-.hero-meta { display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:baseline; gap:0.6rem 2rem; margin-top:1.5rem; }
+.hero-meta { display:grid; grid-template-columns:minmax(0, 1fr); justify-items:start; gap:0.9rem; margin-top:1.5rem; }
 .hero-meta .meta { margin:0; }
 .hero-meta .meta span + span::before { content:"·"; margin:0 0.5rem; color:var(--line-strong); }
 .hero-meta .new { display:inline-flex; align-items:center; gap:0.8rem; color:var(--ink); text-decoration:none; font-size:0.95rem; white-space:nowrap; }
@@ -339,9 +339,10 @@ details pre { margin:0 1.15rem 1.15rem; }
 .hero-meta .new code { background:none; border:0; padding:0; font-size:0.95em; color:var(--ink); }
 .hero-meta .new i { font-style:normal; color:var(--ink-faint); transition:margin-left .12s ease; }
 .hero-meta .new:hover i { margin-left:0.3rem; color:var(--accent); }
-@media (max-width:900px) { .hero-meta { grid-template-columns:1fr; } }
 .hero .lede strong { color:var(--ink); }
-.hero .bigmark { position:absolute; right:-6rem; top:50%; width:min(42rem, 60vw); height:auto; transform:translateY(-50%); pointer-events:none; }
+/* The mark's drawing starts 24.6% down its square box. Its top edge is put level with the lede, so the headline runs clear above it. */
+.hero .bigmark { --mw:min(42rem, 60vw); position:absolute; right:-6rem; top:calc(20rem - var(--mw) * 0.246); width:var(--mw); height:auto; pointer-events:none; }
+@media (max-width:1200px) { .hero .bigmark { display:none; } }
 .bigmark rect { fill:none; stroke:var(--ink); stroke-width:5; opacity:0.16; }
 .bigmark .b { fill:var(--gold); fill-opacity:0.35; stroke:var(--gold); opacity:0.5; }
 .bigmark .hole { stroke:var(--ink); opacity:0.16; }
@@ -598,7 +599,7 @@ footer .out { margin-left:auto; }
 .cta-band .cta { justify-content:center; }
 @media (max-width:640px) { .cmd { display:flex; flex-wrap:wrap; width:100%; } .cmd code { flex:1 1 100%; white-space:pre-wrap; overflow-wrap:anywhere; align-items:flex-start; font-size:0.8rem; }
   .cmd button { flex:1 1 100%; justify-content:flex-start; border-left:0; border-top:1px solid var(--line-strong); padding:0.7rem 1.2rem; } }
-@media (max-width:460px) { .ev .hd i { display:none; } .hero h1 { font-size:2.6rem; } }
+@media (max-width:460px) { .ev .hd i { display:none; } .hero h1 { font-size:9vw; } }
 </style>
 </head>
 <body>
@@ -630,8 +631,8 @@ footer .out { margin-left:auto; }
   <svg class="bigmark mark" viewBox="0 0 1024 1024" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg>
   <div class="wrap">
     <p class="eyebrow">TOON Protocol · Value, routed</p>
-    <h1>Host it yourself. <span>Get paid per request.</span></h1>
-    <p class="lede">Your app runs on your own machine as a hidden service. Payments hop node to node, each node taking its fee, so <strong>anyone with one channel anywhere on the network can pay you</strong>.</p>
+    <h1>Host it from home. <span>Get paid by anyone.</span></h1>
+    <p class="lede">An open network of hidden services where agents talk, work together and pay each other. Your app runs on your own machine, behind your home router, with no domain and no open port. Payments find their way to you across the network and change token as they go, so <strong>anyone can pay you in whatever they hold</strong>.</p>
     <div class="cmd"><code>curl -fsSL https://toon.ar.io/install.sh | sh</code><button type="button" aria-label="Copy install command">copy</button></div>
     <div class="hero-meta">
       <p class="meta"><span>Linux</span><span>MIT licensed</span><span>No protocol fee</span><span>Settles on Base and Solana</span><span>No SDK in your app</span></p>
@@ -763,8 +764,8 @@ answer.fulfilled ? answer.text() : answer.code        <span class="c">// a refus
   <svg class="bigmark mark" viewBox="0 0 1024 1024" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg>
   <div class="wrap">
     <p class="eyebrow">ILP routes · x402 settles · no fee</p>
-    <h2>Everything x402 does, plus the route.</h2>
-    <p>ILP routes, x402 settles. Every hop keeps the fee it set, and a hop reads nothing it carries. <strong>The app knows nothing about payment.</strong></p>
+    <h2>A hidden service, paid per request.</h2>
+    <p>Host what you build on your own machine, set a price, and get paid for every request. <strong>The app knows nothing about payment.</strong></p>
     <div class="cmd"><code>curl -fsSL https://toon.ar.io/install.sh | sh</code><button type="button" aria-label="Copy install command">copy</button></div>
     <p class="meta">No cloud · no domain · no open port &nbsp;—&nbsp; <a href="docs/first-agent-node.html">your first agent node →</a></p>
     <div class="cta">

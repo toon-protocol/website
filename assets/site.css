@@ -312,10 +312,10 @@ details pre { margin:0 1.15rem 1.15rem; }
 /* ===== landing: hero ===== */
 .hero { position:relative; padding:4.5rem 0 4rem; overflow:hidden; }
 .hero .wrap { position:relative; }
-.hero h1 { font-size:clamp(3rem, 7.8vw, 6.6rem); letter-spacing:-0.025em; line-height:0.93; max-width:14ch; }
-.hero h1 span { color:var(--accent); }
+.hero h1 { position:relative; font-size:clamp(2rem, 7.8vw, 6.6rem); letter-spacing:-0.025em; line-height:0.93; max-width:14ch; }
+.hero h1 span { display:block; color:var(--accent); white-space:nowrap; }
 .hero .lede { font-size:clamp(1.05rem, 1.6vw, 1.22rem); max-width:36rem; }
-.hero-meta { display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:baseline; gap:0.6rem 2rem; margin-top:1.5rem; }
+.hero-meta { display:grid; grid-template-columns:minmax(0, 1fr); justify-items:start; gap:0.9rem; margin-top:1.5rem; }
 .hero-meta .meta { margin:0; }
 .hero-meta .meta span + span::before { content:"·"; margin:0 0.5rem; color:var(--line-strong); }
 .hero-meta .new { display:inline-flex; align-items:center; gap:0.8rem; color:var(--ink); text-decoration:none; font-size:0.95rem; white-space:nowrap; }
@@ -323,9 +323,10 @@ details pre { margin:0 1.15rem 1.15rem; }
 .hero-meta .new code { background:none; border:0; padding:0; font-size:0.95em; color:var(--ink); }
 .hero-meta .new i { font-style:normal; color:var(--ink-faint); transition:margin-left .12s ease; }
 .hero-meta .new:hover i { margin-left:0.3rem; color:var(--accent); }
-@media (max-width:900px) { .hero-meta { grid-template-columns:1fr; } }
 .hero .lede strong { color:var(--ink); }
-.hero .bigmark { position:absolute; right:-6rem; top:50%; width:min(42rem, 60vw); height:auto; transform:translateY(-50%); pointer-events:none; }
+/* The mark's drawing starts 24.6% down its square box. Its top edge is put level with the lede, so the headline runs clear above it. */
+.hero .bigmark { --mw:min(42rem, 60vw); position:absolute; right:-6rem; top:calc(20rem - var(--mw) * 0.246); width:var(--mw); height:auto; pointer-events:none; }
+@media (max-width:1200px) { .hero .bigmark { display:none; } }
 .bigmark rect { fill:none; stroke:var(--ink); stroke-width:5; opacity:0.16; }
 .bigmark .b { fill:var(--gold); fill-opacity:0.35; stroke:var(--gold); opacity:0.5; }
 .bigmark .hole { stroke:var(--ink); opacity:0.16; }
@@ -582,4 +583,4 @@ footer .out { margin-left:auto; }
 .cta-band .cta { justify-content:center; }
 @media (max-width:640px) { .cmd { display:flex; flex-wrap:wrap; width:100%; } .cmd code { flex:1 1 100%; white-space:pre-wrap; overflow-wrap:anywhere; align-items:flex-start; font-size:0.8rem; }
   .cmd button { flex:1 1 100%; justify-content:flex-start; border-left:0; border-top:1px solid var(--line-strong); padding:0.7rem 1.2rem; } }
-@media (max-width:460px) { .ev .hd i { display:none; } .hero h1 { font-size:2.6rem; } }
+@media (max-width:460px) { .ev .hd i { display:none; } .hero h1 { font-size:9vw; } }
