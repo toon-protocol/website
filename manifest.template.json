@@ -5,6 +5,33 @@
     "path": "index.html"
   },
   "paths": {
+    "assets/fonts/archivo-800.woff2": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/fonts/jetbrains-mono.woff2": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/icon/toon-icon-512.png": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/icon/toon-icon-64.png": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/icon/toon-icon-small-16.png": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/icon/toon-icon-small-32.png": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/icon/toon-icon-small.svg": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/icon/toon-icon-transparent.svg": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/icon/toon-icon.svg": {
+      "id": "<arweave tx id of this file>"
+    },
     "assets/site.css": {
       "id": "<arweave tx id of this file>"
     },

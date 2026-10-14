@@ -5,8 +5,9 @@
 
 Each src/docs/<slug>.html is a body fragment. This script wraps it in the docs layout
 (header, sidebar, table of contents, pager, footer) and writes docs/<slug>.html.
-src/ecosystem.html becomes ecosystem/index.html. index.html at the root is hand-written
-and self-contained, and this script never touches it.
+src/ecosystem.html becomes ecosystem/index.html. index.html at the root is hand-written;
+the only thing this script does to it is copy assets/site.css between its <style> markers,
+so the one file stands alone while the stylesheet stays the single source.
 
 No dependencies beyond the standard library. No scripts are emitted into any page.
 """
@@ -49,23 +50,12 @@ NAV = [
 
 FLAT = [(slug, title, summary, section) for section, pages in NAV for slug, title, summary in pages]
 
-MARK = """<svg class="mark" viewBox="0 0 220 220" width="26" height="26" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-<g><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
-<path d="M12 12 h80 M12 28 h64 M12 44 h48 v48 M28 92 v-64 h48 M44 76 v-32 M60 92 v-32 M92 28 v64 h-32" class="ln"/>
-<rect x="78" y="78" width="14" height="14" class="dot"/></g>
-<g transform="translate(116,0)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
-<path d="M92 12 h-80 v80 h80 v-64 h-64 v48 h48 v-32 h-32" class="ln"/></g>
-<g transform="translate(0,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
-<path d="M12 92 v-80 h80 v80 h-64 v-48 h48 v32 h-32" class="ln"/></g>
-<g transform="translate(116,116)"><rect x="0" y="0" width="104" height="104" rx="10" class="sq"/>
-<path d="M12 12 v80 M28 92 v-80 h64 M44 28 h48 M28 44 h48 v48 M92 60 h-32 v32" class="ln"/>
-<rect x="12" y="78" width="14" height="14" class="dot"/></g>
-</svg>"""
+MARK = """<svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg>"""
 
-FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect width='220' "
-           "height='220' rx='40' fill='%230b0d12'/%3E%3Cg fill='none' stroke='%23e6e9ef' stroke-width='14'%3E%3Cpath "
-           "d='M40 40h140M40 80h100M40 120h60v60M70 180v-100h70M140 110v70'/%3E%3C/g%3E%3Crect x='150' y='150' "
-           "width='30' height='30' fill='%237dd3fc'/%3E%3C/svg%3E")
+FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' "
+           "fill='%23f3efe6'/%3E%3Crect x='2' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='11' y='7' width='3' "
+           "height='2' fill='%236b6f76'/%3E%3Crect x='5' y='4' width='3' height='8' fill='%232b2f36'/%3E%3Crect x='9' y='4' "
+           "width='3' height='8' fill='%23c9a24a'/%3E%3C/svg%3E")
 
 
 def header(root, active):
@@ -73,7 +63,7 @@ def header(root, active):
         return ' class="active"' if name == active else ""
     return f"""<header class="site-header">
   <div class="wrap">
-    <a class="brand" href="{root}index.html" aria-label="TOON Protocol, home">{MARK}<span class="name">TOON Protocol</span></a>
+    <a class="brand" href="{root}index.html" aria-label="TOON Protocol, home">{MARK}<span class="name">TOON<small>Protocol</small></span></a>
     <nav aria-label="Primary">
       <a class="hide-s" href="{root}index.html#how">How it works</a>
       <a href="{root}docs/index.html"{cls('docs')}>Docs</a>
@@ -88,7 +78,7 @@ def header(root, active):
 def footer(root):
     return f"""<footer>
   <div class="wrap">
-    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write</span>
+    <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write · no scripts</span>
     <nav>
       <a href="{root}index.html">Home</a>
       <a href="{root}docs/index.html">Docs</a>
@@ -201,7 +191,21 @@ def build_ecosystem(body):
             + "\n</body>\n</html>\n")
 
 
+def inline_stylesheet():
+    """Copy assets/site.css into index.html between its <style data-src> markers, so the
+    landing page stands alone as one file while the stylesheet stays the single source."""
+    page = ROOT / "index.html"
+    html_text = page.read_text()
+    css = (ROOT / "assets" / "site.css").read_text().replace('url("fonts/', 'url("assets/fonts/')
+    start_tag = '<style data-src="assets/site.css">'
+    start = html_text.index(start_tag) + len(start_tag)
+    end = html_text.index("</style>", start)
+    page.write_text(html_text[:start] + "\n" + css + html_text[end:])
+    print("inlined assets/site.css into index.html")
+
+
 def main():
+    inline_stylesheet()
     (ROOT / "docs").mkdir(exist_ok=True)
     (ROOT / "ecosystem").mkdir(exist_ok=True)
     for i, (slug, title, summary, section) in enumerate(FLAT):
