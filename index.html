@@ -190,15 +190,16 @@ pre .s { color:#b9d7a1; }
 .stats-band { padding:0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
 .stats-band .wrap { max-width:none; padding:0; }
 .stats { display:grid; grid-template-columns:repeat(4, 1fr); }
-.stats div { padding:1.7rem var(--gut) 1.6rem; border-left:1px solid var(--line); transition:background .12s ease; }
-.stats div:first-child { border-left:0; }
+.stats div { padding:1.7rem clamp(1.25rem, 2.5vw, 2.5rem) 1.6rem; border-left:1px solid var(--line); transition:background .12s ease; }
+.stats div:first-child { border-left:0; padding-left:var(--gut); }
+.stats div:last-child { padding-right:var(--gut); }
 .stats div:hover { background:color-mix(in srgb, var(--gold) 5%, transparent); }
 .stats b { display:flex; align-items:baseline; gap:0.45rem; font:800 clamp(2.2rem, 3.8vw, 3.1rem)/1 var(--display); letter-spacing:-0.05em; color:var(--ink); font-variant-numeric:tabular-nums; }
 .stats b small { font:600 0.78rem/1 var(--mono); letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-faint); }
-.stats span { display:flex; gap:0.6rem; align-items:center; margin-top:0.9rem; color:var(--ink-faint); white-space:nowrap;
-  font:600 0.66rem/1.4 var(--mono); letter-spacing:0.14em; text-transform:uppercase; }
+.stats span { display:flex; gap:0.6rem; align-items:flex-start; margin-top:0.9rem; color:var(--ink-faint); min-width:0;
+  font:600 0.66rem/1.5 var(--mono); letter-spacing:0.12em; text-transform:uppercase; }
+.stats span svg { position:relative; top:0.05rem; }
 .stats span svg { width:0.95rem; height:0.95rem; flex:none; color:var(--gold); }
-@media (max-width:1100px) { .stats span { white-space:normal; } }
 @media (max-width:860px) { .stats { grid-template-columns:repeat(2, 1fr); } .stats div:nth-child(3) { border-left:0; } .stats div:nth-child(n+3) { border-top:1px solid var(--line); } }
 @media (max-width:420px) { .stats { grid-template-columns:1fr; } .stats div { border-left:0; border-top:1px solid var(--line); } .stats div:first-child { border-top:0; } }
 
@@ -327,7 +328,7 @@ details pre { margin:0 1.15rem 1.15rem; }
 /* ===== landing: hero ===== */
 .hero { position:relative; padding:4.5rem 0 4rem; overflow:hidden; }
 .hero .wrap { position:relative; }
-.hero h1 { font-size:clamp(3rem, 7.8vw, 6.6rem); letter-spacing:-0.05em; line-height:0.93; max-width:14ch; }
+.hero h1 { font-size:clamp(3rem, 7.8vw, 6.6rem); letter-spacing:-0.025em; line-height:0.93; max-width:14ch; }
 .hero h1 span { color:var(--accent); }
 .hero .lede { font-size:clamp(1.05rem, 1.6vw, 1.22rem); max-width:36rem; }
 .hero-meta { display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:baseline; gap:0.6rem 2rem; margin-top:1.5rem; }
@@ -367,6 +368,8 @@ details pre { margin:0 1.15rem 1.15rem; }
 @media (max-width:900px) { .specs.rails3 { grid-template-columns:1fr; } }
 .hero.split figure .meta { margin-top:0.8rem; }
 @media (max-width:520px) { .specs { grid-template-columns:1fr; } }
+#run { padding-top:0; }
+#run .rows { border-top:0; }
 .pay { margin-top:3rem; padding-top:2.5rem; border-top:1px solid var(--line); align-items:start; grid-template-columns:0.8fr 1.2fr; }
 .pay .eyebrow { margin-top:0.2rem; }
 .pay .ev pre { padding-top:0.2rem; }
@@ -403,7 +406,7 @@ details pre { margin:0 1.15rem 1.15rem; }
 
 /* ===== landing: the end ===== */
 .end { position:relative; overflow:hidden; padding:6rem 0; border-top:1px solid var(--line); background:var(--bg-tint); }
-.end h2 { font-size:clamp(2.8rem, 6.8vw, 5.6rem); letter-spacing:-0.05em; line-height:0.93; max-width:12ch; }
+.end h2 { font-size:clamp(2.8rem, 6.8vw, 5.6rem); letter-spacing:-0.025em; line-height:0.93; max-width:12ch; }
 .end p { margin-top:1.4rem; max-width:34rem; color:var(--ink-dim); font-size:1.08rem; }
 .end .bigmark { position:absolute; right:-5rem; bottom:-6rem; width:min(34rem, 50vw); height:auto; pointer-events:none; }
 .end .meta { margin-top:1rem; max-width:none; font-size:0.78rem; }
@@ -565,9 +568,9 @@ footer .out { margin-left:auto; }
 <section class="stats-band">
   <div class="wrap">
     <div class="stats" aria-label="Key numbers">
-      <div><b>$0.001</b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.5"/></svg>one request on the live node</span></div>
-      <div><b>0 <small>gas</small></b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>per request, a voucher is a signature</span></div>
-      <div><b>1 <small>tx</small></b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>settles thousands of requests</span></div>
+      <div><b>$0.001</b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.5"/></svg>one request, live node</span></div>
+      <div><b>0 <small>gas</small></b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>per request, a signature</span></div>
+      <div><b>1 <small>tx</small></b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>settles thousands</span></div>
       <div><b>0%</b><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>protocol fee</span></div>
     </div>
   </div>
@@ -576,12 +579,6 @@ footer .out { margin-left:auto; }
 <!-- ============ 2 · WHAT YOU DO ============ -->
 <section id="run">
   <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">What you do</p>
-      <h2>Four commands. A node that gets paid.</h2>
-      <p><code>toon</code> runs the node for you: a wallet, a relay, and a connector in front of any app you add. The first one is on the devnet and costs nothing.</p>
-    </div>
-
     <ol class="rows">
       <li>
         <span class="n">01</span>
