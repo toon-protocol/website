@@ -7,6 +7,8 @@ and the ecosystem page.
 index.html              the landing page: hand-written; build.py copies the stylesheet into it
 docs/*.html             built from src/docs/*.html by build.py
 ecosystem/index.html    built from src/ecosystem.html by build.py
+apps/index.html         built from src/apps.html: every app, in the shape of a marketplace
+agents/index.html       built from src/agents.html: every agent that speaks TOON
 assets/site.css         the one stylesheet, shared by every page
 assets/fonts/           Archivo 800 and JetBrains Mono, self-hosted, latin subsets
 assets/icon/            the mark, as SVG and PNG
@@ -35,7 +37,9 @@ before it.
   and order come from `NAV` in `build.py`. Every `<h2>` gets an anchor and an entry in the
   page's table of contents. End each page with a `<p class="source">` naming the
   repository file it was written from, so the next editor can check it against the source.
-- **The ecosystem page** is `src/ecosystem.html`.
+- **The apps, agents and ecosystem pages** are `src/apps.html`, `src/agents.html` and
+  `src/ecosystem.html`. A new app or agent is one `<li>` in the grid and a bump of the count
+  in the page header.
 - Then run the build:
 
   ```sh
@@ -66,7 +70,7 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
 
    ```sh
    python3 build.py
-   grep -ho 'href="https\?://[^"]*"' index.html docs/*.html ecosystem/*.html | sed 's/href="//;s/"$//' | sort -u \
+   grep -ho 'href="https\?://[^"]*"' index.html docs/*.html apps/*.html agents/*.html ecosystem/*.html | sed 's/href="//;s/"$//' | sort -u \
      | while read u; do printf '%s %s\n' "$(curl -s -o /dev/null -w '%{http_code}' -L "$u")" "$u"; done | grep -v '^200'
    ```
 6. **One script.** `grep -rl '<script' --include='*.html' . | grep -v ^./src` must print

@@ -1,0 +1,70 @@
+<header class="ph">
+  <div>
+    <p class="eyebrow">The apps</p>
+    <h1>Built behind a node.</h1>
+    <p class="lede">Open-source services that run behind a TOON node and are paid per request. None of them contains payment code; the node in front does the charging. Run any of them with <code>toon add</code>, or put your own behind a node and get listed.</p>
+    <p class="trust"><i class="dot live"></i><span>Four are priced on the live mainnet node today. Prices are what it answers at <a href="https://connector.167-233-221-236.sslip.io/ilp"><code>GET /ilp</code></a>, read on 2026-10-03.</span></p>
+  </div>
+  <aside class="ph-side">
+    <b>7</b>
+    <span>apps, each one open source</span>
+    <a href="../docs/adding-an-app.html">Put yours behind a node →</a>
+  </aside>
+</header>
+
+<section class="shelf">
+  <div class="shelf-head">
+    <h2>Browse everything</h2>
+    <p>every app, priced live or source to run</p>
+  </div>
+  <ul class="appgrid" role="list">
+    <li>
+      <div class="top"><a href="https://github.com/toon-protocol/relay">relay</a><span class="badge live">Priced live</span></div>
+      <p>A Nostr relay you get paid to write to. Reads are free and speak plain NIP-01, so any Nostr client can use it; writes arrive through the node, already paid. Every agent node carries one.</p>
+      <div class="foot"><span>write a message <b>$0.001</b></span><span>devnet <code>g.toon.relay</code></span></div>
+    </li>
+    <li>
+      <div class="top"><a href="https://github.com/toon-protocol/store">store</a><span class="badge live">Priced live</span></div>
+      <p>A paid Arweave blob store that uploads through AR.IO's Turbo and returns the transaction id. Also brokers ArNS name purchases. This site was stored through it.</p>
+      <div class="foot"><span>store a file <b>$0.001 + $0.00003 / KiB</b></span><span>devnet <code>g.toon.store</code></span></div>
+    </li>
+    <li>
+      <div class="top"><a href="https://github.com/toon-protocol/anytoon">anytoon</a><span class="badge live">Priced live</span></div>
+      <p>The Anyone Protocol credentials issuer behind a node, reached only at a <code>.anyone</code> hidden-service address. A buyer pays over ILP and receives blind-signed credentials; the issuer runs as its published image, unmodified.</p>
+      <div class="foot"><span>fetch a URL anonymously <b>$0.001</b></span><span>ANYONE on Ethereum, or USDC on Base</span></div>
+    </li>
+    <li>
+      <div class="top"><a href="https://github.com/toon-protocol/gas-station">gas-station</a><span class="badge live">Priced live</span></div>
+      <p>Pays other people's gas. A peer holding no SOL gets a Solana transaction landed; a peer holding no ETH gets an EVM call mined. They pay in whatever they do hold.</p>
+      <div class="foot"><span>a Solana fee paid for you <b>$0.012</b></span><span>devnet <code>g.toon.gas</code></span></div>
+    </li>
+    <li>
+      <div class="top"><a href="https://github.com/toon-protocol/swap">swap</a><span class="badge src">Source</span></div>
+      <p>Swap tokens across chains through a relay, with no server in between. A maker publishes an order; a taker streams it small fills; each side verifies the other's signed claim.</p>
+      <div class="foot"><span>EVM, Solana, Mina</span><span><code>@toon-protocol/swap</code></span></div>
+    </li>
+    <li>
+      <div class="top"><a href="https://github.com/toon-protocol/provider">provider</a><span class="badge src">Source</span></div>
+      <p>A compute provider that sells leases on OCI workloads over TOON payment channels, with a <a href="https://github.com/toon-protocol/gateway">gateway</a> that fronts a workload at a stable hostname and follows it across hosts.</p>
+      <div class="foot"><span>spec: TOON_Network</span><span>a hard fork of Paygress</span></div>
+    </li>
+    <li>
+      <div class="top"><a href="https://github.com/toon-protocol/fractal">fractal</a><span class="badge src">Research</span></div>
+      <p>Agent-grown dimensions on TOON: seed, spec, loop, NIP gate, relay, portal. An experiment in agents building the next thing on a relay they pay for.</p>
+      <div class="foot"><span>research</span></div>
+    </li>
+  </ul>
+</section>
+
+<section class="shelf">
+  <div class="publish">
+    <p class="kicker"># publish</p>
+    <h3>Want your app listed?</h3>
+    <p>Any HTTP service in a container image. Listen on a port, answer a request, and let the node in front of it take the payment. One <code>toon add</code> puts it behind your node at the price you choose; the store's repository is the worked example. Then open a pull request on this site.</p>
+    <div class="cta">
+      <a class="button primary" href="../docs/adding-an-app.html">Put your app behind a node</a>
+      <a class="button ghost" href="https://github.com/toon-protocol/store">The worked example</a>
+      <a class="button ghost" href="https://github.com/toon-protocol/website">Get listed</a>
+    </div>
+  </div>
+</section>

@@ -5,6 +5,12 @@
     "path": "index.html"
   },
   "paths": {
+    "agents/index.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "apps/index.html": {
+      "id": "<arweave tx id of this file>"
+    },
     "assets/fonts/archivo-800.woff2": {
       "id": "<arweave tx id of this file>"
     },

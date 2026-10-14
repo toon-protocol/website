@@ -110,8 +110,8 @@ def header(root, active):
     <a class="brand" href="{'#top' if home else root + 'index.html'}" aria-label="TOON Protocol, home">{MARK}<span class="name">TOON<small>Protocol</small></span></a>
     <nav aria-label="Primary">
       <a href="{root}docs/index.html"{cls('docs')}>Docs</a>
-      <a href="{root}ecosystem/index.html#apps">Apps</a>
-      <a href="{root}ecosystem/index.html"{cls('ecosystem')}>Ecosystem</a>
+      <a href="{root}apps/index.html"{cls('apps')}>Apps</a>
+      <a href="{root}agents/index.html"{cls('agents')}>Agents</a>
       {social()}
       <a class="button primary" href="{'#run' if home else root + 'docs/first-agent-node.html'}">Run a node</a>
     </nav>
@@ -125,6 +125,8 @@ def footer(root):
     <a class="brand" href="{root}index.html" aria-label="TOON Protocol, home">{MARK}</a>
     <nav aria-label="Footer">
       <a href="{root}docs/index.html">docs</a>
+      <a href="{root}apps/index.html">apps</a>
+      <a href="{root}agents/index.html">agents</a>
       <a href="{root}ecosystem/index.html">ecosystem</a>
       <a href="{root}docs/proof.html">proof</a>
       <a href="{GITHUB}">source</a>
@@ -225,11 +227,22 @@ def build_doc(index, slug, title, summary, section, body):
             + "\n</div>\n</body>\n</html>\n")
 
 
-def build_ecosystem(body):
-    return (head("Ecosystem · TOON Protocol",
-                 "The apps behind TOON nodes, the clients that pay them, and the rails underneath: "
-                 "AR.IO, Arweave, Anyone Protocol, x402, Solana, Base, Interledger.", "../")
-            + '\n<div class="page">\n' + header("../", "ecosystem")
+PAGES = {
+    "ecosystem": ("Ecosystem · TOON Protocol",
+                  "The apps behind TOON nodes, the clients that pay them, and the rails underneath: "
+                  "AR.IO, Arweave, Anyone Protocol, x402, Solana, Base, Interledger."),
+    "apps": ("Apps · TOON Protocol",
+             "Open-source services that run behind a TOON node and are paid per request. "
+             "None contains payment code."),
+    "agents": ("Agents · TOON Protocol",
+               "Agents that run a TOON node, pay one, or both: spaceturtle and hermes-toon."),
+}
+
+
+def build_page(slug, body):
+    title, description = PAGES[slug]
+    return (head(title, description, "../")
+            + '\n<div class="page">\n' + header("../", slug)
             + "\n<main>\n" + body + "\n</main>\n"
             + footer("../")
             + "\n</div>\n</body>\n</html>\n")
@@ -266,15 +279,16 @@ def main():
     sync_landing_chrome()
     inline_stylesheet()
     (ROOT / "docs").mkdir(exist_ok=True)
-    (ROOT / "ecosystem").mkdir(exist_ok=True)
     for i, (slug, title, summary, section) in enumerate(FLAT):
         src = SRC / "docs" / f"{slug}.html"
         out = ROOT / "docs" / f"{slug}.html"
         out.write_text(build_doc(i, slug, title, summary, section, src.read_text()))
         print("wrote", out.relative_to(ROOT))
-    eco = (ROOT / "ecosystem" / "index.html")
-    eco.write_text(build_ecosystem((SRC / "ecosystem.html").read_text()))
-    print("wrote", eco.relative_to(ROOT))
+    for slug in PAGES:
+        (ROOT / slug).mkdir(exist_ok=True)
+        out = ROOT / slug / "index.html"
+        out.write_text(build_page(slug, (SRC / f"{slug}.html").read_text()))
+        print("wrote", out.relative_to(ROOT))
     # A path manifest for Arweave: every file under the site, keyed by path.
     paths = {}
     for p in sorted(ROOT.rglob("*")):

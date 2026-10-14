@@ -474,6 +474,42 @@ footer .out { margin-left:auto; }
 .pager a.next { text-align:right; }
 .doc .source { margin-top:2.5rem; color:var(--ink-faint); font:0.78rem/1.6 var(--mono); }
 
+/* ===== apps and agents: the marketplace shape ===== */
+.ph { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:2rem 4rem; align-items:end; padding:4rem var(--gut) 3rem; max-width:var(--max); margin:0 auto; }
+.ph h1 { font-size:clamp(2.6rem, 5.4vw, 4.4rem); letter-spacing:-0.025em; line-height:0.95; max-width:22ch; }
+.ph .lede { max-width:40rem; }
+.ph .trust { display:flex; gap:0.6rem; align-items:baseline; } .ph .trust code { white-space:nowrap; }
+.ph .trust-x { margin-top:1.25rem; max-width:40rem; color:var(--ink-dim); font-size:0.95rem; }
+.ph .dot { flex:none; width:0.5rem; height:0.5rem; border-radius:50%; position:relative; top:-1px; }
+.ph .dot.live { background:var(--good); }
+.ph .dot.idle { background:none; box-shadow:inset 0 0 0 2px var(--ink-faint); }
+.ph-side { display:flex; flex-direction:column; align-items:flex-end; text-align:right; gap:0.5rem; color:var(--ink-faint); font:600 0.68rem/1.5 var(--mono); letter-spacing:0.14em; text-transform:uppercase; }
+.ph-side b { font:800 3.4rem/1 var(--display); letter-spacing:-0.04em; color:var(--ink); }
+.ph-side a { color:var(--accent); text-decoration:none; letter-spacing:0; text-transform:none; font:0.95rem/1.4 var(--body); margin-top:0.5rem; }
+.ph-side a:hover { text-decoration:underline; }
+@media (max-width:800px) { .ph { grid-template-columns:1fr; align-items:start; } .ph-side { align-items:flex-start; text-align:left; } }
+.shelf { max-width:var(--max); margin:0 auto; padding:2.5rem var(--gut) 0; }
+.shelf:last-child { padding-bottom:4rem; }
+.shelf-head { padding-top:2rem; margin-bottom:1.5rem; border-top:1px solid var(--line); }
+.shelf-head h2 { font-size:1.5rem; letter-spacing:-0.03em; }
+.shelf-head p { margin-top:0.3rem; color:var(--ink-faint); font-size:0.9rem; }
+.appgrid { list-style:none; padding:1px; margin:0; display:grid; gap:1px; grid-template-columns:repeat(auto-fill, minmax(19rem, 1fr)); }
+.appgrid li { display:flex; flex-direction:column; gap:0.7rem; padding:1.3rem 1.4rem 1.2rem; background:var(--bg-raised); box-shadow:0 0 0 1px var(--line); color:var(--ink-dim); font-size:0.93rem; transition:background .12s ease; }
+.appgrid li:hover { background:color-mix(in srgb, var(--gold) 5%, var(--bg-raised)); }
+.appgrid .top { display:flex; justify-content:space-between; align-items:center; gap:0.6rem; }
+.appgrid .top a { font:700 1.02rem/1.2 var(--mono); letter-spacing:-0.02em; color:var(--ink); text-decoration:none; }
+.appgrid li:hover .top a { color:var(--accent); }
+.appgrid p { margin:0; }
+.appgrid .foot { margin-top:auto; padding-top:0.8rem; border-top:1px dashed var(--line); display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.3rem 1rem; color:var(--ink-faint); font:0.74rem/1.6 var(--mono); }
+.appgrid .foot b { color:var(--accent); font-weight:600; }
+.appgrid .foot a { color:var(--accent); text-decoration:none; }
+.appgrid .foot code { background:none; border:0; padding:0; color:var(--ink-dim); font-size:1em; }
+.publish { padding:1.8rem 2rem 2rem; border:1px solid var(--line-strong); background:var(--bg-raised); }
+.publish .kicker { color:var(--gold); font:600 0.78rem/1.4 var(--mono); margin-bottom:0.8rem; }
+.publish h3 { font-size:1.6rem; letter-spacing:-0.03em; margin-bottom:0.8rem; }
+.publish p { color:var(--ink-dim); max-width:var(--measure); }
+.publish .cta { margin-top:1.4rem; }
+
 /* ===== ecosystem ===== */
 .priced { list-style:none; padding:1px; margin:0; display:grid; gap:1px; grid-template-columns:repeat(auto-fit, minmax(15rem, 1fr)); }
 .priced li { padding:1.4rem 1.4rem 1.3rem; background:var(--bg-raised); box-shadow:0 0 0 1px var(--line); display:flex; flex-direction:column; gap:0.55rem; font-size:0.93rem; color:var(--ink-dim); position:relative; }
@@ -535,8 +571,8 @@ footer .out { margin-left:auto; }
     <a class="brand" href="#top" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg><span class="name">TOON<small>Protocol</small></span></a>
     <nav aria-label="Primary">
       <a href="docs/index.html">Docs</a>
-      <a href="ecosystem/index.html#apps">Apps</a>
-      <a href="ecosystem/index.html">Ecosystem</a>
+      <a href="apps/index.html">Apps</a>
+      <a href="agents/index.html">Agents</a>
       <span class="social">
       <a href="https://github.com/toon-protocol/toon_cli" aria-label="TOON on GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
       <a href="https://x.com/toonprotocol" aria-label="TOON on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
@@ -697,6 +733,8 @@ answer.fulfilled ? answer.text() : answer.code        <span class="c">// a refus
     <a class="brand" href="index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></a>
     <nav aria-label="Footer">
       <a href="docs/index.html">docs</a>
+      <a href="apps/index.html">apps</a>
+      <a href="agents/index.html">agents</a>
       <a href="ecosystem/index.html">ecosystem</a>
       <a href="docs/proof.html">proof</a>
       <a href="https://github.com/toon-protocol/toon_cli">source</a>
