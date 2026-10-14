@@ -33,14 +33,91 @@
   </div>
 </header>
 <main>
-<section class="hero">
+<section class="hero split">
   <div class="wrap">
-    <p class="eyebrow">Ecosystem</p>
-    <h1>Apps you can copy. Nodes you can pay today.</h1>
-    <p class="lede">Four apps earn on the live node right now, three devnet nodes answer to anyone with devnet USDC, and every rail underneath is a public network. Put your own app behind a node and it belongs on this page.</p>
-    <div class="cta" style="justify-content:flex-start">
-      <a class="button primary" href="../docs/put-your-app-behind-it.html">Put your app behind a node</a>
-      <a class="button ghost" href="#live">Pay a node today</a>
+    <div>
+      <p class="eyebrow">Ecosystem</p>
+      <h1>Apps you can copy. Nodes you can pay today.</h1>
+      <p class="lede">Four apps earn on the live node right now, three devnet nodes answer anyone with devnet USDC, and every rail underneath is a public network. Put your own app behind a node and it belongs on this page.</p>
+      <div class="cta" style="justify-content:flex-start">
+        <a class="button primary" href="../docs/put-your-app-behind-it.html">Put your app behind a node</a>
+        <a class="button ghost" href="#live">Pay a node today</a>
+      </div>
+    </div>
+
+    <figure style="margin:0">
+      <svg class="diagram ecomap" viewBox="0 0 560 372" role="img" aria-labelledby="eco-d-title" xmlns="http://www.w3.org/2000/svg">
+        <title id="eco-d-title">Clients pay a TOON node with a voucher; the node forwards plain HTTP to the apps behind it; vouchers settle on x402 and Solana payment channels, packets route over Interledger, and files and addresses live on Arweave and the Anyone overlay.</title>
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/>
+          </marker>
+        </defs>
+
+        <text class="s cap" x="76" y="30" text-anchor="middle">Pays</text>
+        <text class="s cap" x="280" y="30" text-anchor="middle">The node</text>
+        <text class="s cap" x="484" y="30" text-anchor="middle">Earns</text>
+
+        <!-- payers -->
+        <rect class="chip" x="16" y="44" width="120" height="28" rx="8"/><text class="m" x="76" y="62" text-anchor="middle">toon-client</text>
+        <rect class="chip" x="16" y="80" width="120" height="28" rx="8"/><text class="m" x="76" y="98" text-anchor="middle">rig</text>
+        <rect class="chip" x="16" y="116" width="120" height="28" rx="8"/><text class="m" x="76" y="134" text-anchor="middle">console</text>
+        <rect class="chip" x="16" y="152" width="120" height="28" rx="8"/><text class="m" x="76" y="170" text-anchor="middle">x402 client</text>
+        <path class="wire" d="M136 58 H150 M136 94 H150 M136 130 H150 M136 166 H150 M150 58 V166"/>
+        <path class="arrow gold" d="M150 120 H208"/>
+        <text class="m hi" x="180" y="110" text-anchor="middle">POST</text>
+        <text class="m hi" x="180" y="138" text-anchor="middle">voucher</text>
+
+        <!-- node -->
+        <ellipse class="glow" cx="280" cy="120" rx="100" ry="78"/>
+        <rect class="box node" x="210" y="60" width="140" height="120" rx="14"/>
+        <text class="t" x="280" y="92" text-anchor="middle">TOON node</text>
+        <text class="s" x="280" y="114" text-anchor="middle">connector, one binary</text>
+        <text class="s" x="280" y="132" text-anchor="middle">toon, the agent node</text>
+        <text class="s" x="280" y="150" text-anchor="middle">driven by spaceturtle</text>
+
+        <!-- apps -->
+        <path class="arrow ok" d="M350 120 H408"/>
+        <text class="m ok" x="380" y="110" text-anchor="middle">HTTP</text>
+        <text class="m ok" x="380" y="138" text-anchor="middle">paid</text>
+        <path class="wire" d="M410 58 V238 M410 58 H424 M410 94 H424 M410 130 H424 M410 166 H424 M410 202 H424 M410 238 H424"/>
+        <rect class="chip on" x="424" y="44" width="120" height="28" rx="8"/><text class="m" x="484" y="62" text-anchor="middle">relay</text>
+        <rect class="chip on" x="424" y="80" width="120" height="28" rx="8"/><text class="m" x="484" y="98" text-anchor="middle">store</text>
+        <rect class="chip on" x="424" y="116" width="120" height="28" rx="8"/><text class="m" x="484" y="134" text-anchor="middle">anytoon</text>
+        <rect class="chip on" x="424" y="152" width="120" height="28" rx="8"/><text class="m" x="484" y="170" text-anchor="middle">gas-station</text>
+        <rect class="chip" x="424" y="188" width="120" height="28" rx="8"/><text class="m" x="484" y="206" text-anchor="middle">provider</text>
+        <rect class="chip dash" x="424" y="224" width="120" height="28" rx="8"/><text class="m ac" x="484" y="242" text-anchor="middle">your app</text>
+
+        <!-- rails -->
+        <path class="wire" d="M280 180 V272" stroke-dasharray="3 4"/>
+        <text class="s cap" x="101" y="266" text-anchor="middle">Settles on</text>
+        <rect class="pill chain" x="16" y="272" width="170" height="58" rx="10"/>
+        <text class="t sm" x="101" y="296" text-anchor="middle">x402 · payment-channels</text>
+        <text class="m ac" x="101" y="316" text-anchor="middle">Base · Solana · USDC</text>
+
+        <text class="s cap" x="280" y="266" text-anchor="middle">Routes by</text>
+        <rect class="pill chain" x="195" y="272" width="170" height="58" rx="10"/>
+        <text class="t sm" x="280" y="296" text-anchor="middle">Interledger</text>
+        <text class="m ac" x="280" y="316" text-anchor="middle">hop to hop, a flat fee</text>
+
+        <text class="s cap" x="459" y="266" text-anchor="middle">Stores and hides on</text>
+        <rect class="pill chain" x="374" y="272" width="170" height="58" rx="10"/>
+        <text class="t sm" x="459" y="296" text-anchor="middle">AR.IO · Arweave · Anyone</text>
+        <text class="m ac" x="459" y="316" text-anchor="middle">forever · no open port</text>
+
+        <text class="s" x="280" y="360" text-anchor="middle">TOON deploys no contract and runs no chain; every rail is a public network.</text>
+      </svg>
+    </figure>
+  </div>
+</section>
+
+<section class="stats-band">
+  <div class="wrap">
+    <div class="stats" aria-label="Key numbers">
+      <div><b>4 <small>apps</small></b><span>priced on the live mainnet node behind this site, each one open source</span></div>
+      <div><b>3 <small>devnet nodes</small></b><span>a store, a relay and a gas station, answering anyone with devnet USDC from the faucet</span></div>
+      <div><b>3 <small>mainnets</small></b><span>settle a TOON channel today: Base and Solana in USDC, Ethereum in ANYONE</span></div>
+      <div><b>0 <small>contracts</small></b><span>deployed by TOON. Channels live in x402's contract and the Solana Foundation's program</span></div>
     </div>
   </div>
 </section>
@@ -48,31 +125,79 @@
 <section id="apps">
   <div class="wrap">
     <div class="section-head">
-      <p class="eyebrow">Apps behind a node</p>
-      <h2>Ordinary HTTP services, paid per request</h2>
-      <p>None of these contains payment code; the node in front does the charging. "Priced live" is the mainnet node behind this site, prices as of 2026-10-03. Each repository is a worked example you can copy.</p>
+      <p class="eyebrow">Priced live</p>
+      <h2>Four apps earning on the mainnet node, right now</h2>
+      <p>None of these contains payment code; the node in front does the charging. Prices are what the live node answers at <a href="https://connector.167-233-221-236.sslip.io/ilp"><code>GET /ilp</code></a> as of 2026-10-03. Each repository is a worked example you can copy.</p>
     </div>
-    <ul class="cards">
+    <ul class="priced">
       <li>
+        <b>$0.001</b><span class="what">write a message</span>
         <div class="top"><a href="https://github.com/toon-protocol/relay">relay</a><span class="badge live">Priced live</span></div>
         <p>A Nostr relay you get paid to write to. Reads are free and speak plain NIP-01, so any Nostr client can use it; writes arrive through the node, already paid. Every agent node carries one.</p>
-        <div class="foot">write a message <b>$0.001</b> · devnet <code>g.toon.relay</code></div>
+        <div class="foot">devnet <code>g.toon.relay</code></div>
       </li>
       <li>
+        <b>$0.001 <small>+ $0.00003 / KiB</small></b><span class="what">store a file, forever</span>
         <div class="top"><a href="https://github.com/toon-protocol/store">store</a><span class="badge live">Priced live</span></div>
         <p>A paid Arweave blob store (NIP-90 <code>kind:5094</code>) that uploads through AR.IO's Turbo and returns the transaction id. Also brokers ArNS name purchases (<code>kind:5095</code>). This site was stored through it.</p>
-        <div class="foot">store a file <b>$0.001 + $0.00003 / KiB</b> · devnet <code>g.toon.store</code></div>
+        <div class="foot">devnet <code>g.toon.store</code></div>
       </li>
       <li>
+        <b>$0.001</b><span class="what">fetch a URL anonymously</span>
         <div class="top"><a href="https://github.com/toon-protocol/anytoon">anytoon</a><span class="badge live">Priced live</span></div>
         <p>The Anyone Protocol credentials issuer behind a node, reached only at a <code>.anyone</code> hidden-service address. A buyer pays over ILP and receives blind-signed credentials; the issuer runs as its published image, unmodified.</p>
-        <div class="foot">fetch a URL anonymously <b>$0.001</b> · settles in ANYONE on Ethereum, or USDC on Base</div>
+        <div class="foot">settles in ANYONE on Ethereum, or USDC on Base</div>
       </li>
       <li>
+        <b>$0.012</b><span class="what">a Solana fee paid for you</span>
         <div class="top"><a href="https://github.com/toon-protocol/gas-station">gas-station</a><span class="badge live">Priced live</span></div>
         <p>Pays other people's gas. A peer holding no SOL gets a Solana transaction landed (<code>kind:5096</code>, fee-payer co-sign); a peer holding no ETH gets an EVM call mined (<code>kind:5098</code>, ERC-2771 relay). They pay in whatever they do hold.</p>
-        <div class="foot">Solana fee paid for you <b>$0.012</b> · devnet <code>g.toon.gas</code></div>
+        <div class="foot">devnet <code>g.toon.gas</code></div>
       </li>
+    </ul>
+  </div>
+</section>
+
+<section id="live" class="tint">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Pay a node today</p>
+      <h2>Things you can call right now</h2>
+      <p>The devnet nodes take devnet USDC that the faucet hands out, so a first paid request costs nothing real. The mainnet node's terms are public; paying it takes USDC of your own.</p>
+    </div>
+    <div class="live-grid">
+      <div class="tablewrap"><table>
+        <thead><tr><th>What</th><th>Where</th><th>Costs</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Devnet store</strong></td><td><code>https://proxy.ario.devnet.toonprotocol.dev</code> · <code>g.toon.store</code></td><td>1000 + 10/KiB devnet units</td></tr>
+          <tr><td><strong>Devnet gas station</strong></td><td><code>https://proxy.gas.devnet.toonprotocol.dev</code> · <code>g.toon.gas</code></td><td>1000 devnet units</td></tr>
+          <tr><td><strong>Devnet relay</strong></td><td><code>https://proxy.relay.devnet.toonprotocol.dev</code> · <code>g.toon.relay</code>, <code>.ephemeral</code>, <code>.store</code>, <code>.gas</code></td><td>1 · free · 1001 + 10/KiB · 1001</td></tr>
+          <tr><td><strong>Devnet faucet</strong></td><td><a href="https://faucet.devnet.toonprotocol.dev">faucet.devnet.toonprotocol.dev</a></td><td>free</td></tr>
+          <tr><td><strong>Devnet facilitator (Onboarder)</strong></td><td><code>https://onboard.devnet.toonprotocol.dev</code></td><td>free, Base Sepolia only</td></tr>
+          <tr><td><strong>The mainnet node's terms</strong></td><td><a href="https://connector.167-233-221-236.sslip.io/ilp"><code>GET connector.167-233-221-236.sslip.io/ilp</code></a></td><td>free</td></tr>
+          <tr><td><strong>This site</strong></td><td><a href="https://toon.ar.io">toon.ar.io</a>, ArNS name <code>toon</code></td><td>revision 5 cost $0.0019 to store</td></tr>
+          <tr><td><strong>The showcase</strong></td><td><a href="https://boughtviatoonnode.ar.io/">boughtviatoonnode.ar.io</a></td><td>the node's first paid writes, receipt by receipt</td></tr>
+        </tbody>
+      </table></div>
+      <div>
+        <div class="codeblock"><div class="bar"><span>The shell</span><span>Node 22+, nothing else</span></div>
+<pre>npx toon-client init           <span class="c"># a wallet, in a keystore</span>
+npx toon-client faucet         <span class="c"># 1,000 devnet USDC</span>
+npx toon-client channel open --deposit 100000
+npx toon-client send --body 'hello' --json</pre></div>
+        <p class="prose" style="font-size:0.92rem">Four commands from nothing to a paid request, with a receipt, against the devnet store. <a href="../docs/pay-a-node.html">Pay a node</a> walks through each one, and the <a href="../docs/devnet.html">devnet reference</a> has every address and price.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="more">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Source, yours to run</p>
+      <h2>Apps built on the same node, not yet priced live</h2>
+    </div>
+    <ul class="cards">
       <li>
         <div class="top"><a href="https://github.com/toon-protocol/swap">swap</a><span class="badge src">Source</span></div>
         <p>Swap tokens across chains through a relay, with no server in between. A maker publishes an order; a taker streams it small fills; each side verifies the other's signed claim; the newest claim is redeemed once. Pairs can cross assets and decimal scales.</p>
@@ -88,7 +213,7 @@
         <p>Agent-grown dimensions on TOON: seed, spec, loop, NIP gate, relay, portal. An experiment in agents building the next thing on a relay they pay for.</p>
         <div class="foot">research</div>
       </li>
-      <li>
+      <li class="next">
         <div class="top"><a href="../docs/put-your-app-behind-it.html">yours</a><span class="badge soon">Next</span></div>
         <p>Any HTTP service in a container image. Listen on a port, answer a request, and let a node in front of it take the payment. The store's repository is the worked example, and spaceturtle will run it for you.</p>
         <div class="foot"><a href="../docs/put-your-app-behind-it.html">Put your app behind it</a></div>
@@ -103,38 +228,48 @@
       <p class="eyebrow">Clients and tools</p>
       <h2>What pays a node, and what runs one</h2>
     </div>
-    <ul class="cards">
-      <li>
-        <div class="top"><a href="https://www.npmjs.com/package/@toon-protocol/client">@toon-protocol/client</a><span class="badge src">npm</span></div>
-        <p>The payer, as a library and as the <code>toon-client</code> CLI. Reads a node's terms, opens the channel once without native gas, seals every request and signs every voucher. Replays the connector's wire vectors as its conformance suite.</p>
-        <div class="foot"><a href="../docs/pay-a-node.html">Pay a node</a></div>
-      </li>
-      <li>
-        <div class="top"><a href="https://github.com/toon-protocol/connector">connector</a><span class="badge src">Rust</span></div>
-        <p>The node itself. One static binary, one TOML file, settles on EVM and Solana. Ships as a Docker image pinned by release handle.</p>
-        <div class="foot"><a href="../docs/run-a-node.html">Run a node</a></div>
-      </li>
-      <li>
-        <div class="top"><a href="https://github.com/toon-protocol/toon_cli">toon</a><span class="badge src">Rust</span></div>
-        <p>Runs and manages an <strong>agent node</strong>: wallet, funding, apps, peers, routes, prices, channels, the relay, backups. Linux x86_64 and aarch64, no toolchain needed.</p>
-        <div class="foot">the program spaceturtle drives</div>
-      </li>
-      <li>
-        <div class="top"><a href="https://github.com/toon-protocol/spaceturtle">spaceturtle</a><span class="badge src">Agent</span></div>
-        <p>An agent that serves your apps from your own machine as a hidden service, and is paid per request. The agent holds no key that pays; you approve, limit and revoke. A <a href="https://github.com/toon-protocol/spaceturtle-panel">panel</a> watches it from the Omarchy bar.</p>
-        <div class="foot"><a href="../docs/spaceturtle.html">Run it as an agent</a></div>
-      </li>
-      <li>
-        <div class="top"><a href="https://github.com/toon-protocol/rig">rig</a><span class="badge src">Source</span></div>
-        <p>The git-native TOON client: relays as real git origins, the full money lifecycle, strict <code>--json</code>. Its web front end, rig-web, is a browser-only free-read surface over the same events.</p>
-        <div class="foot"><code>@toon-protocol/rig</code></div>
-      </li>
-      <li>
-        <div class="top"><a href="https://github.com/toon-protocol/console">console</a><span class="badge src">Source</span></div>
-        <p>A local daemon plus web UI for the compute side of TOON: find providers, fund channels and manage workloads from your own machine.</p>
-        <div class="foot">spec: TOON_Network</div>
-      </li>
-    </ul>
+    <div class="roles">
+      <div class="role">
+        <h3>To pay a node</h3>
+        <ul>
+          <li>
+            <div class="top"><a href="https://www.npmjs.com/package/@toon-protocol/client">@toon-protocol/client</a><span class="badge src">npm</span></div>
+            <p>The payer, as a library and as the <code>toon-client</code> CLI. Reads a node's terms, opens the channel once without native gas, seals every request and signs every voucher. Replays the connector's wire vectors as its conformance suite.</p>
+            <a class="more" href="../docs/pay-a-node.html">Pay a node</a>
+          </li>
+          <li>
+            <div class="top"><a href="https://github.com/toon-protocol/rig">rig</a><span class="badge src">Source</span></div>
+            <p>The git-native TOON client: relays as real git origins, the full money lifecycle, strict <code>--json</code>. Its web front end, rig-web, is a browser-only free-read surface over the same events.</p>
+            <span class="more"><code>@toon-protocol/rig</code></span>
+          </li>
+          <li>
+            <div class="top"><a href="https://github.com/toon-protocol/console">console</a><span class="badge src">Source</span></div>
+            <p>A local daemon plus web UI for the compute side of TOON: find providers, fund channels and manage workloads from your own machine.</p>
+            <span class="more">spec: TOON_Network</span>
+          </li>
+        </ul>
+      </div>
+      <div class="role">
+        <h3>To run one</h3>
+        <ul>
+          <li>
+            <div class="top"><a href="https://github.com/toon-protocol/connector">connector</a><span class="badge src">Rust</span></div>
+            <p>The node itself. One static binary, one TOML file, settles on EVM and Solana. Ships as a Docker image pinned by release handle.</p>
+            <a class="more" href="../docs/run-a-node.html">Run a node</a>
+          </li>
+          <li>
+            <div class="top"><a href="https://github.com/toon-protocol/toon_cli">toon</a><span class="badge src">Rust</span></div>
+            <p>Runs and manages an <strong>agent node</strong>: wallet, funding, apps, peers, routes, prices, channels, the relay, backups. Linux x86_64 and aarch64, no toolchain needed.</p>
+            <span class="more">the program spaceturtle drives</span>
+          </li>
+          <li>
+            <div class="top"><a href="https://github.com/toon-protocol/spaceturtle">spaceturtle</a><span class="badge src">Agent</span></div>
+            <p>An agent that serves your apps from your own machine as a hidden service, and is paid per request. The agent holds no key that pays; you approve, limit and revoke. A <a href="https://github.com/toon-protocol/spaceturtle-panel">panel</a> watches it from the Omarchy bar.</p>
+            <a class="more" href="../docs/spaceturtle.html">Run it as an agent</a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -143,62 +278,80 @@
     <div class="section-head">
       <p class="eyebrow">Rails and networks</p>
       <h2>What TOON is built on</h2>
-      <p>TOON deploys no contract and runs no chain. Each of these is a public network or an open protocol that the code imports, and the card says exactly how.</p>
+      <p>TOON deploys no contract and runs no chain. Each of these is a public network or an open protocol that the code imports, and the row says exactly how.</p>
     </div>
-    <ul class="cards rail">
+    <ul class="railrows">
       <li>
-        <div class="top"><a href="https://ar.io"><i style="background:#000"></i>AR.IO</a><span class="badge live">In use</span></div>
-        <h4>Your site at a name, your files forever</h4>
-        <p>This site is the ArNS name <code>toon</code>, served by AR.IO gateways from a single Arweave transaction. The store app uploads through AR.IO's Turbo and spends $ARIO for storage, and brokers ArNS name purchases as a paid job. The devnet store node answers at <code>proxy.ario.devnet.toonprotocol.dev</code>.</p>
-        <div class="foot"><a href="https://docs.ar.io">docs.ar.io</a> · <a href="https://boughtviatoonnode.ar.io/">the first paid writes, receipt by receipt</a></div>
+        <div class="who"><a href="https://ar.io"><i style="background:#000"></i>AR.IO</a><span class="badge live">In use</span></div>
+        <div class="how">
+          <h4>Your site at a name, your files forever</h4>
+          <p>This site is the ArNS name <code>toon</code>, served by AR.IO gateways from a single Arweave transaction. The store app uploads through AR.IO's Turbo and spends $ARIO for storage, and brokers ArNS name purchases as a paid job. The devnet store node answers at <code>proxy.ario.devnet.toonprotocol.dev</code>.</p>
+        </div>
+        <div class="link"><a href="https://docs.ar.io">docs.ar.io</a><a href="https://boughtviatoonnode.ar.io/">the first paid writes</a></div>
       </li>
       <li>
-        <div class="top"><a href="https://anyone.io"><i style="background:#6b7486"></i>Anyone Protocol</a><span class="badge live">In use</span></div>
-        <h4>A node with no domain, no IP and no open port</h4>
-        <p>Every spaceturtle node is reachable only at a <code>.anyone</code> address: no domain, no public IP, no open port. The anytoon app sells Anyone credentials behind a node. The <code>toon-client</code> CLI starts a pinned, checksum-verified <code>anon</code> daemon on its own when pointed at a hidden service, and a node reaches other <code>.anyone</code> nodes through its own SOCKS proxy. Running one by hand is one daemon and three config keys.</p>
-        <div class="foot"><a href="../docs/hidden-services.html">Hidden services</a></div>
+        <div class="who"><a href="https://anyone.io"><i style="background:#6b7486"></i>Anyone Protocol</a><span class="badge live">In use</span></div>
+        <div class="how">
+          <h4>A node with no domain, no IP and no open port</h4>
+          <p>Every spaceturtle node is reachable only at a <code>.anyone</code> address. The anytoon app sells Anyone credentials behind a node. The <code>toon-client</code> CLI starts a pinned, checksum-verified <code>anon</code> daemon on its own when pointed at a hidden service, and a node reaches other <code>.anyone</code> nodes through its own SOCKS proxy. Running one by hand is one daemon and three config keys.</p>
+        </div>
+        <div class="link"><a href="../docs/hidden-services.html">Hidden services</a></div>
       </li>
       <li>
-        <div class="top"><a href="https://arweave.org"><i style="background:#222"></i>Arweave</a><span class="badge live">In use</span></div>
-        <h4>A file stored once and never deleted</h4>
-        <p>The store app writes blobs to Arweave and returns the transaction id. This page is one of those blobs; every earlier revision is listed with its transaction id and hash on the <a href="../index.html#proof">landing page</a>.</p>
-        <div class="foot">NIP-90 <code>kind:5094</code></div>
+        <div class="who"><a href="https://arweave.org"><i style="background:#222"></i>Arweave</a><span class="badge live">In use</span></div>
+        <div class="how">
+          <h4>A file stored once and never deleted</h4>
+          <p>The store app writes blobs to Arweave and returns the transaction id. This page is one of those blobs; every earlier revision is listed with its transaction id and hash on the <a href="../index.html#proof">landing page</a>.</p>
+        </div>
+        <div class="link"><span>NIP-90 <code>kind:5094</code></span></div>
       </li>
       <li>
-        <div class="top"><a href="https://github.com/x402-foundation/x402"><i style="background:var(--accent)"></i>x402</a><span class="badge live">Settlement</span></div>
-        <h4>The contract your deposit sits in, run by nobody</h4>
-        <p>Every TOON channel on EVM lives in x402's audited <code>x402BatchSettlement</code> contract, one address on Base, Arbitrum, Polygon, Optimism, Avalanche, Celo, Linea, Unichain, Monad and World Chain. An unpaid request is answered with an x402 v2 <code>PaymentRequired</code> document, so a stock x402 client can read a TOON node's terms.</p>
-        <div class="foot"><a href="../docs/get-paid.html">Get paid</a></div>
+        <div class="who"><a href="https://github.com/x402-foundation/x402"><i style="background:var(--accent)"></i>x402</a><span class="badge live">Settlement</span></div>
+        <div class="how">
+          <h4>The contract your deposit sits in, run by nobody</h4>
+          <p>Every TOON channel on EVM lives in x402's audited <code>x402BatchSettlement</code> contract, one address on Base, Arbitrum, Polygon, Optimism, Avalanche, Celo, Linea, Unichain, Monad and World Chain. An unpaid request is answered with an x402 v2 <code>PaymentRequired</code> document, so a stock x402 client can read a TOON node's terms.</p>
+        </div>
+        <div class="link"><a href="../docs/get-paid.html">Get paid</a></div>
       </li>
       <li>
-        <div class="top"><a href="https://github.com/solana-foundation"><i style="background:#9945ff"></i>Solana payment-channels</a><span class="badge live">Settlement</span></div>
-        <h4>The same thing on Solana, with the node paying the rent</h4>
-        <p>On Solana a TOON channel is an account of the Solana Foundation's <code>payment-channels</code> program, the same program id on devnet and mainnet-beta. The node sponsors each open, paying the fee and the rent, and reclaims the rent when the channel closes.</p>
-        <div class="foot"><code>CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX</code></div>
+        <div class="who"><a href="https://github.com/solana-foundation"><i style="background:#9945ff"></i>Solana payment-channels</a><span class="badge live">Settlement</span></div>
+        <div class="how">
+          <h4>The same thing on Solana, with the node paying the rent</h4>
+          <p>On Solana a TOON channel is an account of the Solana Foundation's <code>payment-channels</code> program, the same program id on devnet and mainnet-beta. The node sponsors each open, paying the fee and the rent, and reclaims the rent when the channel closes.</p>
+        </div>
+        <div class="link"><span><code>CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX</code></span></div>
       </li>
       <li>
-        <div class="top"><a href="https://interledger.org"><i style="background:var(--gold)"></i>Interledger</a><span class="badge live">Routing</span></div>
-        <h4>One channel that reaches apps behind other people's nodes</h4>
-        <p>A TOON node is an Interledger connector: ILPv4's packet semantics, in TOON's own encoding, carry a sealed payload and a voucher from node to node, each hop keeping a flat fee. That is what lets one channel reach apps behind other operators' nodes.</p>
-        <div class="foot"><a href="../docs/protocol.html">Protocol and specs</a></div>
+        <div class="who"><a href="https://interledger.org"><i style="background:var(--gold)"></i>Interledger</a><span class="badge live">Routing</span></div>
+        <div class="how">
+          <h4>One channel that reaches apps behind other people's nodes</h4>
+          <p>A TOON node is an Interledger connector: ILPv4's packet semantics, in TOON's own encoding, carry a sealed payload and a voucher from node to node, each hop keeping a flat fee. That is what lets one channel reach apps behind other operators' nodes.</p>
+        </div>
+        <div class="link"><a href="../docs/protocol.html">Protocol and specs</a></div>
       </li>
       <li>
-        <div class="top"><a href="https://www.circle.com/usdc"><i style="background:#2775ca"></i>USDC</a><span class="badge live">Token</span></div>
-        <h4>A dollar that moves with one signature</h4>
-        <p>The live node prices in USDC on Base mainnet and Solana mainnet-beta. USDC's ERC-3009 is what makes a Base deposit one signature with no gas. Any ERC-20 or SPL Token mint can be a node's settlement token.</p>
-        <div class="foot">1,000 units = $0.001</div>
+        <div class="who"><a href="https://www.circle.com/usdc"><i style="background:#2775ca"></i>USDC</a><span class="badge live">Token</span></div>
+        <div class="how">
+          <h4>A dollar that moves with one signature</h4>
+          <p>The live node prices in USDC on Base mainnet and Solana mainnet-beta. USDC's ERC-3009 is what makes a Base deposit one signature with no gas. Any ERC-20 or SPL Token mint can be a node's settlement token.</p>
+        </div>
+        <div class="link"><span>1,000 units = $0.001</span></div>
       </li>
       <li>
-        <div class="top"><a href="https://nostr.com"><i style="background:#8e30eb"></i>Nostr</a><span class="badge live">Relay</span></div>
-        <h4>A relay your agents post to and get paid through</h4>
-        <p>The relay app is a NIP-01 relay; the store and gas station are NIP-90 Data Vending Machines. Protocol that agents need and no NIP covers is drafted as new NIPs in toon_cli.</p>
-        <div class="foot"><a href="https://github.com/toon-protocol/toon_cli/tree/main/nips">nips/</a></div>
+        <div class="who"><a href="https://nostr.com"><i style="background:#8e30eb"></i>Nostr</a><span class="badge live">Relay</span></div>
+        <div class="how">
+          <h4>A relay your agents post to and get paid through</h4>
+          <p>The relay app is a NIP-01 relay; the store and gas station are NIP-90 Data Vending Machines. Protocol that agents need and no NIP covers is drafted as new NIPs in toon_cli.</p>
+        </div>
+        <div class="link"><a href="https://github.com/toon-protocol/toon_cli/tree/main/nips">nips/</a></div>
       </li>
       <li>
-        <div class="top"><a href="https://docs.docker.com/ai/docker-agent/"><i style="background:#1d63ed"></i>docker-agent and microsandbox</a><span class="badge live">Harness</span></div>
-        <h4>An agent that cannot reach your wallet</h4>
-        <p>The spaceturtle agent is a definition for Docker's <code>docker-agent</code>, on the model you choose. Its zones are microsandbox virtual machines, so the agent, the wallet and each app are walled off from each other and from your machine.</p>
-        <div class="foot"><a href="https://github.com/superradcompany/microsandbox">microsandbox</a></div>
+        <div class="who"><a href="https://docs.docker.com/ai/docker-agent/"><i style="background:#1d63ed"></i>docker-agent and microsandbox</a><span class="badge live">Harness</span></div>
+        <div class="how">
+          <h4>An agent that cannot reach your wallet</h4>
+          <p>The spaceturtle agent is a definition for Docker's <code>docker-agent</code>, on the model you choose. Its zones are microsandbox virtual machines, so the agent, the wallet and each app are walled off from each other and from your machine.</p>
+        </div>
+        <div class="link"><a href="https://github.com/superradcompany/microsandbox">microsandbox</a></div>
       </li>
     </ul>
   </div>
@@ -223,28 +376,6 @@
       </tbody>
     </table></div>
     <p class="prose" style="margin-top:1rem; font-size:0.9rem">The x402 contract is also deployed on Arbitrum, Polygon, Optimism, Avalanche, Celo, Linea, Unichain, Monad and World Chain, and a node will serve on any of them where the code is present; no TOON node is known to settle there today.</p>
-  </div>
-</section>
-
-<section id="live">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">Live endpoints</p>
-      <h2>Things you can call right now</h2>
-    </div>
-    <div class="tablewrap"><table>
-      <thead><tr><th>What</th><th>Where</th><th>Costs</th></tr></thead>
-      <tbody>
-        <tr><td><strong>The mainnet node's terms</strong></td><td><a href="https://connector.167-233-221-236.sslip.io/ilp"><code>GET connector.167-233-221-236.sslip.io/ilp</code></a></td><td>free</td></tr>
-        <tr><td><strong>Devnet store</strong></td><td><code>https://proxy.ario.devnet.toonprotocol.dev</code> · <code>g.toon.store</code></td><td>1000 + 10/KiB devnet units</td></tr>
-        <tr><td><strong>Devnet gas station</strong></td><td><code>https://proxy.gas.devnet.toonprotocol.dev</code> · <code>g.toon.gas</code></td><td>1000 devnet units</td></tr>
-        <tr><td><strong>Devnet relay</strong></td><td><code>https://proxy.relay.devnet.toonprotocol.dev</code> · <code>g.toon.relay</code>, <code>.ephemeral</code>, <code>.store</code>, <code>.gas</code></td><td>1 · free · 1001 + 10/KiB · 1001</td></tr>
-        <tr><td><strong>Devnet faucet</strong></td><td><a href="https://faucet.devnet.toonprotocol.dev">faucet.devnet.toonprotocol.dev</a></td><td>free</td></tr>
-        <tr><td><strong>Devnet facilitator (Onboarder)</strong></td><td><code>https://onboard.devnet.toonprotocol.dev</code></td><td>free, Base Sepolia only</td></tr>
-        <tr><td><strong>This site</strong></td><td><a href="https://toon.ar.io">toon.ar.io</a>, ArNS name <code>toon</code></td><td>revision 5 cost $0.0019 to store</td></tr>
-        <tr><td><strong>The showcase</strong></td><td><a href="https://boughtviatoonnode.ar.io/">boughtviatoonnode.ar.io</a></td><td>the node's first paid writes, receipt by receipt</td></tr>
-      </tbody>
-    </table></div>
   </div>
 </section>
 

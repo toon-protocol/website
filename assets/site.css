@@ -150,6 +150,100 @@ section.tint { background:var(--bg-tint); }
 .hero { padding:4rem 0 3rem; }
 .hero h1 { font-size:clamp(2.4rem, 5.5vw, 3.8rem); letter-spacing:-0.035em; }
 .hero .lede { max-width:var(--measure); margin-top:1rem; font-size:1.15rem; color:var(--ink-dim); }
+.hero.split .wrap { display:grid; grid-template-columns:minmax(0, 1.05fr) minmax(0, 1fr); gap:3rem; align-items:center; }
+.hero.split h1 { font-size:clamp(2.2rem, 4.4vw, 3.2rem); }
+.hero.split .cta { margin-top:1.75rem; }
+@media (max-width:900px) { .hero.split .wrap { grid-template-columns:1fr; gap:2.5rem; } }
+
+/* the ecosystem map: the same vocabulary as the landing page's hero diagram */
+.diagram { width:100%; height:auto; display:block; }
+.diagram .box { fill:var(--bg-raised); stroke:var(--line-strong); stroke-width:1.2; }
+.diagram .box.node { stroke:var(--accent); }
+.diagram .t { fill:var(--ink); font:600 13px ui-sans-serif, system-ui, sans-serif; }
+.diagram .t.sm { font-size:12.5px; }
+.diagram .s { fill:var(--ink-dim); font:12px ui-sans-serif, system-ui, sans-serif; }
+.diagram .s.cap { font-size:10.5px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; fill:var(--ink-faint); }
+.diagram .m { fill:var(--ink-dim); font:11.5px ui-monospace, Menlo, monospace; }
+.diagram .m.hi { fill:var(--gold); }
+.diagram .m.ok { fill:var(--good); }
+.diagram .m.ac { fill:var(--accent); }
+.diagram .arrow { stroke:var(--ink-dim); stroke-width:1.5; fill:none; marker-end:url(#ah); }
+.diagram .arrow.gold { stroke:var(--gold); }
+.diagram .arrow.ok { stroke:var(--good); }
+.diagram .pill { fill:var(--bg-sunken); stroke:var(--line); }
+.diagram .pill.chain { stroke:var(--accent); fill:var(--accent-soft); }
+.diagram .wire { stroke:var(--line-strong); stroke-width:1.2; fill:none; }
+.diagram .glow { fill:var(--accent-soft); }
+.diagram .chip { fill:var(--bg-raised); stroke:var(--line-strong); }
+.diagram .chip.on { stroke:var(--good); }
+.diagram .chip.dash { stroke:var(--accent); stroke-dasharray:4 3; fill:transparent; }
+
+/* the stat strip */
+.stats-band { padding:0 0 4rem; border-top:0 !important; }
+.stats { display:grid; gap:1px; grid-template-columns:repeat(4, 1fr); background:var(--line);
+  border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; }
+.stats div { background:var(--bg-raised); padding:1.4rem 1.5rem; }
+.stats b { display:block; font-size:2rem; font-weight:650; letter-spacing:-0.03em; line-height:1.1; }
+.stats b small { font-size:0.95rem; color:var(--ink-dim); font-weight:500; letter-spacing:0; margin-left:0.25rem; }
+.stats span { display:block; margin-top:0.35rem; font-size:0.9rem; color:var(--ink-dim); }
+@media (max-width:860px) { .stats { grid-template-columns:repeat(2, 1fr); } }
+@media (max-width:420px) { .stats { grid-template-columns:1fr; } }
+
+/* the priced-live tiles: the price first, then the app */
+.priced { list-style:none; padding:0; margin:0; display:grid; gap:1rem; grid-template-columns:repeat(auto-fit, minmax(15rem, 1fr)); }
+.priced li { padding:1.3rem 1.4rem 1.2rem; background:var(--bg-raised); border:1px solid var(--line); border-radius:var(--radius);
+  display:flex; flex-direction:column; gap:0.55rem; font-size:0.93rem; color:var(--ink-dim); position:relative; }
+.priced li::before { content:""; position:absolute; inset:0 auto 0 0; width:3px; background:var(--gold); border-radius:var(--radius) 0 0 var(--radius); }
+.priced li > b { font-size:1.9rem; font-weight:650; letter-spacing:-0.03em; line-height:1.1; color:var(--gold); }
+.priced li > b small { font-size:0.85rem; font-weight:500; letter-spacing:0; color:var(--ink-dim); margin-left:0.2rem; }
+.priced .what { font-size:0.78rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faint); margin-top:-0.3rem; }
+.priced .top { display:flex; justify-content:space-between; align-items:center; gap:0.6rem; margin-top:0.5rem; padding-top:0.8rem; border-top:1px solid var(--line); }
+.priced .top a { font-weight:650; color:var(--ink); text-decoration:none; font-size:1.02rem; }
+.priced .top a:hover { color:var(--accent); }
+.priced li > p { margin:0; }
+.priced .foot { margin-top:auto; padding-top:0.5rem; font-size:0.82rem; color:var(--ink-faint); }
+
+/* pay today: the endpoints beside the four commands */
+.live-grid { display:grid; grid-template-columns:minmax(0, 1.5fr) minmax(0, 1fr); gap:1.5rem; align-items:start; }
+.live-grid .tablewrap { margin:0; }
+.live-grid .codeblock { margin:0 0 1rem; }
+@media (max-width:980px) { .live-grid { grid-template-columns:1fr; } }
+
+/* the "next" card invites your app */
+.cards li.next { border-style:dashed; border-color:var(--line-strong); background:transparent; }
+
+/* clients and tools, grouped by what you want to do */
+.roles { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+@media (max-width:860px) { .roles { grid-template-columns:1fr; } }
+.role { border:1px solid var(--line); border-radius:var(--radius); background:var(--bg-raised); overflow:hidden; }
+.role h3 { padding:0.8rem 1.3rem; background:var(--bg-sunken); border-bottom:1px solid var(--line);
+  font:600 0.74rem ui-sans-serif, system-ui, sans-serif; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-faint); }
+.role ul { list-style:none; padding:0; margin:0; }
+.role li { padding:1.1rem 1.3rem; display:flex; flex-direction:column; gap:0.5rem; font-size:0.93rem; color:var(--ink-dim); }
+.role li + li { border-top:1px solid var(--line); }
+.role .top { display:flex; justify-content:space-between; align-items:center; gap:0.6rem; }
+.role .top a { font-weight:650; color:var(--ink); text-decoration:none; font-size:1.02rem; }
+.role .top a:hover { color:var(--accent); }
+.role li > p { margin:0; }
+.role strong { color:var(--ink); }
+.role .more { font-size:0.84rem; color:var(--ink-faint); }
+.role a.more { color:var(--accent); text-decoration:none; }
+.role a.more:hover { text-decoration:underline; }
+
+/* rails as rows: who, what it does for you, where to read more */
+.railrows { list-style:none; padding:0; margin:0; border-top:1px solid var(--line); }
+.railrows li { display:grid; grid-template-columns:13rem minmax(0, 1fr) 11rem; gap:1.5rem; padding:1.4rem 0; border-bottom:1px solid var(--line); font-size:0.93rem; color:var(--ink-dim); }
+.railrows .who { display:flex; flex-direction:column; align-items:flex-start; gap:0.5rem; }
+.railrows .who a { display:flex; align-items:center; gap:0.6rem; font-weight:650; color:var(--ink); text-decoration:none; font-size:1.02rem; }
+.railrows .who a:hover { color:var(--accent); }
+.railrows .who i { width:0.7rem; height:0.7rem; border-radius:50%; display:inline-block; flex:none; border:1px solid var(--line-strong); }
+.railrows .how h4 { font-size:1rem; font-weight:650; color:var(--ink); margin-bottom:0.45rem; }
+.railrows .how p { margin:0; max-width:var(--measure); }
+.railrows .link { display:flex; flex-direction:column; gap:0.3rem; font-size:0.84rem; color:var(--ink-faint); overflow-wrap:anywhere; }
+.railrows .link a { color:var(--accent); text-decoration:none; }
+.railrows .link a:hover { text-decoration:underline; }
+.railrows .link code { white-space:normal; }
+@media (max-width:900px) { .railrows li { grid-template-columns:1fr; gap:0.7rem; } .railrows .link { flex-direction:row; flex-wrap:wrap; gap:0.3rem 1rem; } }
 .section-head { max-width:46rem; margin-bottom:2rem; }
 .section-head h2 { font-size:clamp(1.5rem, 3vw, 2.1rem); }
 .section-head p { margin-top:0.7rem; color:var(--ink-dim); font-size:1.02rem; }
