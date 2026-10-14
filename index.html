@@ -357,6 +357,13 @@ details pre { margin:0 1.15rem 1.15rem; }
 .specs dd { margin:0; }
 .specs dd a { white-space:nowrap; }
 @media (max-width:900px) { .specs { grid-template-columns:1fr 1fr; } }
+.specs.rails3 { margin-top:0.5rem; }
+.specs.rails3 > div { padding:0.9rem 1rem; font-size:0.86rem; }
+.specs.rails3 dt { margin-bottom:0.35rem; }
+.specs.rails3 dd b { display:block; color:var(--ink); font-weight:600; }
+.specs.rails3 dd span { display:block; margin-top:0.15rem; color:var(--ink-faint); font:0.72rem/1.6 var(--mono); }
+@media (max-width:900px) { .specs.rails3 { grid-template-columns:1fr; } }
+.hero.split figure .meta { margin-top:0.8rem; }
 @media (max-width:520px) { .specs { grid-template-columns:1fr; } }
 .pay { margin-top:3rem; padding-top:2.5rem; border-top:1px solid var(--line); align-items:start; grid-template-columns:0.8fr 1.2fr; }
 .pay .eyebrow { margin-top:0.2rem; }

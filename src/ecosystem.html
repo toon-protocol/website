@@ -11,7 +11,7 @@
     </div>
 
     <figure style="margin:0">
-      <svg class="diagram ecomap" viewBox="0 0 560 372" role="img" aria-labelledby="eco-d-title" xmlns="http://www.w3.org/2000/svg">
+      <svg class="diagram ecomap" viewBox="0 0 560 262" role="img" aria-labelledby="eco-d-title" xmlns="http://www.w3.org/2000/svg">
         <title id="eco-d-title">Clients pay a TOON node with a voucher; the node forwards plain HTTP to the apps behind it; vouchers settle on x402 and Solana payment channels, packets route over Interledger, and files and addresses live on Arweave and the Anyone overlay.</title>
         <defs>
           <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -24,18 +24,17 @@
         <text class="s cap" x="484" y="30" text-anchor="middle">Earns</text>
 
         <!-- payers -->
-        <rect class="chip" x="16" y="44" width="120" height="28" rx="8"/><text class="m" x="76" y="62" text-anchor="middle">toon-client</text>
-        <rect class="chip" x="16" y="80" width="120" height="28" rx="8"/><text class="m" x="76" y="98" text-anchor="middle">rig</text>
-        <rect class="chip" x="16" y="116" width="120" height="28" rx="8"/><text class="m" x="76" y="134" text-anchor="middle">console</text>
-        <rect class="chip" x="16" y="152" width="120" height="28" rx="8"/><text class="m" x="76" y="170" text-anchor="middle">x402 client</text>
+        <rect class="chip" x="16" y="44" width="120" height="28" rx="4"/><text class="m" x="76" y="62" text-anchor="middle">toon-client</text>
+        <rect class="chip" x="16" y="80" width="120" height="28" rx="4"/><text class="m" x="76" y="98" text-anchor="middle">rig</text>
+        <rect class="chip" x="16" y="116" width="120" height="28" rx="4"/><text class="m" x="76" y="134" text-anchor="middle">console</text>
+        <rect class="chip" x="16" y="152" width="120" height="28" rx="4"/><text class="m" x="76" y="170" text-anchor="middle">x402 client</text>
         <path class="wire" d="M136 58 H150 M136 94 H150 M136 130 H150 M136 166 H150 M150 58 V166"/>
         <path class="arrow gold" d="M150 120 H208"/>
         <text class="m hi" x="180" y="110" text-anchor="middle">POST</text>
         <text class="m hi" x="180" y="138" text-anchor="middle">voucher</text>
 
         <!-- node -->
-        <ellipse class="glow" cx="280" cy="120" rx="100" ry="78"/>
-        <rect class="box node" x="210" y="60" width="140" height="120" rx="14"/>
+        <rect class="box node" x="210" y="60" width="140" height="120" rx="4"/>
         <text class="t" x="280" y="92" text-anchor="middle">TOON node</text>
         <text class="s" x="280" y="114" text-anchor="middle">connector, one binary</text>
         <text class="s" x="280" y="132" text-anchor="middle">toon, the agent node</text>
@@ -46,32 +45,20 @@
         <text class="m ok" x="380" y="110" text-anchor="middle">HTTP</text>
         <text class="m ok" x="380" y="138" text-anchor="middle">paid</text>
         <path class="wire" d="M410 58 V238 M410 58 H424 M410 94 H424 M410 130 H424 M410 166 H424 M410 202 H424 M410 238 H424"/>
-        <rect class="chip on" x="424" y="44" width="120" height="28" rx="8"/><text class="m" x="484" y="62" text-anchor="middle">relay</text>
-        <rect class="chip on" x="424" y="80" width="120" height="28" rx="8"/><text class="m" x="484" y="98" text-anchor="middle">store</text>
-        <rect class="chip on" x="424" y="116" width="120" height="28" rx="8"/><text class="m" x="484" y="134" text-anchor="middle">anytoon</text>
-        <rect class="chip on" x="424" y="152" width="120" height="28" rx="8"/><text class="m" x="484" y="170" text-anchor="middle">gas-station</text>
-        <rect class="chip" x="424" y="188" width="120" height="28" rx="8"/><text class="m" x="484" y="206" text-anchor="middle">provider</text>
-        <rect class="chip dash" x="424" y="224" width="120" height="28" rx="8"/><text class="m ac" x="484" y="242" text-anchor="middle">your app</text>
+        <rect class="chip on" x="424" y="44" width="120" height="28" rx="4"/><text class="m" x="484" y="62" text-anchor="middle">relay</text>
+        <rect class="chip on" x="424" y="80" width="120" height="28" rx="4"/><text class="m" x="484" y="98" text-anchor="middle">store</text>
+        <rect class="chip on" x="424" y="116" width="120" height="28" rx="4"/><text class="m" x="484" y="134" text-anchor="middle">anytoon</text>
+        <rect class="chip on" x="424" y="152" width="120" height="28" rx="4"/><text class="m" x="484" y="170" text-anchor="middle">gas-station</text>
+        <rect class="chip" x="424" y="188" width="120" height="28" rx="4"/><text class="m" x="484" y="206" text-anchor="middle">provider</text>
+        <rect class="chip dash" x="424" y="224" width="120" height="28" rx="4"/><text class="m ac" x="484" y="242" text-anchor="middle">your app</text>
 
-        <!-- rails -->
-        <path class="wire" d="M280 180 V272" stroke-dasharray="3 4"/>
-        <text class="s cap" x="101" y="266" text-anchor="middle">Settles on</text>
-        <rect class="pill chain" x="16" y="272" width="170" height="58" rx="10"/>
-        <text class="t sm" x="101" y="296" text-anchor="middle">x402 · payment-channels</text>
-        <text class="m ac" x="101" y="316" text-anchor="middle">Base · Solana · USDC</text>
-
-        <text class="s cap" x="280" y="266" text-anchor="middle">Routes by</text>
-        <rect class="pill chain" x="195" y="272" width="170" height="58" rx="10"/>
-        <text class="t sm" x="280" y="296" text-anchor="middle">Interledger</text>
-        <text class="m ac" x="280" y="316" text-anchor="middle">hop to hop, a flat fee</text>
-
-        <text class="s cap" x="459" y="266" text-anchor="middle">Stores and hides on</text>
-        <rect class="pill chain" x="374" y="272" width="170" height="58" rx="10"/>
-        <text class="t sm" x="459" y="296" text-anchor="middle">AR.IO · Arweave · Anyone</text>
-        <text class="m ac" x="459" y="316" text-anchor="middle">forever · no open port</text>
-
-        <text class="s" x="280" y="360" text-anchor="middle">TOON deploys no contract and runs no chain; every rail is a public network.</text>
       </svg>
+      <dl class="specs rails3" aria-label="The rails underneath">
+        <div><dt>Settles on</dt><dd><b>x402 · payment-channels</b><span>Base · Solana · USDC</span></dd></div>
+        <div><dt>Routes by</dt><dd><b>Interledger</b><span>hop to hop, a flat fee</span></dd></div>
+        <div><dt>Stores and hides on</dt><dd><b>AR.IO · Arweave · Anyone</b><span>forever · no open port</span></dd></div>
+      </dl>
+      <p class="meta">TOON deploys no contract and runs no chain; every rail is a public network. <a href="#rails">The rails →</a></p>
     </figure>
   </div>
 </section>
