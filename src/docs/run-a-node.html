@@ -1,4 +1,18 @@
-<p>The connector is one static binary that reads one TOML file. The published Docker image is how it is meant to be deployed.</p>
+<p>The connector is one static binary that reads one TOML file. Three ways to get it running: <code>init</code> writes a devnet node for you, Docker runs the one you write, and source is for changing the connector rather than running it.</p>
+
+<h2>The fastest start: init</h2>
+
+<p>One command writes a runnable devnet node into a directory: a config with one priced route, the Base Sepolia settlement block, an operator surface so you can see what you were paid, fresh keys owned by you, and a <code>compose.yml</code> that runs the connector and a payment-oblivious echo app as your own uid. It touches no chain and overwrites nothing.</p>
+
+<div class="codeblock"><div class="bar"><span>The shell</span><span>devnet, free</span></div>
+<pre>IMG=ghcr.io/toon-protocol/connector:rust-main   <span class="c"># or a dated release handle that carries init</span>
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/w" -w /w "$IMG" init --devnet --dir node --image "$IMG"
+cd node &amp;&amp; docker compose up -d
+curl -s http://127.0.0.1:3000/ilp | jq .routes</pre></div>
+
+<p><code>init</code> prints what it wrote, the node's settlement address, and the three <code>toon-client</code> commands that pay it. Only <code>--devnet</code> exists: a mainnet node settles real money in a token you choose, and every value in that block is yours to read off the chain (<a href="get-paid.html">Get paid</a>). Flags: <code>--dir</code> (default <code>.</code>), <code>--address</code> (default <code>g.devnet.&lt;six hex digits&gt;</code>, also the route's prefix), <code>--image</code> (what the compose file runs; pin a release handle for a node you keep). A directory that already holds a config is refused by name, because rotating the signer key would change the node's identity under every peer.</p>
+
+<p>The rest of this page explains each file <code>init</code> wrote, so you can change it.</p>
 
 <ol class="steps">
   <li><b>01</b><strong>Pull it</strong>Pin a release handle and generate the node's identity key.</li>

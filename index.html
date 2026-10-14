@@ -292,13 +292,13 @@ footer { border-top:1px solid var(--line); padding:3rem 0 2.5rem; font-size:0.9r
 <section class="hero">
   <div class="wrap">
     <div>
-      <p class="eyebrow">Pay-per-request for agents, APIs and apps</p>
-      <h1>Value, <span>routed.</span></h1>
-      <p class="lede">Put a price on any HTTP endpoint. Get paid per request, settled onchain, <strong>without changing your app</strong>. The caller pays with a signed voucher, an IOU against a deposit it locked on chain once. Your app sees a plain HTTP request.</p>
+      <p class="eyebrow">TOON Protocol · Value, routed</p>
+      <h1>Put a price on <span>any HTTP app.</span></h1>
+      <p class="lede">Get paid per request, in USDC, with no protocol fee and <strong>no change to your app</strong>. One command gives you a running node. One more pays it.</p>
       <div class="cta">
-        <a class="button primary" href="#run">Run a node in three steps
+        <a class="button primary" href="#run">Run a node in one command
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-        <a class="button ghost" href="docs/index.html">Read the docs</a>
+        <a class="button ghost" href="docs/pay-a-node.html">Pay a node</a>
       </div>
       <div class="trust">
         <span>MIT licensed</span>
@@ -395,7 +395,7 @@ footer { border-top:1px solid var(--line); padding:3rem 0 2.5rem; font-size:0.9r
     <div class="section-head">
       <p class="eyebrow">How it works</p>
       <h2>A paid reverse proxy. It terminates payment the way nginx terminates TLS.</h2>
-      <p>A TOON node sits in front of your HTTP app. You set a price per route. Every request that reaches your app has already been paid for.</p>
+      <p>Your app behind it, a price per route. Every request that reaches your app has already been paid for.</p>
     </div>
 
     <div class="twocol wide-left">
@@ -443,33 +443,51 @@ footer { border-top:1px solid var(--line); padding:3rem 0 2.5rem; font-size:0.9r
   <div class="wrap">
     <div class="section-head">
       <p class="eyebrow">For operators</p>
-      <h2>Run a node in three steps</h2>
-      <p>One binary, one config file, one command. There is no account to open, nobody to ask, and nothing to add to your app.</p>
+      <h2>One command. A node that gets paid.</h2>
+      <p><code>init</code> writes a devnet node into a directory: one priced route, the settlement block, your keys, an operator surface, and a compose file with an echo app behind the route. Nothing touches a chain until someone pays you.</p>
     </div>
-
-    <ol class="steps">
-      <li><h3>Pull it</h3><p>The connector ships as one Docker image. Pull it and generate the node's key with one line of <code>openssl</code>.</p></li>
-      <li><h3>Price a route</h3><p>Four lines of TOML point a price at your app. A settlement block names the token you want to be paid in; the guide has the addresses to copy.</p></li>
-      <li><h3>Start it</h3><p><code>docker compose up -d</code>. Your node answers <code>GET /ilp</code> with its price list and starts collecting.</p></li>
-    </ol>
 
     <div class="twocol">
-      <div class="codeblock">
-        <div class="bar"><span>The shell</span><span>connector 2026.09.29.1</span></div>
-<pre>docker pull ghcr.io/toon-protocol/connector:rust-2026.09.29.1
-openssl rand -hex 32 &gt; data/signer.key
-docker compose up -d</pre>
+      <div class="stack">
+        <div class="codeblock">
+          <div class="bar"><span>The shell</span><span>devnet, free</span></div>
+<pre>IMG=ghcr.io/toon-protocol/connector:rust-main
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/w" -w /w "$IMG" \
+  init --devnet --dir node --image "$IMG"
+cd node &amp;&amp; docker compose up -d</pre>
+        </div>
+        <div class="codeblock">
+          <div class="bar"><span>What init printed</span></div>
+<pre>Wrote a devnet node to node:
+
+  config/connector.toml   one route, g.devnet.ba2249, at 1000 units (0.001 devnet USDC)
+  data/                   signer, settlement and operator keys, 0600, owned by you
+  state/                  the claim journal; keep it, it is the watermark
+  compose.yml             the connector and the stub app, as your own uid
+
+Settlement address: <span class="g">0x6690d6c168006f0b3e8fd8968099653379db0d0b</span></pre>
+        </div>
       </div>
-      <div class="codeblock">
-        <div class="bar"><span>connector.toml</span><span>one route</span></div>
-<pre>[[routes]]
-prefix      = <span class="s">"g.example.app"</span>
-handler_url = <span class="s">"http://app:3100/"</span>
-price       = <span class="g">1000</span>      <span class="c"># 0.001 USDC per request</span></pre>
+      <div class="stack">
+        <div class="codeblock">
+          <div class="bar"><span>Then pay it</span><span class="tag">from any machine</span></div>
+<pre>npx toon-client faucet
+npx toon-client channel open --connector http://127.0.0.1:3000 --deposit 100000
+npx toon-client send --connector http://127.0.0.1:3000 --body 'hello' --json</pre>
+        </div>
+        <div class="codeblock">
+          <div class="bar"><span>The receipt</span><span class="tag">2026-10-14, as returned</span></div>
+<pre>{ "fulfilled": <span class="ok">true</span>, "status": <span class="ok">200</span>,
+  "text": <span class="s">"delivered by stub app: hello"</span>,
+  "claim": { "chain": "evm", "amount": <span class="g">"1000"</span>, "cumulative": "1000" } }
+
+<span class="c"># and on the node, at info:</span>
+admitted a batch-settlement channel on its first voucher  cumulative=1000</pre>
+        </div>
       </div>
     </div>
 
-    <p class="prose" style="margin-top:1.5rem">Before it faces the world, put a TLS proxy in front of it: a TOON node refuses plaintext peers. The <a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/run-a-node.md">operator guide</a> covers that, the settlement block, and <a href="https://github.com/toon-protocol/connector/blob/main/docs/guide/peering.md">peering</a> with a second node.</p>
+    <p class="prose" style="margin-top:1.5rem">The channel opened with no ETH, through the devnet facilitator. The request cost a signature. The node keeps the whole 0.001 USDC, and <code>GET /claims</code> shows it. Prefer to write every file yourself? <a href="docs/run-a-node.html">Run a node</a> explains each one <code>init</code> wrote, and <a href="docs/hidden-services.html">Hidden services</a> puts the node at a <code>.anyone</code> address with no domain and no open port.</p>
 
     <div class="cta">
       <a class="button primary" href="docs/run-a-node.html">Read the operator guide</a>
@@ -1026,7 +1044,7 @@ price       = <span class="g">1000</span>      <span class="c"># 0.001 USDC per 
 <div class="cta-band">
   <div class="wrap">
     <h2>Put a price on it.</h2>
-    <p>One Docker image, four lines of TOML, and your app is paid per request. The guide takes about ten minutes.</p>
+    <p>One command writes a devnet node that gets paid. Four lines of TOML put your own app behind it.</p>
     <div class="cta">
       <a class="button primary" href="docs/run-a-node.html">Run a node</a>
       <a class="button ghost" href="docs/pay-a-node.html">Pay a node</a>
