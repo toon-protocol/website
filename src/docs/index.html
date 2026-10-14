@@ -1,45 +1,138 @@
-<p><strong>Put a price on any HTTP app and get paid per request, in USDC, with no protocol fee and no change to your app.</strong> A TOON node is a paid reverse proxy: it sits in front of your app, refuses an unpaid request with the price, and hands your app a plain HTTP request once it has been paid for. <code>toon</code> installs in one line and runs the node for you.</p>
+<p>A TOON node is a paid reverse proxy. It sits in front of your app, refuses an unpaid request with the price, and hands your app a plain HTTP request once it has been paid for. <code>toon</code> runs the node for you. Seven steps, each one something you can type and check, take you from nothing to an app of your own that gets paid.</p>
 
-<h2>Three steps</h2>
+<h2>One step at a time</h2>
 
-<p><strong>1. Install.</strong> Linux, x86_64 or aarch64, glibc 2.35 or later; <code>docker</code> and <code>systemd --user</code> on the machine. No Rust toolchain from a release.</p>
-<div class="codeblock"><div class="bar"><span>The shell</span></div>
-<pre>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</pre></div>
+<ol class="path">
+  <li>
+    <span class="n">01</span>
+    <div>
+      <h3>Install <code>toon</code></h3>
+      <p>One line puts the release binary in <code>~/.local/bin</code>. Linux, x86_64 or aarch64, with <code>docker</code> and <code>systemd --user</code> on the machine. No Rust toolchain, no account.</p>
+      <div class="ev">
+        <div class="hd"><span>The shell</span></div>
+        <span class="l">curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</span>
+        <span class="l">toon --version</span>
+        <span class="o">toon 0.2.0 (connector 7d0582e2…, relay ghcr.io/toon-protocol/relay:rust-sha-1b02f2e@sha256:3eea…)</span>
+      </div>
+      <p class="see"><b>You should see</b> the release, the connector revision it embeds, and the relay image it runs. <a href="install.html">Install, in full →</a></p>
+    </div>
+  </li>
+  <li>
+    <span class="n">02</span>
+    <div>
+      <h3>Give it a passphrase</h3>
+      <p>The passphrase seals the keystore. It is never a flag and never prompted for; <code>toon</code> reads it from the file this variable names. Put the <code>export</code> in your shell profile.</p>
+      <div class="ev">
+        <div class="hd"><span>Once</span></div>
+        <span class="l">mkdir -p ~/.config/toon</span>
+        <span class="l">printf '%s\n' 'a long passphrase you keep somewhere safe' &gt; ~/.config/toon/passphrase</span>
+        <span class="l">chmod 600 ~/.config/toon/passphrase</span>
+        <span class="l">export TOON_PASSPHRASE_FILE=~/.config/toon/passphrase</span>
+      </div>
+    </div>
+  </li>
+  <li>
+    <span class="n">03</span>
+    <div>
+      <h3>Create the node</h3>
+      <p>This makes the wallet and the first TOON app, a relay reachable as a hidden service. The flag says you accept the Anyone Protocol's terms, which a hidden service needs.</p>
+      <div class="ev">
+        <div class="hd"><span>Devnet</span><i>free</i></div>
+        <span class="l">toon init --accept-anyone-terms</span>
+      </div>
+      <p class="see"><b>You should see</b> the mnemonic, printed once. Write it down now; no command shows it again. <a href="first-agent-node.html">Your first agent node →</a></p>
+    </div>
+  </li>
+  <li>
+    <span class="n">04</span>
+    <div>
+      <h3>Fund it</h3>
+      <p>The devnet faucet sends the token the node is paid in. That is enough to start it.</p>
+      <div class="ev">
+        <div class="hd"><span>Devnet</span><i>free</i></div>
+        <span class="l">toon wallet fund</span>
+        <span class="l">toon wallet balances</span>
+      </div>
+      <p class="see"><b>You should see</b> a balance in devnet USDC. <a href="money.html">Money: what each command moves →</a></p>
+    </div>
+  </li>
+  <li>
+    <span class="n">05</span>
+    <div>
+      <h3>Start it</h3>
+      <p><code>up</code> writes a <code>systemd --user</code> unit, so the node outlives this terminal. <code>status</code> says what is running and at which address.</p>
+      <div class="ev">
+        <div class="hd"><span>The shell</span></div>
+        <span class="l">toon up</span>
+        <span class="l">toon status</span>
+        <span class="o">Supervisor: running.</span>
+        <span class="o">TOON app relay (ILP address g.toon.fb0e007c71750599): connector running on 127.0.0.1:25599.</span>
+      </div>
+      <p class="see"><b>You should see</b> the supervisor running and the relay's address. <a href="operations.html">Operations: up, down, status and logs →</a></p>
+    </div>
+  </li>
+  <li>
+    <span class="n">06</span>
+    <div>
+      <h3>Post to your own relay</h3>
+      <p>Publishing to your relay signs the event with your agent identity and costs nothing. Every command takes <code>--json</code>, so the answer is a document you can read with <code>jq</code>.</p>
+      <div class="ev">
+        <div class="hd"><span>The shell</span></div>
+        <span class="l">toon event publish --kind 1 --content "hello from my agent node" --json &gt; event.json</span>
+        <span class="l">jq -r .outcome event.json</span>
+        <span class="o">published</span>
+      </div>
+      <p class="see"><b>You should see</b> <code>published</code>. Reading it back from the relay's read address is the last step of <a href="first-agent-node.html">your first agent node →</a></p>
+    </div>
+  </li>
+  <li>
+    <span class="n">07</span>
+    <div>
+      <h3>Put your app behind it</h3>
+      <p>Any HTTP service in a container image, at the price you choose, in units of the token you settle in. From then on every request that reaches it has already been paid for, and the app itself knows nothing about payment.</p>
+      <div class="ev">
+        <div class="hd"><span>Your app, priced</span><i>--yes, because it pays</i></div>
+        <span class="l">toon add echo --to relay --image echo-app --price 2 --yes</span>
+        <span class="l">toon route list</span>
+      </div>
+      <p class="see"><b>You should see</b> your app's route and its price in the list. <a href="adding-an-app.html">Adding an app →</a></p>
+    </div>
+  </li>
+</ol>
 
-<p><strong>2. Create and fund your agent node</strong> on the devnet, the test network. <code>init</code> needs a passphrase file first; <a href="first-agent-node.html">Your first agent node</a> shows that.</p>
-<div class="codeblock"><div class="bar"><span>Devnet, free</span></div>
-<pre>toon init --accept-anyone-terms     <span class="c"># a wallet, and a relay reachable as a hidden service</span>
-toon wallet fund                    <span class="c"># test tokens from the faucet</span></pre></div>
+<h2>The other side: pay a node</h2>
 
-<p><strong>3. Start it and see it answer.</strong></p>
-<div class="codeblock"><div class="bar"><span>The shell</span></div>
-<pre>toon up                             <span class="c"># a systemd --user unit, so it outlives this terminal</span>
-toon status                         <span class="c"># what is running, and at which address</span></pre></div>
+<p>A caller needs no account and no API key: a wallet, one channel, and a signed voucher on every request. Four commands against the devnet store, from nothing to a paid request with a receipt.</p>
+
+<div class="ev">
+  <div class="hd"><span>The shell</span><i>Node 22 or later, nothing else</i></div>
+  <span class="l">npx toon-client init</span>
+  <span class="l">npx toon-client faucet</span>
+  <span class="l">npx toon-client channel open --deposit 100000</span>
+  <span class="l">npx toon-client send --body 'hello' --json</span>
+</div>
+<p class="see"><b>You should see</b> the store's answer and the claim that paid for it. <a href="pay-a-node.html">Pay a node, each command explained →</a></p>
 
 <h2>What holds</h2>
 
-<ul>
-  <li><strong>You set the price and keep it.</strong> A whole number of the token's smallest unit per route; <code>1000</code> is 0.001 USDC. There is no protocol fee.</li>
-  <li><strong>A request costs a signature, not a transaction.</strong> The caller deposits once into an x402 channel on Base or Solana; one onchain transaction every ten minutes lands everything since the last.</li>
-  <li><strong>Your app never sees a payment.</strong> It gets a plain HTTP request and three optional headers saying who paid, how much, on what chain.</li>
-  <li><strong>One binary, MIT.</strong> <code>toon</code> runs the node as a hidden service with no domain and no open port; every command that pays states its amount and needs <code>--yes</code>.</li>
-</ul>
-
-<p>Below: the paths, the wire, and where everything lives.</p>
+<dl class="specs">
+  <div><dt>Your price</dt><dd>A whole number of the token's smallest unit per route; <code>1000</code> is 0.001 USDC. You keep all of it: there is no protocol fee.</dd></div>
+  <div><dt>No gas per request</dt><dd>A request costs a signature. The caller deposits once into an x402 channel on Base or Solana; one transaction every ten minutes lands everything since the last.</dd></div>
+  <div><dt>Your app, unchanged</dt><dd>It gets a plain HTTP request and three optional headers saying who paid, how much, on what chain. It never sees a payment.</dd></div>
+  <div><dt>Money moves on purpose</dt><dd>Every command that pays states its amount and needs <code>--yes</code>. An agent gets a scoped key with a limit, never the wallet.</dd></div>
+  <div><dt>Hidden by default</dt><dd>A new node is reached at a <code>.anyone</code> address: no domain, no certificate, no open port.</dd></div>
+  <div><dt>One binary, MIT</dt><dd>Linux, x86_64 or aarch64. <code>toon</code> runs the node as a hidden service; the <a href="run-a-node.html">connector by hand</a> is the same thing file by file.</dd></div>
+</dl>
 
 <h2>Pick your path</h2>
 <ul class="paths">
   <li>
     <a class="title" href="adding-an-app.html">I have an app to charge for</a>
-    Three commands give you a node; one <code>toon add</code> puts your app behind it with a price. Prefer to write every file yourself? <a href="run-a-node.html">The connector, by hand</a>.
+    One <code>toon add</code> puts it behind your node with a price. Prefer to write every file yourself? <a href="run-a-node.html">The connector, by hand</a>.
   </li>
   <li>
     <a class="title" href="pay-a-node.html">I want to pay for requests</a>
-    Install the client, make a wallet, open one channel, and buy a request. The first one is on devnet and costs nothing.
-  </li>
-  <li>
-    <a class="title" href="networks-and-reachability.html">I want no domain, no certificate, no open port</a>
-    A new agent node is a hidden service at a <code>.anyone</code> address by default. <a href="hidden-services.html">Hidden services</a> is the same thing done by hand.
+    Install the client, make a wallet, open one channel, and buy a request. The first one is on the devnet and costs nothing.
   </li>
   <li>
     <a class="title" href="spaceturtle.html">I want an agent to run it</a>
@@ -49,38 +142,22 @@ toon status                         <span class="c"># what is running, and at wh
     <a class="title" href="peering.html">I run a node and want traffic</a>
     Join a network, peer with another operator, set routes and prices, and carry packets one hop further for a fee.
   </li>
+  <li>
+    <a class="title" href="concepts.html">I want the words defined</a>
+    Node, connector, app, relay, route, channel, voucher, claim: one meaning each, and the wire underneath.
+  </li>
 </ul>
-
-<h2>What a paid request looks like</h2>
-
-<p>An unpaid request is refused with the price, as an x402 v2 document a stock client can read.</p>
-
-<div class="codeblock"><div class="bar"><span>On the wire</span><span>x402 v2</span></div>
-<pre><span class="c"># an unpaid request to a priced route</span>
-<span class="k">POST</span> /ilp                  <span class="c">no voucher attached</span>
-<span class="g">402 Payment Required</span>
-{ "x402Version": 2,
-  "accepts": [{ "scheme":  <span class="s">"batch-settlement"</span>,
-               "network": <span class="s">"eip155:8453"</span>,
-               "amount":  <span class="s">"1000"</span>,
-               "payTo":   <span class="s">"0x…"</span> }] }
-
-<span class="c"># the same request, with a signed voucher</span>
-<span class="k">POST</span> /ilp                  <span class="c">voucher: 1,000 units</span>
-<span class="ok">200</span>                        <span class="c">your app's answer, sealed</span></pre></div>
-
-<p>The caller then attaches a signed voucher to every request: a running total the node accepts only if it rises by the price. Underneath, the node is an <a href="https://interledger.org">Interledger</a> connector, which is why its one endpoint is <code>/ilp</code>; <a href="concepts.html">Concepts</a> defines every word used here.</p>
 
 <h2>Where things live</h2>
 
 <div class="tablewrap"><table>
 <thead><tr><th>Repository</th><th>What it is</th></tr></thead>
 <tbody>
-<tr><td><a href="https://github.com/toon-protocol/connector">connector</a></td><td>The node: one Rust binary, one TOML file. Its <code>docs/</code> hold the specs, the ADRs and the wire vectors that every other repository replays.</td></tr>
-<tr><td><a href="https://github.com/toon-protocol/toon-client">toon-client</a></td><td><code>@toon-protocol/client</code>, the payer, as a library and as the <code>toon-client</code> CLI.</td></tr>
 <tr><td><a href="https://github.com/toon-protocol/toon_cli">toon_cli</a></td><td><code>toon</code>, the program that runs and manages an <strong>agent node</strong>: wallet, apps, peers, routes, prices, channels and the relay.</td></tr>
+<tr><td><a href="https://github.com/toon-protocol/connector">connector</a></td><td>The node inside: one Rust binary, one TOML file. Its <code>docs/</code> hold the specs, the ADRs and the wire vectors every other repository replays.</td></tr>
+<tr><td><a href="https://github.com/toon-protocol/toon-client">toon-client</a></td><td><code>@toon-protocol/client</code>, the payer, as a library and as the <code>toon-client</code> CLI.</td></tr>
 <tr><td><a href="https://github.com/toon-protocol/spaceturtle">spaceturtle</a></td><td>The agent and the harness that run an agent node from your own machine.</td></tr>
-<tr><td><a href="https://github.com/toon-protocol/relay">relay</a>, <a href="https://github.com/toon-protocol/store">store</a>, <a href="https://github.com/toon-protocol/gas-station">gas-station</a>, <a href="https://github.com/toon-protocol/anytoon">anytoon</a></td><td>Apps that run behind a node today, each a worked example of the app side. The <a href="../ecosystem/index.html">ecosystem page</a> lists them all.</td></tr>
+<tr><td><a href="../apps/index.html">the apps</a></td><td>relay, store, gas-station, anytoon and more, each a worked example of the app side.</td></tr>
 </tbody></table></div>
 
 <p>These pages are written from those repositories' own guides. Where a page here and the repository disagree, the repository is right, and each page says which file it was written from.</p>
