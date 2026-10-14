@@ -1,5 +1,7 @@
 <p>A price makes a route cost something. A <strong>settlement backend</strong> is what lets anyone actually pay it. There are two chains, and a node may carry either table or both; with both, it accepts vouchers on both at once. Every channel is an x402 <code>batch-settlement</code> channel: on EVM that is x402's audited <code>x402BatchSettlement</code> contract, and on Solana the Solana Foundation's <code>payment-channels</code> program. Both are <strong>constants of the binary</strong>, the same address on every network, so there is nothing chain-specific to name beyond your own RPC, token and key.</p>
 
+<p><strong>The short version:</strong> add the eight-line <a href="#the-settlement-block">settlement block</a> below to <code>connector.toml</code>, give its key a little gas, and restart. <code>connector init --devnet</code> writes it for you. The rest of this page is what each line commits you to.</p>
+
 <h2>The shape</h2>
 
 <div class="tablewrap"><table>

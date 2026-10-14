@@ -1,5 +1,8 @@
 <p>A <strong>payment channel</strong> is an x402 <code>batch-settlement</code> channel: a deposit this client locks on chain, payable to one connector, that lets it pay that connector many times while touching the chain only to open, top up and leave. It is the only way the client pays.</p>
 
+<pre>npx toon-client channel open --deposit 100000   <span class="c"># once, no gas: 0.10 USDC into a channel</span>
+npx toon-client channel status                   <span class="c"># deposit, signed so far, available</span></pre>
+
 <ul>
   <li><strong>Base:</strong> x402's own <code>x402BatchSettlement</code> contract.</li>
   <li><strong>Solana:</strong> the Solana Foundation's <code>payment-channels</code> program.</li>

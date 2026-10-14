@@ -1,5 +1,13 @@
 <p>A route with a <code>handler_url</code> <strong>terminates</strong> there. The connector opens the sealed payload, makes exactly that HTTP request of your app, and seals the app's complete response back. Your app does not change, imports nothing, and never sees a payment.</p>
 
+<div class="codeblock"><div class="bar"><span>connector.toml</span><span>the whole of it</span></div>
+<pre>[[routes]]
+prefix      = <span class="s">"g.your.node.quotes"</span>
+handler_url = <span class="s">"http://quotes:8080/"</span>   <span class="c"># your app, on the compose network</span>
+price       = <span class="g">1000</span>                     <span class="c"># 0.001 USDC per request</span></pre></div>
+
+<p>That is everything your app needs from you. The rest of this page is what it will see.</p>
+
 <h2>What your app is handed</h2>
 
 <p>An ordinary HTTP request. Your app holds no key on the node's behalf and supplies nothing toward the packet's fulfilment; the connector derives that itself. So "the app answered" and "the packet was paid for" stay separable, and an app that knows nothing about payment cannot leak, forge or withhold one.</p>

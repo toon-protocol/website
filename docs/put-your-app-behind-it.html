@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Put your app behind it · TOON Protocol docs</title>
-<meta name="description" content="What a route terminates to, and what your app sees.">
+<meta name="description" content="Your own app behind a priced route, told who paid in three headers.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' rx='40' fill='%230b0d12'/%3E%3Cg fill='none' stroke='%23e6e9ef' stroke-width='14'%3E%3Cpath d='M40 40h140M40 80h100M40 120h60v60M70 180v-100h70M140 110v70'/%3E%3C/g%3E%3Crect x='150' y='150' width='30' height='30' fill='%237dd3fc'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="../assets/site.css">
 </head>
@@ -101,8 +101,16 @@
   <main class="doc">
     <p class="eyebrow">Operators</p>
     <h1>Put your app behind it</h1>
-    <p class="lede">What a route terminates to, and what your app sees.</p>
+    <p class="lede">Your own app behind a priced route, told who paid in three headers.</p>
 <p>A route with a <code>handler_url</code> <strong>terminates</strong> there. The connector opens the sealed payload, makes exactly that HTTP request of your app, and seals the app's complete response back. Your app does not change, imports nothing, and never sees a payment.</p>
+
+<div class="codeblock"><div class="bar"><span>connector.toml</span><span>the whole of it</span></div>
+<pre>[[routes]]
+prefix      = <span class="s">"g.your.node.quotes"</span>
+handler_url = <span class="s">"http://quotes:8080/"</span>   <span class="c"># your app, on the compose network</span>
+price       = <span class="g">1000</span>                     <span class="c"># 0.001 USDC per request</span></pre></div>
+
+<p>That is everything your app needs from you. The rest of this page is what it will see.</p>
 
 <h2 id="what-your-app-is-handed"><a class="anchor" href="#what-your-app-is-handed">What your app is handed</a></h2>
 

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pay a node · TOON Protocol docs</title>
-<meta name="description" content="From nothing to a paid request, with the CLI and the library.">
+<meta name="description" content="A wallet, one channel and one paid request on the devnet, in six commands.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' rx='40' fill='%230b0d12'/%3E%3Cg fill='none' stroke='%23e6e9ef' stroke-width='14'%3E%3Cpath d='M40 40h140M40 80h100M40 120h60v60M70 180v-100h70M140 110v70'/%3E%3C/g%3E%3Crect x='150' y='150' width='30' height='30' fill='%237dd3fc'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="../assets/site.css">
 </head>
@@ -101,10 +101,18 @@
   <main class="doc">
     <p class="eyebrow">Callers</p>
     <h1>Pay a node</h1>
-    <p class="lede">From nothing to a paid request, with the CLI and the library.</p>
-<p>From nothing to a paid request against the public devnet, and back again after a restart. Every step is given twice: once as the <code>toon-client</code> CLI, once as the library. You need Node.js 22 or newer. Nothing else: no local chain, no node of your own.</p>
+    <p class="lede">A wallet, one channel and one paid request on the devnet, in six commands.</p>
+<p>From nothing to a paid request against the public devnet. Node.js 22 or newer, nothing else: no chain, no node of your own. Each step is shown as the <code>toon-client</code> CLI and as the library.</p>
 
-<p>You will make a wallet, fill it with devnet USDC, deposit some of it into an x402 payment channel on chain, and then buy one HTTP request from an app behind a connector. The channel is the slow, onchain part and you do it once, with no native gas. Requests after that are signatures, not transactions.</p>
+<div class="codeblock"><div class="bar"><span>The six commands</span><span>devnet, free</span></div>
+<pre>npm install @toon-protocol/client
+npx toon-client init                                 <span class="c"># a wallet, in an encrypted keystore</span>
+npx toon-client faucet                               <span class="c"># 1,000 devnet USDC</span>
+npx toon-client channel open --deposit 100000        <span class="c"># 0.10 USDC into a channel, no ETH</span>
+npx toon-client send --body 'hello' --json           <span class="c"># one paid request, with a receipt</span>
+npx toon-client claim-state                          <span class="c"># what the node says you have paid</span></pre></div>
+
+<p>Each step below says what one of those does and shows the same thing from the library.</p>
 
 <p>The node used throughout is the devnet store, <code>https://proxy.ario.devnet.toonprotocol.dev</code>, which serves the route <code>g.toon.store</code> at 1000 base units (0.001 USDC) plus 10 per kibibyte. The <a href="devnet.html">devnet reference</a> has the full table.</p>
 

@@ -1,5 +1,8 @@
 <p>How you inspect a running node and how you move its money. It mounts <strong>only</strong> when <code>[operator]</code> is configured, and merges onto <code>client_edge_addr</code>: there is no second port and no second listener.</p>
 
+<p><strong>The one read you will do most:</strong> what you were paid.</p>
+<pre>curl -s -H "Authorization: Bearer $(cat data/operator-bearer-token)" http://127.0.0.1:3000/claims | jq</pre>
+
 <div class="codeblock"><div class="bar"><span>connector.toml</span></div>
 <pre>[operator]
 bearer_token_file = <span class="s">"/app/data/operator-bearer-token"</span>

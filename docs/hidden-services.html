@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hidden services · TOON Protocol docs</title>
-<meta name="description" content="Running a node at a .anyone address, and paying one.">
+<meta name="description" content="Your node at a .anyone address with no domain and no open port, and a client that reaches it.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' rx='40' fill='%230b0d12'/%3E%3Cg fill='none' stroke='%23e6e9ef' stroke-width='14'%3E%3Cpath d='M40 40h140M40 80h100M40 120h60v60M70 180v-100h70M140 110v70'/%3E%3C/g%3E%3Crect x='150' y='150' width='30' height='30' fill='%237dd3fc'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="../assets/site.css">
 </head>
@@ -101,7 +101,7 @@
   <main class="doc">
     <p class="eyebrow">Operators</p>
     <h1>Hidden services</h1>
-    <p class="lede">Running a node at a .anyone address, and paying one.</p>
+    <p class="lede">Your node at a .anyone address with no domain and no open port, and a client that reaches it.</p>
 <p>A connector is ordinarily a clearnet host with a domain and a TLS certificate. It can also be a <strong>hidden service</strong>: a node reachable only inside the <a href="https://anyone.io">Anyone Protocol</a> overlay, at a <code>.anyone</code> address that public DNS cannot resolve and no certificate authority can certify. Anyone is a Tor-derived network; its daemon is called <code>anon</code>, and its addresses end in <code>.anyone</code> rather than <code>.onion</code>. A node at such an address needs no domain, no public IP and no port opened on your router, which is how a node can run from a laptop behind a home router.</p>
 
 <p>This page has both halves: <a href="#running-one">running a node as a hidden service</a>, and <a href="#paying-one">paying a node that is one</a>. Every <a href="spaceturtle.html">spaceturtle</a> node is a hidden service, and spaceturtle does the operator half for you; this page is for doing it by hand.</p>

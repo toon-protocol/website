@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Get paid · TOON Protocol docs</title>
-<meta name="description" content="The settlement block, the chains, the tokens, and who pays gas.">
+<meta name="description" content="A node anyone on Base or Solana can open a channel to and pay, with no gas.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' rx='40' fill='%230b0d12'/%3E%3Cg fill='none' stroke='%23e6e9ef' stroke-width='14'%3E%3Cpath d='M40 40h140M40 80h100M40 120h60v60M70 180v-100h70M140 110v70'/%3E%3C/g%3E%3Crect x='150' y='150' width='30' height='30' fill='%237dd3fc'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="../assets/site.css">
 </head>
@@ -101,8 +101,10 @@
   <main class="doc">
     <p class="eyebrow">Operators</p>
     <h1>Get paid</h1>
-    <p class="lede">The settlement block, the chains, the tokens, and who pays gas.</p>
+    <p class="lede">A node anyone on Base or Solana can open a channel to and pay, with no gas.</p>
 <p>A price makes a route cost something. A <strong>settlement backend</strong> is what lets anyone actually pay it. There are two chains, and a node may carry either table or both; with both, it accepts vouchers on both at once. Every channel is an x402 <code>batch-settlement</code> channel: on EVM that is x402's audited <code>x402BatchSettlement</code> contract, and on Solana the Solana Foundation's <code>payment-channels</code> program. Both are <strong>constants of the binary</strong>, the same address on every network, so there is nothing chain-specific to name beyond your own RPC, token and key.</p>
+
+<p><strong>The short version:</strong> add the eight-line <a href="#the-settlement-block">settlement block</a> below to <code>connector.toml</code>, give its key a little gas, and restart. <code>connector init --devnet</code> writes it for you. The rest of this page is what each line commits you to.</p>
 
 <h2 id="the-shape"><a class="anchor" href="#the-shape">The shape</a></h2>
 

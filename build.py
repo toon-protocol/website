@@ -21,29 +21,29 @@ SRC = ROOT / "src"
 # (section title, [(slug, nav title, one-line summary)])
 NAV = [
     ("Start here", [
-        ("index", "Overview", "What a TOON node is, the two roles, and which path to take."),
-        ("concepts", "Concepts", "The words the rest of the docs use, each defined once."),
+        ("index", "Overview", "What you get, what to run, and what holds. Then pick a path."),
+        ("concepts", "Concepts", "After this page the rest of the docs read without a glossary."),
     ]),
     ("Operators", [
-        ("run-a-node", "Run a node", "One image, one TOML file, one command."),
-        ("put-your-app-behind-it", "Put your app behind it", "What a route terminates to, and what your app sees."),
-        ("get-paid", "Get paid", "The settlement block, the chains, the tokens, and who pays gas."),
-        ("peering", "Peer with another node", "Carry someone else's packets one hop further for a fee."),
-        ("operator-surface", "The operator surface", "Reads, signed writes, the dashboard, and operating it."),
-        ("hidden-services", "Hidden services", "Running a node at a .anyone address, and paying one."),
+        ("run-a-node", "Run a node", "A node running on your machine and answering GET /ilp, in one command or by hand."),
+        ("put-your-app-behind-it", "Put your app behind it", "Your own app behind a priced route, told who paid in three headers."),
+        ("get-paid", "Get paid", "A node anyone on Base or Solana can open a channel to and pay, with no gas."),
+        ("peering", "Peer with another node", "Your node carrying another node's packets for a fee, set up from one URL."),
+        ("operator-surface", "The operator surface", "A token that reads what you were paid, and a key that moves it."),
+        ("hidden-services", "Hidden services", "Your node at a .anyone address with no domain and no open port, and a client that reaches it."),
     ]),
     ("Callers", [
-        ("pay-a-node", "Pay a node", "From nothing to a paid request, with the CLI and the library."),
-        ("channels", "Payment channels", "Opening without gas, who pays what, the watermark, leaving."),
-        ("cli", "CLI reference", "Every setting, where it comes from, and the commands."),
-        ("errors", "Errors and reject codes", "Who refused, what each code means, and what to do."),
+        ("pay-a-node", "Pay a node", "A wallet, one channel and one paid request on the devnet, in six commands."),
+        ("channels", "Payment channels", "A channel you open without gas, pay from with signatures, and leave with your deposit."),
+        ("cli", "CLI reference", "Every toon-client setting and command, and where each value comes from."),
+        ("errors", "Errors and reject codes", "What each refusal means, and the one thing to do about it."),
     ]),
     ("Agents", [
-        ("spaceturtle", "spaceturtle", "An agent that runs a node from your own machine."),
+        ("spaceturtle", "spaceturtle", "An agent running a node from your machine, with the money kept away from it."),
     ]),
     ("Reference", [
-        ("devnet", "Devnet reference", "Nodes, routes, prices, contracts and the faucet."),
-        ("protocol", "Protocol and specs", "The wire, the greeting, the specs, the ADRs and the vectors."),
+        ("devnet", "Devnet reference", "Every devnet address, route and price, and the faucet that funds you."),
+        ("protocol", "Protocol and specs", "The packet, the greeting and the self-description, and where the specs live."),
     ]),
 ]
 

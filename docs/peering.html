@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Peer with another node · TOON Protocol docs</title>
-<meta name="description" content="Carry someone else&#x27;s packets one hop further for a fee.">
+<meta name="description" content="Your node carrying another node&#x27;s packets for a fee, set up from one URL.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' rx='40' fill='%230b0d12'/%3E%3Cg fill='none' stroke='%23e6e9ef' stroke-width='14'%3E%3Cpath d='M40 40h140M40 80h100M40 120h60v60M70 180v-100h70M140 110v70'/%3E%3C/g%3E%3Crect x='150' y='150' width='30' height='30' fill='%237dd3fc'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="../assets/site.css">
 </head>
@@ -101,8 +101,14 @@
   <main class="doc">
     <p class="eyebrow">Operators</p>
     <h1>Peer with another node</h1>
-    <p class="lede">Carry someone else&#x27;s packets one hop further for a fee.</p>
+    <p class="lede">Your node carrying another node&#x27;s packets for a fee, set up from one URL.</p>
 <p>Terminating your own routes earns from callers who know your address. Peering puts you on paths that start somewhere else: you carry someone's packet one hop further, and keep a fee for doing it.</p>
+
+<p><strong>The whole of it</strong> is one free read and three signed writes against your own node:</p>
+<pre>curl -s https://their-node.example/ilp | jq          <span class="c"># 1. read their terms, free</span>
+sign-write.sh -X POST -p /peers ...                  <span class="c"># 2. open your channel toward them</span>
+sign-write.sh -X POST -p /channels/&lt;id&gt;/fund ...     <span class="c"># 3. keep collateral behind your vouchers</span>
+sign-write.sh -X POST -p /routes/peers ...           <span class="c"># 4. route through it, at your price</span></pre>
 
 <p>A peering is created by an <strong>operator</strong> and by nothing else. It cannot be bought, learned or announced into existence. What you give it is one thing: <strong>the counterparty's self-description URL</strong>.</p>
 

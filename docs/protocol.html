@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Protocol and specs · TOON Protocol docs</title>
-<meta name="description" content="The wire, the greeting, the specs, the ADRs and the vectors.">
+<meta name="description" content="The packet, the greeting and the self-description, and where the specs live.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' rx='40' fill='%230b0d12'/%3E%3Cg fill='none' stroke='%23e6e9ef' stroke-width='14'%3E%3Cpath d='M40 40h140M40 80h100M40 120h60v60M70 180v-100h70M140 110v70'/%3E%3C/g%3E%3Crect x='150' y='150' width='30' height='30' fill='%237dd3fc'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="../assets/site.css">
 </head>
@@ -101,8 +101,11 @@
   <main class="doc">
     <p class="eyebrow">Reference</p>
     <h1>Protocol and specs</h1>
-    <p class="lede">The wire, the greeting, the specs, the ADRs and the vectors.</p>
+    <p class="lede">The packet, the greeting and the self-description, and where the specs live.</p>
 <p>The wire is defined by the Rust connector, not by any client. Its committed <strong>wire vectors</strong> are the normative cross-repository contract; the client, the rig and the swap replay them as their own conformance suites. Vectors are normative; prose is not. This page is the map to the specs, with the three things most readers come for: the packet, the greeting, and the self-description.</p>
+
+<pre>curl -s https://proxy.ario.devnet.toonprotocol.dev/ilp | jq        <span class="c"># a node's self-description, free</span>
+npx toon-client price g.toon.store https://proxy.ario.devnet.toonprotocol.dev   <span class="c"># one route's price</span></pre>
 
 <h2 id="the-packet"><a class="anchor" href="#the-packet">The packet</a></h2>
 

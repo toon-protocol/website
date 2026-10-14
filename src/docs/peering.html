@@ -1,5 +1,11 @@
 <p>Terminating your own routes earns from callers who know your address. Peering puts you on paths that start somewhere else: you carry someone's packet one hop further, and keep a fee for doing it.</p>
 
+<p><strong>The whole of it</strong> is one free read and three signed writes against your own node:</p>
+<pre>curl -s https://their-node.example/ilp | jq          <span class="c"># 1. read their terms, free</span>
+sign-write.sh -X POST -p /peers ...                  <span class="c"># 2. open your channel toward them</span>
+sign-write.sh -X POST -p /channels/&lt;id&gt;/fund ...     <span class="c"># 3. keep collateral behind your vouchers</span>
+sign-write.sh -X POST -p /routes/peers ...           <span class="c"># 4. route through it, at your price</span></pre>
+
 <p>A peering is created by an <strong>operator</strong> and by nothing else. It cannot be bought, learned or announced into existence. What you give it is one thing: <strong>the counterparty's self-description URL</strong>.</p>
 
 <h2>Being peerable</h2>

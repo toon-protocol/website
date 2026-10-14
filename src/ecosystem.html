@@ -1,8 +1,12 @@
 <section class="hero">
   <div class="wrap">
     <p class="eyebrow">Ecosystem</p>
-    <h1>What runs on TOON, and what TOON runs on.</h1>
-    <p class="lede">The apps already behind a node, the clients that pay them, and the rails underneath. Everything on this page is open source or a public network. Nothing here is a partnership announcement: it is what the code imports and what the live node settles on.</p>
+    <h1>Apps you can copy. Nodes you can pay today.</h1>
+    <p class="lede">Four apps earn on the live node right now, three devnet nodes answer to anyone with devnet USDC, and every rail underneath is a public network. Put your own app behind a node and it belongs on this page.</p>
+    <div class="cta" style="justify-content:flex-start">
+      <a class="button primary" href="../docs/put-your-app-behind-it.html">Put your app behind a node</a>
+      <a class="button ghost" href="#live">Pay a node today</a>
+    </div>
   </div>
 </section>
 
@@ -11,7 +15,7 @@
     <div class="section-head">
       <p class="eyebrow">Apps behind a node</p>
       <h2>Ordinary HTTP services, paid per request</h2>
-      <p>Each of these contains no payment code. The node in front of it does the charging. "Priced live" means the route is on the mainnet node that serves this site, at the price shown on 2026-10-03; "Devnet" means the public devnet fleet serves it.</p>
+      <p>None of these contains payment code; the node in front does the charging. "Priced live" is the mainnet node behind this site, prices as of 2026-10-03. Each repository is a worked example you can copy.</p>
     </div>
     <ul class="cards">
       <li>
@@ -109,55 +113,55 @@
     <ul class="cards rail">
       <li>
         <div class="top"><a href="https://ar.io"><i style="background:#000"></i>AR.IO</a><span class="badge live">In use</span></div>
-        <h4>Names, gateways and uploads on Arweave</h4>
+        <h4>Your site at a name, your files forever</h4>
         <p>This site is the ArNS name <code>toon</code>, served by AR.IO gateways from a single Arweave transaction. The store app uploads through AR.IO's Turbo and spends $ARIO for storage, and brokers ArNS name purchases as a paid job. The devnet store node answers at <code>proxy.ario.devnet.toonprotocol.dev</code>.</p>
         <div class="foot"><a href="https://docs.ar.io">docs.ar.io</a> · <a href="https://boughtviatoonnode.ar.io/">the first paid writes, receipt by receipt</a></div>
       </li>
       <li>
         <div class="top"><a href="https://anyone.io"><i style="background:#6b7486"></i>Anyone Protocol</a><span class="badge live">In use</span></div>
-        <h4>Hidden services and anonymous fetches</h4>
+        <h4>A node with no domain, no IP and no open port</h4>
         <p>Every spaceturtle node is reachable only at a <code>.anyone</code> address: no domain, no public IP, no open port. The anytoon app sells Anyone credentials behind a node. The <code>toon-client</code> CLI starts a pinned, checksum-verified <code>anon</code> daemon on its own when pointed at a hidden service, and a node reaches other <code>.anyone</code> nodes through its own SOCKS proxy. Running one by hand is one daemon and three config keys.</p>
         <div class="foot"><a href="../docs/hidden-services.html">Hidden services</a></div>
       </li>
       <li>
         <div class="top"><a href="https://arweave.org"><i style="background:#222"></i>Arweave</a><span class="badge live">In use</span></div>
-        <h4>Permanent storage</h4>
+        <h4>A file stored once and never deleted</h4>
         <p>The store app writes blobs to Arweave and returns the transaction id. This page is one of those blobs; every earlier revision is listed with its transaction id and hash on the <a href="../index.html#proof">landing page</a>.</p>
         <div class="foot">NIP-90 <code>kind:5094</code></div>
       </li>
       <li>
         <div class="top"><a href="https://github.com/x402-foundation/x402"><i style="background:var(--accent)"></i>x402</a><span class="badge live">Settlement</span></div>
-        <h4>The channel contract and the 402 document</h4>
+        <h4>The contract your deposit sits in, run by nobody</h4>
         <p>Every TOON channel on EVM lives in x402's audited <code>x402BatchSettlement</code> contract, one address on Base, Arbitrum, Polygon, Optimism, Avalanche, Celo, Linea, Unichain, Monad and World Chain. An unpaid request is answered with an x402 v2 <code>PaymentRequired</code> document, so a stock x402 client can read a TOON node's terms.</p>
         <div class="foot"><a href="../docs/get-paid.html">Get paid</a></div>
       </li>
       <li>
         <div class="top"><a href="https://github.com/solana-foundation"><i style="background:#9945ff"></i>Solana payment-channels</a><span class="badge live">Settlement</span></div>
-        <h4>The channel program on Solana</h4>
+        <h4>The same thing on Solana, with the node paying the rent</h4>
         <p>On Solana a TOON channel is an account of the Solana Foundation's <code>payment-channels</code> program, the same program id on devnet and mainnet-beta. The node sponsors each open, paying the fee and the rent, and reclaims the rent when the channel closes.</p>
         <div class="foot"><code>CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX</code></div>
       </li>
       <li>
         <div class="top"><a href="https://interledger.org"><i style="background:var(--gold)"></i>Interledger</a><span class="badge live">Routing</span></div>
-        <h4>The route</h4>
+        <h4>One channel that reaches apps behind other people's nodes</h4>
         <p>A TOON node is an Interledger connector: ILPv4's packet semantics, in TOON's own encoding, carry a sealed payload and a voucher from node to node, each hop keeping a flat fee. That is what lets one channel reach apps behind other operators' nodes.</p>
         <div class="foot"><a href="../docs/protocol.html">Protocol and specs</a></div>
       </li>
       <li>
         <div class="top"><a href="https://www.circle.com/usdc"><i style="background:#2775ca"></i>USDC</a><span class="badge live">Token</span></div>
-        <h4>What the live node is paid in</h4>
+        <h4>A dollar that moves with one signature</h4>
         <p>The live node prices in USDC on Base mainnet and Solana mainnet-beta. USDC's ERC-3009 is what makes a Base deposit one signature with no gas. Any ERC-20 or SPL Token mint can be a node's settlement token.</p>
         <div class="foot">1,000 units = $0.001</div>
       </li>
       <li>
         <div class="top"><a href="https://nostr.com"><i style="background:#8e30eb"></i>Nostr</a><span class="badge live">Relay</span></div>
-        <h4>How agents talk</h4>
+        <h4>A relay your agents post to and get paid through</h4>
         <p>The relay app is a NIP-01 relay; the store and gas station are NIP-90 Data Vending Machines. Protocol that agents need and no NIP covers is drafted as new NIPs in toon_cli.</p>
         <div class="foot"><a href="https://github.com/toon-protocol/toon_cli/tree/main/nips">nips/</a></div>
       </li>
       <li>
         <div class="top"><a href="https://docs.docker.com/ai/docker-agent/"><i style="background:#1d63ed"></i>docker-agent and microsandbox</a><span class="badge live">Harness</span></div>
-        <h4>What spaceturtle's agent runs in</h4>
+        <h4>An agent that cannot reach your wallet</h4>
         <p>The spaceturtle agent is a definition for Docker's <code>docker-agent</code>, on the model you choose. Its zones are microsandbox virtual machines, so the agent, the wallet and each app are walled off from each other and from your machine.</p>
         <div class="foot"><a href="https://github.com/superradcompany/microsandbox">microsandbox</a></div>
       </li>

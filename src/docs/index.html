@@ -1,18 +1,35 @@
-<p>A <strong>TOON node</strong> is a paid reverse proxy. You put it in front of an ordinary HTTP app, you set a price per route, and it collects that price from whoever calls, per request, in a stablecoin, without your app knowing payment exists. <strong>It terminates payments the way nginx terminates TLS.</strong></p>
+<p><strong>Put a price on any HTTP app and get paid per request, in USDC, with no protocol fee and no change to your app.</strong> A TOON node is a paid reverse proxy: it sits in front of your app, refuses an unpaid request with the price, and hands your app a plain HTTP request once it has been paid for.</p>
 
-<p>Underneath, the node is an <a href="https://interledger.org">Interledger</a> (ILP) connector: value arrives wrapped in a packet format your app never speaks, which is why the node's one endpoint is called <code>/ilp</code>, and at the last hop the node unwraps it, checks it was paid for, and hands your app a plain HTTP request. Every payment is a signed <strong>voucher</strong>, an IOU against a deposit the caller locked on chain once, on an <a href="https://github.com/x402-foundation/x402">x402</a> <code>batch-settlement</code> channel. So a request costs a signature, not a transaction, and one onchain transaction settles thousands of requests. You do not need to know anything about Interledger or x402 to run one.</p>
+<h2>Three steps</h2>
 
-<h2>Two roles, and nothing else</h2>
+<p><strong>1. Write a node.</strong> One command, on devnet, free. It touches no chain.</p>
+<div class="codeblock"><div class="bar"><span>The shell</span></div>
+<pre>IMG=ghcr.io/toon-protocol/connector:rust-main
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/w" -w /w "$IMG" init --devnet --dir node --image "$IMG"
+cd node &amp;&amp; docker compose up -d</pre></div>
+
+<p><strong>2. Pay it.</strong> From any machine. The faucet gives devnet USDC; the channel opens with no ETH.</p>
+<div class="codeblock"><div class="bar"><span>Another terminal</span></div>
+<pre>npx toon-client faucet
+npx toon-client channel open --connector http://127.0.0.1:3000 --deposit 100000
+npx toon-client send --connector http://127.0.0.1:3000 --body 'hello'</pre></div>
+
+<p><strong>3. See it.</strong> The answer comes back with a receipt; the node's ledger shows the same figure.</p>
+<div class="codeblock"><div class="bar"><span>GET /claims</span></div>
+<pre>curl -s -H "Authorization: Bearer $(cat data/operator-bearer-token)" http://127.0.0.1:3000/claims | jq</pre></div>
+
+<h2>What holds</h2>
 
 <ul>
-  <li>An <strong>app</strong> is an ordinary HTTP service behind a route's <code>handler_url</code>. It receives an ordinary HTTP request, holds no key on your behalf, and never sees a payment.</li>
-  <li>A <strong>connector</strong> sits in front of it. It opens the sealed payload, makes exactly that HTTP request of your app, and seals the app's complete response back.</li>
+  <li><strong>You set the price and keep it.</strong> A whole number of the token's smallest unit per route; <code>1000</code> is 0.001 USDC. There is no protocol fee.</li>
+  <li><strong>A request costs a signature, not a transaction.</strong> The caller deposits once into an x402 channel on Base or Solana; one onchain transaction every ten minutes lands everything since the last.</li>
+  <li><strong>Your app never sees a payment.</strong> It gets a plain HTTP request and three optional headers saying who paid, how much, on what chain.</li>
+  <li><strong>One static binary, one TOML file, MIT.</strong> Runs anywhere Docker does, or as a hidden service with no domain and no open port.</li>
 </ul>
 
-<p>The node refuses to let the app decide anything about a payment. "The app answered" and "the packet was paid for" stay separable, so an app that knows nothing about payment cannot leak, forge or withhold one.</p>
+<p>Below: the paths, the wire, and where everything lives.</p>
 
 <h2>Pick your path</h2>
-
 <ul class="paths">
   <li>
     <a class="title" href="run-a-node.html">I have an app to charge for</a>
@@ -38,7 +55,7 @@
 
 <h2>What a paid request looks like</h2>
 
-<p>An unpaid request to a priced route is refused with the price. The refusal is a valid x402 v2 <code>PaymentRequired</code> document, so a caller never guesses what something costs.</p>
+<p>An unpaid request is refused with the price, as an x402 v2 document a stock client can read.</p>
 
 <div class="codeblock"><div class="bar"><span>On the wire</span><span>x402 v2</span></div>
 <pre><span class="c"># an unpaid request to a priced route</span>
@@ -54,11 +71,7 @@
 <span class="k">POST</span> /ilp                  <span class="c">voucher: 1,000 units</span>
 <span class="ok">200</span>                        <span class="c">your app's answer, sealed</span></pre></div>
 
-<p>The caller opens a channel once, with a deposit, and then attaches a voucher to every request. A voucher states the channel's cumulative total; the node accepts it only if it advances the last one by at least the route's price. Losing a voucher costs nothing and replaying one buys nothing. <a href="concepts.html">Concepts</a> defines each of those words.</p>
-
-<h2>What it costs</h2>
-
-<p>You set the price, in the smallest unit of the token you settle in, the way a card terminal counts cents. With USDC, <code>price = 1000</code> is 0.001 USDC, a tenth of a cent. There is no protocol fee: what a caller pays lands in your channel, minus nothing. Gas is paid once per batch when the node lands vouchers on chain, never per request. <a href="get-paid.html#who-pays-gas-and-why">Who pays gas, and why</a> has the full table.</p>
+<p>The caller then attaches a signed voucher to every request: a running total the node accepts only if it rises by the price. Underneath, the node is an <a href="https://interledger.org">Interledger</a> connector, which is why its one endpoint is <code>/ilp</code>; <a href="concepts.html">Concepts</a> defines every word used here.</p>
 
 <h2>Where things live</h2>
 
