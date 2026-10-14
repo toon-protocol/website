@@ -110,6 +110,9 @@ section.tint { background:var(--bg-tint); }
 .diagram .arrow { stroke:var(--ink-dim); stroke-width:1.5; fill:none; marker-end:url(#ah); }
 .diagram .arrow.gold { stroke:var(--gold); }
 .diagram .arrow.dash { stroke-dasharray:4 4; }
+.diagram .arrow.ok { stroke:var(--good); }
+.diagram .t.sm { font-size:12.5px; }
+.diagram .s.cap { font-size:10.5px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; fill:var(--ink-faint); }
 .diagram .pill { fill:var(--bg-sunken); stroke:var(--line); }
 .diagram .pill.gold { stroke:var(--gold); fill:var(--gold-soft); }
 .diagram .pill.chain { stroke:var(--accent); fill:var(--accent-soft); }
@@ -309,7 +312,7 @@ footer { border-top:1px solid var(--line); padding:3rem 0 2.5rem; font-size:0.9r
     </div>
 
     <figure style="margin:0">
-      <svg class="diagram" viewBox="0 0 560 360" role="img" aria-labelledby="hero-d-title" xmlns="http://www.w3.org/2000/svg">
+      <svg class="diagram" viewBox="0 0 560 362" role="img" aria-labelledby="hero-d-title" xmlns="http://www.w3.org/2000/svg">
         <title id="hero-d-title">A caller sends a request with a voucher to a TOON node. The node checks the voucher and forwards a plain HTTP request to the app. Vouchers settle in batches on an x402 channel on Base or Solana.</title>
         <defs>
           <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -317,61 +320,58 @@ footer { border-top:1px solid var(--line); padding:3rem 0 2.5rem; font-size:0.9r
           </marker>
         </defs>
 
-        <!-- glow behind node -->
-        <ellipse class="glow" cx="280" cy="150" rx="120" ry="80"/>
+        <text class="s cap" x="74" y="30" text-anchor="middle">Pays</text>
+        <text class="s cap" x="280" y="30" text-anchor="middle">The node</text>
+        <text class="s cap" x="486" y="30" text-anchor="middle">Earns</text>
 
         <!-- caller -->
-        <rect class="box" x="16" y="104" width="120" height="92" rx="12"/>
-        <text class="t" x="76" y="140" text-anchor="middle">Caller</text>
-        <text class="s" x="76" y="160" text-anchor="middle">an agent, a service,</text>
-        <text class="s" x="76" y="176" text-anchor="middle">a script</text>
+        <rect class="box" x="16" y="80" width="116" height="120" rx="12"/>
+        <text class="t" x="74" y="124" text-anchor="middle">Caller</text>
+        <text class="s" x="74" y="146" text-anchor="middle">an agent, a service</text>
+        <text class="s" x="74" y="163" text-anchor="middle">or a script</text>
 
         <!-- node -->
-        <rect class="box node" x="208" y="92" width="144" height="116" rx="14"/>
-        <text class="t" x="280" y="128" text-anchor="middle">TOON node</text>
-        <text class="s" x="280" y="148" text-anchor="middle">checks the voucher</text>
-        <text class="s" x="280" y="164" text-anchor="middle">unseals the request</text>
-        <text class="s" x="280" y="180" text-anchor="middle">keeps the price</text>
+        <ellipse class="glow" cx="280" cy="135" rx="104" ry="92"/>
+        <rect class="box node" x="210" y="60" width="140" height="154" rx="14"/>
+        <text class="t" x="280" y="104" text-anchor="middle">TOON node</text>
+        <text class="s" x="280" y="128" text-anchor="middle">checks the voucher</text>
+        <text class="s" x="280" y="146" text-anchor="middle">unseals the request</text>
+        <text class="s" x="280" y="164" text-anchor="middle">keeps the price</text>
 
         <!-- app -->
-        <rect class="box app" x="424" y="104" width="120" height="92" rx="12"/>
-        <text class="t" x="484" y="140" text-anchor="middle">Your app</text>
-        <text class="s" x="484" y="160" text-anchor="middle">unchanged</text>
-        <text class="s" x="484" y="176" text-anchor="middle">no payment code</text>
+        <rect class="box app" x="428" y="80" width="116" height="120" rx="12"/>
+        <text class="t" x="486" y="124" text-anchor="middle">Your app</text>
+        <text class="s" x="486" y="146" text-anchor="middle">unchanged</text>
+        <text class="s" x="486" y="163" text-anchor="middle">no payment code</text>
 
-        <!-- request arrow caller -> node (paid) -->
-        <path class="arrow gold" d="M136 136 H206"/>
-        <rect class="pill gold" x="118" y="46" width="108" height="42" rx="8"/>
-        <text class="m hi" x="172" y="63" text-anchor="middle">POST /ilp</text>
-        <text class="m hi" x="172" y="79" text-anchor="middle">+ voucher 1,000</text>
-        <path class="wire" d="M172 88 V124"/>
+        <!-- 1: the refusal names the price -->
+        <path class="arrow dash" d="M208 118 H134"/>
+        <text class="m" x="171" y="94" text-anchor="middle">402</text>
+        <text class="m" x="171" y="108" text-anchor="middle">1,000</text>
 
-        <!-- 402 refusal arrow node -> caller (dashed) -->
-        <path class="arrow dash" d="M206 172 H138"/>
-        <rect class="pill" x="104" y="214" width="136" height="42" rx="8"/>
-        <text class="m" x="172" y="231" text-anchor="middle">402 Payment Required</text>
-        <text class="m" x="172" y="247" text-anchor="middle">amount: "1000"</text>
-        <path class="wire" d="M172 214 V176"/>
+        <!-- 2: the caller pays with a voucher -->
+        <path class="arrow gold" d="M132 158 H208"/>
+        <text class="m hi" x="171" y="174" text-anchor="middle">POST /ilp</text>
+        <text class="m hi" x="171" y="188" text-anchor="middle">+ voucher</text>
 
-        <!-- node -> app plain http -->
-        <path class="arrow ok" d="M352 136 H422" stroke="var(--good)"/>
-        <rect class="pill" x="336" y="46" width="104" height="42" rx="8"/>
-        <text class="m ok" x="388" y="63" text-anchor="middle">plain HTTP</text>
-        <text class="m ok" x="388" y="79" text-anchor="middle">already paid</text>
-        <path class="wire" d="M388 88 V124"/>
+        <!-- 3: the app gets plain HTTP -->
+        <path class="arrow ok" d="M350 118 H426"/>
+        <text class="m ok" x="389" y="94" text-anchor="middle">plain HTTP</text>
+        <text class="m ok" x="389" y="108" text-anchor="middle">paid</text>
 
-        <!-- app -> node response, sealed back -->
-        <path class="arrow" d="M422 172 H354"/>
-        <text class="m" x="388" y="192" text-anchor="middle">200, sealed back</text>
+        <!-- the answer, sealed back -->
+        <path class="arrow" d="M426 158 H352"/>
+        <text class="m" x="389" y="174" text-anchor="middle">200</text>
+        <text class="m" x="389" y="188" text-anchor="middle">sealed</text>
 
-        <!-- settlement line -->
-        <path class="wire" d="M280 208 V264" stroke-dasharray="3 4"/>
-        <rect class="pill chain" x="150" y="264" width="260" height="60" rx="10"/>
-        <text class="t" x="280" y="287" text-anchor="middle" style="font-size:12.5px">x402 batch-settlement channel</text>
-        <text class="m ac" x="280" y="306" text-anchor="middle">Base · Solana · one tx settles thousands</text>
+        <!-- settlement -->
+        <path class="wire" d="M280 214 V246" stroke-dasharray="3 4"/>
+        <text class="s cap" x="280" y="258" text-anchor="middle">Settles on</text>
+        <rect class="pill chain" x="135" y="264" width="290" height="58" rx="10"/>
+        <text class="t sm" x="280" y="288" text-anchor="middle">x402 batch-settlement channel</text>
+        <text class="m ac" x="280" y="308" text-anchor="middle">Base · Solana · one tx settles thousands</text>
 
-        <!-- footnote -->
-        <text class="s" x="280" y="350" text-anchor="middle">A voucher is a signature, not a transaction. No gas per request, no block to wait for.</text>
+        <text class="s" x="280" y="352" text-anchor="middle">A voucher is a signature, not a transaction. No gas per request, no block to wait for.</text>
       </svg>
     </figure>
   </div>
