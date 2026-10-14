@@ -16,7 +16,7 @@
 <style data-src="assets/site.css">
 /* TOON Protocol site: one stylesheet for the landing page, docs/ and ecosystem/.
    build.py copies it inline into index.html so that file stands alone.
-   Palette from the icon: cream, charcoal, gold, grey. No scripts anywhere. */
+   Palette from the icon: cream, charcoal, gold, grey. The only script is the copy button. */
 
 @font-face { font-family:"Archivo"; font-style:normal; font-weight:800; font-display:swap;
   src:url("assets/fonts/archivo-800.woff2") format("woff2");
@@ -138,25 +138,21 @@ pre .s { color:#b9d7a1; }
   font:600 0.68rem/1.3 var(--mono); letter-spacing:0.1em; text-transform:uppercase; color:var(--term-dim); }
 .codeblock .bar .tag { color:#7ecf8a; text-transform:none; letter-spacing:0; }
 .codeblock pre { border:0; border-radius:0; margin:0; }
-/* The command box. There is no script on this site, so the control on the right cannot
-   write the clipboard; instead the whole box is user-select:all, so one click anywhere in
-   it (the control included) selects exactly the command, and Ctrl+C copies it. The "$"
-   and the label are generated content, which a selection does not carry. */
+/* The command box, as on herdr.dev: the command, and a button that copies it. The "$" is
+   generated content, so it is not part of what gets copied. The button is the one script
+   on the site (index.html, at the end of the body). */
 .cmd { display:inline-flex; align-items:stretch; max-width:100%; margin-top:2rem; border:1px solid var(--line-strong);
-  background:color-mix(in srgb, var(--bg-raised) 82%, transparent); backdrop-filter:blur(6px); user-select:all; cursor:copy; }
+  background:color-mix(in srgb, var(--bg-raised) 82%, transparent); backdrop-filter:blur(6px); }
 .cmd code { display:flex; align-items:center; gap:0.7rem; padding:0.85rem 1.2rem; font-size:0.86rem; white-space:nowrap; overflow-x:auto; scrollbar-width:none;
   background:none; border:0; border-radius:0; color:var(--ink); }
 .cmd code::before { content:"$"; color:var(--gold); font-weight:600; }
-.cmd .copy { display:flex; align-items:center; padding:0 1rem; border-left:1px solid var(--line-strong); color:var(--ink-faint);
-  font:600 0.66rem/1 var(--mono); letter-spacing:0.14em; text-transform:uppercase; white-space:nowrap; font-style:normal; }
-.cmd .copy::after { content:"select"; }
-.cmd:hover .copy { color:var(--ink); }
-.cmd::selection, .cmd *::selection { background:var(--accent-soft); color:var(--ink); }
-pre.sel { position:relative; user-select:all; cursor:copy; padding-right:5.5rem; white-space:pre-wrap; overflow-wrap:anywhere; }
-pre.sel .copy { position:absolute; top:0.55rem; right:0.6rem; padding:0.3rem 0.55rem; border:1px solid var(--term-line); color:var(--term-dim);
-  font:600 0.62rem/1 var(--mono); letter-spacing:0.14em; text-transform:uppercase; font-style:normal; }
-pre.sel .copy::after { content:"select"; }
-pre.sel:hover .copy { color:var(--term-ink); }
+.cmd button { display:flex; align-items:center; padding:0 1rem; border:0; border-left:1px solid var(--line-strong); background:none; cursor:pointer; color:var(--ink-faint);
+  font:600 0.66rem/1 var(--mono); letter-spacing:0.14em; text-transform:uppercase; white-space:nowrap; }
+.cmd button:hover, .cmd button.done { color:var(--ink); }
+pre.sel { position:relative; padding-right:5.5rem; white-space:pre-wrap; overflow-wrap:anywhere; }
+pre.sel button { position:absolute; top:0.55rem; right:0.6rem; padding:0.3rem 0.55rem; border:1px solid var(--term-line); background:none; cursor:pointer; color:var(--term-dim);
+  font:600 0.62rem/1 var(--mono); letter-spacing:0.14em; text-transform:uppercase; }
+pre.sel button:hover, pre.sel button.done { color:var(--term-ink); }
 .meta { margin-top:1rem; color:var(--ink-faint); font:0.76rem/1.7 var(--mono); }
 .meta a { color:var(--accent); text-decoration:none; }
 .meta a:hover { text-decoration:underline; }
@@ -514,7 +510,7 @@ footer.site-foot { padding-bottom:0; }
     <p class="eyebrow">TOON Protocol · Value, routed</p>
     <h1>Put a price on <span>any HTTP app.</span></h1>
     <p class="lede">Get paid per request, in USDC, with no protocol fee and <strong>no change to your app</strong>. One command installs <code>toon</code>. Three more give you a running node.</p>
-    <div class="cmd"><code>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</code><i class="copy" title="Selects the command; Ctrl+C copies it"></i></div>
+    <div class="cmd"><code>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</code><button type="button" aria-label="Copy install command">copy</button></div>
     <p class="meta">then <code>toon init --accept-anyone-terms</code> · <code>toon wallet fund</code> · <code>toon up</code> &nbsp;—&nbsp; <a href="#run">the three steps →</a> &nbsp; <a href="docs/pay-a-node.html">pay a node →</a></p>
     <div class="hero-meta">
       <p class="meta"><span>Linux</span><span>MIT licensed</span><span>No protocol fee</span><span>Settles on Base and Solana</span><span>No SDK in your app</span></p>
@@ -679,7 +675,7 @@ footer.site-foot { padding-bottom:0; }
         </div>
         <div class="codeblock">
           <div class="bar"><span>The shell</span><span class="tag">docker and systemd --user on the machine</span></div>
-<pre class="sel"><i class="copy" title="Selects the command; Ctrl+C copies it"></i>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</pre>
+<pre class="sel"><button type="button" aria-label="Copy install command">copy</button>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</pre>
         </div>
       </li>
       <li>
@@ -998,7 +994,7 @@ toon route list                     <span class="c"># what the connector termina
         <p class="eyebrow">Proof</p>
         <h2>This page is not on a web server.</h2>
         <div class="prose" style="margin-top:1rem">
-          <p>It is one HTML file with no scripts and no external assets, stored permanently on Arweave, and the write that put it there was bought through the node priced above: two paid hops, each charging by the KiB, each paid with a voucher on an x402 channel on Solana mainnet. The node settles on Base mainnet and Solana mainnet.</p>
+          <p>It is one HTML file with no external assets and one script, the copy button, stored permanently on Arweave, and the write that put it there was bought through the node priced above: two paid hops, each charging by the KiB, each paid with a voucher on an x402 channel on Solana mainnet. The node settles on Base mainnet and Solana mainnet.</p>
           <p>A page cannot contain its own hash, so each revision embeds the receipts of the ones before it: the Arweave transaction id and sha256, the claim on each hop, and the purchase of the name this page lives under. Every hash checks against a public chain.</p>
           <p>The node's first paid writes are documented receipt by receipt at <a href="https://boughtviatoonnode.ar.io/">boughtviatoonnode.ar.io</a>.</p>
         </div>
@@ -1302,7 +1298,7 @@ toon route list                     <span class="c"># what the connector termina
     <p class="eyebrow">Devnet, free, no account</p>
     <h2>Put a price on it.</h2>
     <p>One command installs <code>toon</code>. Three more give you a node that gets paid, and one more puts your own app behind it.</p>
-    <div class="cmd"><code>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</code><i class="copy" title="Selects the command; Ctrl+C copies it"></i></div>
+    <div class="cmd"><code>curl -fsSL https://raw.githubusercontent.com/toon-protocol/toon_cli/main/install.sh | sh</code><button type="button" aria-label="Copy install command">copy</button></div>
     <p class="meta">then <code>toon init --accept-anyone-terms</code> · <code>toon wallet fund</code> · <code>toon up</code> &nbsp;—&nbsp; <a href="docs/first-agent-node.html">the whole guide →</a></p>
     <div class="cta">
       <a class="button primary" href="docs/first-agent-node.html">Run a node</a>
@@ -1366,11 +1362,30 @@ toon route list                     <span class="c"># what the connector termina
     </div>
     <div class="footbar">
       <span>TOON Protocol · MIT licensed · stored on Arweave via a paid TOON write</span>
-      <span>No scripts, no trackers, nothing loaded from anywhere else.</span>
+      <span>No trackers, nothing loaded from anywhere else; the only script copies a command.</span>
     </div>
   </div>
   <div class="footcells" aria-hidden="true"></div>
 </footer>
 
+<script>
+/* The copy buttons, the one script on this site. Each button copies the text of the
+   element it sits in, minus its own label; the "$" is CSS and never part of it. */
+document.querySelectorAll(".cmd button, pre.sel button").forEach(function (button) {
+  button.addEventListener("click", function () {
+    var box = button.parentNode;
+    var text = Array.prototype.filter.call(box.childNodes, function (node) { return node !== button; })
+      .map(function (node) { return node.textContent; }).join("").trim();
+    var done = function () {
+      button.textContent = "copied"; button.classList.add("done");
+      setTimeout(function () { button.textContent = "copy"; button.classList.remove("done"); }, 1400);
+    };
+    if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(done); return; }
+    var range = document.createRange(); range.selectNodeContents(box.querySelector("code") || box);
+    var sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    if (document.execCommand("copy")) done();
+  });
+});
+</script>
 </body>
 </html>
