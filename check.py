@@ -497,15 +497,16 @@ def rule_hosts(page):
 
 
 def rule_favicon(page):
-    rule = "links the 16px favicon in its light and its dark variant, as files"
-    want = {"(prefers-color-scheme: light)": "toon-icon-16.svg", "(prefers-color-scheme: dark)": "toon-icon-16-dark.svg"}
+    rule = "links the 16px favicon as files: the light one by default, the dark one for a dark scheme"
+    want = {"": "toon-icon-16.svg", "(prefers-color-scheme: dark)": "toon-icon-16-dark.svg"}  # "": no media, so a browser that ignores media still gets one
     icons = resources(page).icons
     for href, _ in icons:
         if href.startswith("data:"):
             yield rule, "a data-URI favicon"
     for media, name in want.items():
         if not any(m == media and href.rsplit("/", 1)[-1] == name for href, m in icons):
-            yield rule, f"no <link rel=\"icon\" media=\"{media}\"> for {name}"
+            where = f'media="{media}"' if media else "without media"
+            yield rule, f'no <link rel="icon" {where}> for {name}'
 
 
 def rule_header_mark(page):

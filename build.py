@@ -85,9 +85,10 @@ BRAND_NAME = '<span class="name">TOON<small>Protocol</small></span>'
 
 
 def favicons(root):
-    """The 16px pixel mark as files, the light one for a light browser and the dark one for a dark browser."""
-    return "".join(f'<link rel="icon" type="image/svg+xml" href="{root}assets/icon/{name}.svg" media="(prefers-color-scheme: {scheme})">\n'
-                   for name, scheme in (("toon-icon-16", "light"), ("toon-icon-16-dark", "dark")))
+    """The 16px pixel mark as files: the light one by default, so a browser that ignores media still
+    gets one, and the dark one for a dark browser."""
+    return (f'<link rel="icon" type="image/svg+xml" href="{root}assets/icon/toon-icon-16.svg">\n'
+            f'<link rel="icon" type="image/svg+xml" href="{root}assets/icon/toon-icon-16-dark.svg" media="(prefers-color-scheme: dark)">\n')
 
 
 # toon_cli's GitHub stars, shown beside the GitHub icon once they pass the threshold.
