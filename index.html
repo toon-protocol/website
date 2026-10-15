@@ -3,25 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TOON Protocol · Value, routed. Host it from home. Get paid by anyone.</title>
-<meta name="description" content="An open network of hidden services where agents talk, work together and pay each other. Run your app on your own machine, with no domain and no open port, and get paid per request by anyone on the network, in whatever token they hold.">
+<title>TOON Protocol · Your machine. Paid per request.</title>
+<meta name="description" content="Your machine. Paid per request. TOON gets requests to your app and makes sure each one is paid before your code sees it.">
 <meta property="og:site_name" content="TOON Protocol">
-<meta property="og:title" content="Host it from home. Get paid by anyone.">
-<meta property="og:description" content="Your app runs on your own machine, with no domain and no open port, and anyone on the network can pay you in whatever token they hold.">
+<meta property="og:title" content="Your machine. Paid per request.">
+<meta property="og:description" content="TOON gets requests to your app and makes sure each one is paid before your code sees it.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://toon.ar.io/assets/og/toon-card.png">
 <meta property="og:image:secure_url" content="https://toon.ar.io/assets/og/toon-card.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="TOON Protocol. Host it from home. Get paid by anyone.">
+<meta property="og:image:alt" content="TOON Protocol. Your machine. Paid per request.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@toonprotocol">
-<meta name="twitter:title" content="Host it from home. Get paid by anyone.">
-<meta name="twitter:description" content="Your app runs on your own machine, with no domain and no open port, and anyone on the network can pay you in whatever token they hold.">
+<meta name="twitter:title" content="Your machine. Paid per request.">
+<meta name="twitter:description" content="TOON gets requests to your app and makes sure each one is paid before your code sees it.">
 <meta name="twitter:image" content="https://toon.ar.io/assets/og/toon-card.png">
-<meta name="twitter:image:alt" content="TOON Protocol. Host it from home. Get paid by anyone.">
-<meta name="theme-color" content="#c9a24a">
+<meta name="twitter:image:alt" content="TOON Protocol. Your machine. Paid per request.">
+<meta name="theme-color" content="#f3efe6">
 <link rel="icon" type="image/svg+xml" href="assets/icon/toon-icon-16.svg" media="(prefers-color-scheme: light)">
 <link rel="icon" type="image/svg+xml" href="assets/icon/toon-icon-16-dark.svg" media="(prefers-color-scheme: dark)">
 <style data-src="assets/site.css">
@@ -198,14 +198,14 @@ pre .s { color:var(--good); }
 /* The command box, as on herdr.dev: the command, and a button that copies it. The "$" is
    generated content, so it is not part of what gets copied. The button is the one script
    on the site (index.html, at the end of the body). */
-.cmd { display:inline-flex; align-items:stretch; max-width:100%; margin-top:2rem; border:1px solid var(--line-strong);
-  background:var(--bg-raised); }
+.cmd { display:inline-flex; align-items:stretch; max-width:100%; margin-top:2rem; border:1px solid #1c1f24;
+  background:#1c1f24; }  /* Night panel in both schemes (.brand/identity.md: terminals are Night) */
 .cmd code { display:flex; align-items:center; gap:0.7rem; padding:0.85rem 1.2rem; font-size:0.86rem; white-space:nowrap; overflow-x:auto; scrollbar-width:none;
-  background:none; border:0; border-radius:0; color:var(--ink); }
+  background:none; border:0; border-radius:0; color:var(--term-ink); }
 .cmd code::before { content:"$"; color:var(--gold); font-weight:500; }
-.cmd button { display:flex; align-items:center; padding:0 1rem; border:0; border-left:1px solid var(--line-strong); background:none; cursor:pointer; color:var(--ink-faint);
+.cmd button { display:flex; align-items:center; padding:0 1rem; border:0; border-left:1px solid #3a3f47; background:none; cursor:pointer; color:var(--term-dim);
   font:500 0.66rem/1 var(--mono); letter-spacing:0.14em; text-transform:uppercase; white-space:nowrap; }
-.cmd button:hover, .cmd button.done { color:var(--ink); }
+.cmd button:hover, .cmd button.done { color:var(--term-ink); }
 /* Evidence panels: every command and example on the landing page sits in one of these,
    the panel herdr draws beside each row. A .l line is a command and gets the prompt; a .o
    line is output; a pre inside keeps its columns. */
@@ -718,7 +718,7 @@ html.nav-open .docs-header .menu .shut { display:inline; }
 .publish .cta { margin-top:1.4rem; }
 
 @media (max-width:640px) { .cmd { display:flex; flex-wrap:wrap; width:100%; } .cmd code { flex:1 1 100%; white-space:pre-wrap; overflow-wrap:anywhere; align-items:flex-start; font-size:0.8rem; }
-  .cmd button { flex:1 1 100%; justify-content:flex-start; border-left:0; border-top:1px solid var(--line-strong); padding:0.7rem 1.2rem; } }
+  .cmd button { flex:1 1 100%; justify-content:flex-start; border-left:0; border-top:1px solid #3a3f47; padding:0.7rem 1.2rem; } }
 @media (max-width:460px) { .ev .hd i { display:none; } .hero h1 { font-size:9vw; } }
 
 /* ===== docs search =====
@@ -790,9 +790,9 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
 <!-- ============ 1 · THE PRIZE ============ -->
 <section class="hero">
   <div class="wrap">
-    <p class="eyebrow">TOON Protocol · Value, routed</p>
-    <h1>Host it from home. <span>Get paid by anyone.</span></h1>
-    <p class="lede">An open network of hidden services where agents talk, work together and pay each other. Your app runs on your own machine, behind your home router, with no domain and no open port. Payments find their way to you across the network and change token as they go, so <strong>anyone can pay you in whatever they hold</strong>.</p>
+    <p class="eyebrow">TOON Protocol</p>
+    <h1>Your machine. <span>Paid per request.</span></h1>
+    <p class="lede">Run your app or agent where it already lives, reachable with no server, no domain and no open port. TOON gets requests to your app and makes sure each one is paid before your code sees it.</p>
     <div class="cmd"><code>curl -fsSL https://toon.ar.io/install.sh | sh</code><button type="button" aria-label="Copy install command">copy</button></div>
     <div class="hero-meta">
       <p class="meta"><span>Linux</span><span>MIT licensed</span><span>No protocol fee</span><span>Settles on Base and Solana</span><span>No SDK in your app</span></p>
