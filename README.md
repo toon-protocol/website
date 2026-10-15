@@ -105,6 +105,12 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
    (`.brand/messaging.md` marks which are owed), a "paid" page carrying the live/devnet label,
    and docs body copy, which is not rewritten for the tagline.
 
+8. **The status chip.** Every header carries one chip saying what is live and what is next, built
+   from `STATUS_LIVE`, `STATUS_NEXT` and `OPERATORS` in `build.py`; change them there and rebuild.
+   `OPERATORS` is the number of independent connector operators and renders only above zero.
+   `python3 check.py` fails a page without exactly one chip that says "Live" and "Next". The
+   header also carries "Run a node" and the footer states "No protocol fee".
+
 ## The install URL
 
 Every install command on the site reads `curl -fsSL https://toon.ar.io/install.sh | sh`.
