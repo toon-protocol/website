@@ -328,7 +328,7 @@ def pager_html(index):
 
 def doc_foot(slug, index):
     return f"""  <div class="doc-foot">
-    <p class="doc-meta"><a href="{SOURCE}/{slug}.html">Edit page</a><span>MIT licensed · stored on Arweave via a paid TOON write · <a href="proof.html">proof</a></span></p>
+    <p class="doc-meta"><a href="{SOURCE}/{slug}.html">Edit page</a><span>MIT licensed · No protocol fee · stored on Arweave via a paid TOON write · <a href="proof.html">proof</a></span></p>
     {pager_html(index)}
   </div>"""
 

@@ -204,6 +204,9 @@ MARKETING_BANNED_WORDS = ["onion"]
 SIDEBAR_PAGE_BANNED = ["Get paid"]
 
 
+VOID = ("meta", "link", "br", "img", "path", "rect", "circle", "input", "hr")  # tags with no end tag of their own
+
+
 class Copy(HTMLParser):
     """What a reader and a link preview see: text outside code, the head's tags, the h1 and the sidebar."""
 
@@ -223,7 +226,7 @@ class Copy(HTMLParser):
             k = a.get("name") or a.get("property")
             if k:
                 self.meta[k] = a.get("content") or ""
-        if tag not in ("meta", "link", "br", "img", "path", "rect", "circle", "input", "hr"):
+        if tag not in VOID:
             self.stack.append((tag, a.get("class") or ""))
 
     def handle_endtag(self, tag):
@@ -438,7 +441,7 @@ class Resources(HTMLParser):
             self.chips[-1] += data
 
     def handle_endtag(self, tag):
-        if self.chip_depth:
+        if self.chip_depth and tag not in VOID:
             self.chip_depth -= 1
         if tag == "header":
             self.in_header = False
@@ -448,7 +451,7 @@ class Resources(HTMLParser):
     def handle_starttag(self, tag, attrs):
         a = {k: v for k, v in attrs if v is not None}
         classes = a.get("class", "").split()
-        if self.chip_depth and tag not in ("br", "img", "input", "meta", "link", "hr"):
+        if self.chip_depth and tag not in VOID:
             self.chip_depth += 1
         elif "status-chip" in classes:
             self.chips.append("")
