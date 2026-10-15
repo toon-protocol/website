@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Apps · TOON Protocol</title>
-<meta name="description" content="Open-source services that run behind a TOON node and are paid per request. None contains payment code.">
+<meta name="description" content="Open-source apps that run behind a connector and are paid per request. None contains payment code.">
 <link rel="icon" type="image/svg+xml" href="../assets/icon/toon-icon-16.svg" media="(prefers-color-scheme: light)">
 <link rel="icon" type="image/svg+xml" href="../assets/icon/toon-icon-16-dark.svg" media="(prefers-color-scheme: dark)">
 <link rel="stylesheet" href="../assets/site.css">
@@ -55,14 +55,14 @@
       <span class="badge live">Priced live</span>
       <p>A Nostr relay you get paid to write to. Reads are free and speak plain NIP-01, so any Nostr client can use it. Writes reach it through the connector, already paid. Every agent node carries one.</p>
       <div class="meta"><span class="stat"><i class="star">★</i>0</span><span class="stat"><i class="lang" style="background:#dea584"></i>Rust</span><span class="stat ver">rust-2026.10.03.4</span></div>
-      <div class="foot"><span>write a message <b>0.001 USDC</b></span><span>mainnet, read 2026-10-03 · route <code>g.toon.relay</code></span></div>
+      <div class="foot"><span>write a message <b>0.001 USDC</b></span><span>mainnet, read 2026-10-03 · route <code>g.drew.relay</code></span></div>
     </li>
     <li>
       <a class="head" href="https://github.com/toon-protocol/store"><span class="av"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></span><span class="title"><span class="owner">toon-protocol/</span><b>store</b></span><span class="go">↗</span></a>
       <span class="badge live">Priced live</span>
       <p>A paid Arweave blob store that uploads through AR.IO's Turbo and returns the transaction id. It also brokers ArNS name purchases. This site was stored through it.</p>
       <div class="meta"><span class="stat"><i class="star">★</i>0</span><span class="stat"><i class="lang" style="background:#3178c6"></i>TypeScript</span></div>
-      <div class="foot"><span>store a file <b>0.001 USDC + 0.00003 USDC / KiB</b></span><span>mainnet, read 2026-10-03 · route <code>g.toon.store</code></span></div>
+      <div class="foot"><span>store a file <b>0.001 USDC + 0.00003 USDC / KiB</b></span><span>mainnet, read 2026-10-03 · route <code>g.drew.ario</code></span></div>
     </li>
     <li>
       <a class="head" href="https://github.com/toon-protocol/anytoon"><span class="av"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></span><span class="title"><span class="owner">toon-protocol/</span><b>anytoon</b></span><span class="go">↗</span></a>
@@ -76,7 +76,7 @@
       <span class="badge live">Priced live</span>
       <p>Pays other people's gas. A peer holding no SOL gets a Solana transaction landed. A peer holding no ETH gets an EVM call mined. They pay in the token they do hold.</p>
       <div class="meta"><span class="stat"><i class="star">★</i>0</span><span class="stat"><i class="lang" style="background:#3178c6"></i>TypeScript</span><span class="stat ver">MIT</span></div>
-      <div class="foot"><span>a Solana fee paid for you <b>0.012 USDC</b></span><span>mainnet, read 2026-10-03 · route <code>g.toon.gas</code></span></div>
+      <div class="foot"><span>a Solana fee paid for you <b>0.012 USDC</b></span><span>mainnet, read 2026-10-03 · route <code>g.drew.gas.transfer</code></span></div>
     </li>
     <li>
       <a class="head" href="https://github.com/toon-protocol/provider"><span class="av"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></span><span class="title"><span class="owner">toon-protocol/</span><b>provider</b></span><span class="go">↗</span></a>
@@ -90,7 +90,7 @@
       <span class="badge src">Devnet</span>
       <p>A priced route that sells nothing, on purpose. Pay it to test your whole payment flow before you risk money. It answers with a Mirror of what arrived and what it was charged.</p>
       <div class="meta"><span class="stat"><i class="star">★</i>0</span><span class="stat"><i class="lang" style="background:#dea584"></i>Rust</span></div>
-      <div class="foot"><span>pay a packet <b>1 + 1 / KiB</b> base units of test USDC</span><span>devnet only, the figure in its README · route <code>g.toon.echo</code></span></div>
+      <div class="foot"><span>pay a packet <b>1 + 1 / KiB base units of test USDC</b></span><span>devnet, from its README, read 2026-10-15 · route <code>g.toon.echo</code></span></div>
     </li>
   </ul>
 </section>

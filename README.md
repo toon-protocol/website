@@ -72,9 +72,10 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
 
 1. **Prices.** The "Priced live" cards on the apps page are a snapshot read off the live
    agent node's `GET /ilp`. Reread it, then update the read date and the network on every
-   price (apps page cards and status chip, and the agents page's hermes-toon card) if a price
-   or the network changed. Each price carries its unit or token, its read date and the
-   network it was read on, and the chip says the same network.
+   price (the apps page cards and trust line, and the agents page's hermes-toon card) if a
+   price or the network changed, and the route on each card to the prefix that node serves.
+   Each price carries its unit or token, its read date and the network it was read on, and
+   that network is the one the status chip (`STATUS_LIVE` in `build.py`) calls live.
 2. **Release tags.** The version named in `src/docs/install.html` is toon_cli's latest
    release (`gh release list -R toon-protocol/toon_cli`); the Docker tag in
    `src/docs/run-a-node.html` is the connector's (`gh release list -R toon-protocol/connector`).
