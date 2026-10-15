@@ -299,6 +299,8 @@ class Resources(HTMLParser):
             self.in_mark, self.header_mark = True, set()
         elif tag in ("rect", "g") and self.in_mark:
             self.header_mark |= set(classes)
+            if "fill" in a or "fill:" in a.get("style", ""):
+                self.header_mark.add("fill=")
         if tag == "link" and a.get("rel") == "icon":
             self.icons.append((a.get("href", ""), a.get("media", "")))
         if tag == "script":
@@ -339,7 +341,7 @@ def rule_favicon(page):
         if href.startswith("data:"):
             yield rule, "a data-URI favicon"
     for media, name in want.items():
-        if not any(m == media and href.endswith("/" + name if "/" in href else href == name) for href, m in icons):
+        if not any(m == media and href.rsplit("/", 1)[-1] == name for href, m in icons):
             yield rule, f"no <link rel=\"icon\" media=\"{media}\"> for {name}"
 
 
@@ -354,6 +356,8 @@ def rule_header_mark(page):
             yield rule, f"the header mark has no .{part} shape"
     if "c" in got:
         yield rule, "the header mark draws the wire, which is gone at this size"
+    if "fill=" in got:
+        yield rule, "the header mark paints its own colours, so the page's theme can't set its light and dark variants"
 
 
 def rule_scripts(page):

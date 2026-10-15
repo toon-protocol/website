@@ -74,7 +74,7 @@ NAV = [
 
 FLAT = [(slug, title, summary, section) for section, pages in NAV for slug, title, summary in pages]
 
-MARK = """<svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg>"""
+FULL_MARK = """<svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg>"""
 
 # The two-bar mark for 24 to 48px (assets/icon/toon-icon-small.svg), inline so the page's tokens theme it:
 # an Ink header bar with a Paper square on Paper, a Paper bar with a Night square on Night.
@@ -88,8 +88,6 @@ def favicons(root):
     """The 16px pixel mark as files, the light one for a light browser and the dark one for a dark browser."""
     return "".join(f'<link rel="icon" type="image/svg+xml" href="{root}assets/icon/{name}.svg" media="(prefers-color-scheme: {scheme})">\n'
                    for name, scheme in (("toon-icon-16", "light"), ("toon-icon-16-dark", "dark")))
-
-
 
 
 # toon_cli's GitHub stars, shown beside the GitHub icon once they pass the threshold.
@@ -113,7 +111,6 @@ def social():
         out.append(f'<a href="{url}" aria-label="TOON on {name}" title="{name}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="{d}"/></svg>{count}</a>')
     out.append('</span>')
     return "\n      ".join(out)
-
 
 
 def header(root, active):
@@ -345,7 +342,7 @@ def build_splash(index, slug, title, summary, body):
         <a class="pill secondary" href="first-agent-node.html">Your first agent node</a>
       </div>
     </div>
-    <div class="art">{MARK.replace('width="28" height="28"', 'width="320" height="320"')}</div>
+    <div class="art">{FULL_MARK.replace('width="28" height="28"', 'width="320" height="320"')}</div>
   </div>
   <div class="doc">
 {body}
