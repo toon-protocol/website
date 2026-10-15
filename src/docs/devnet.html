@@ -10,7 +10,7 @@
 
 <h2>Nodes</h2>
 
-<p>Three nodes, six routes. Each node is the receiver of its own channels, so a channel opened with one buys nothing at the others.</p>
+<p>Four nodes, seven routes. Each node is the receiver of its own channels, so a channel opened with one buys nothing at the others.</p>
 
 <div class="tablewrap"><table>
 <thead><tr><th>Node</th><th>Client-edge URL</th><th>Route</th><th>Price</th><th>Carriage</th></tr></thead>
@@ -21,6 +21,7 @@
 <tr><td><code>g.toon.relay.ephemeral</code></td><td>free</td><td>HTTP or BTP</td></tr>
 <tr><td><code>g.toon.relay.store</code></td><td>1001 <strong>+ 10 per KiB</strong></td><td>HTTP or BTP</td></tr>
 <tr><td><code>g.toon.relay.gas</code></td><td>1001</td><td>HTTP or BTP</td></tr>
+<tr><td><strong><a href="#the-echo-merchant">Echo Merchant</a></strong></td><td><code>https://proxy.echo.devnet.toonprotocol.dev</code></td><td><code>g.toon.echo</code></td><td>1 <strong>+ 1 per KiB</strong></td><td>HTTP or BTP</td></tr>
 </tbody></table></div>
 
 <p>The last two are <strong>forwarded</strong>: the relay carries the packet to the store or the gas station and charges its own hop on top. Forwarding runs one way. A forwarded route needs one thing a direct one does not: the payload is sealed to the connector that <em>terminates</em> the route, so you name the far node yourself with <code>sealTo</code>. Seal to the relay instead and the packet is undeliverable (<code>F01</code>).</p>
@@ -50,7 +51,7 @@
 
 <h2>The Echo Merchant</h2>
 
-<p>The <strong>Echo Merchant</strong> is a priced route at <code>g.toon.echo</code> that sells nothing, on purpose. It costs 1 base unit plus 1 per KiB, on Base Sepolia or Solana devnet, and it answers each paid packet with a <strong>Mirror</strong>: the request as it arrived and the payment as it arrived, including what it was charged. Pay it first, before a route that sells something real, and a failure is your payer's, not the service's.</p>
+<p>The <strong>Echo Merchant</strong> is a priced route at <code>g.toon.echo</code>, served at <code>https://proxy.echo.devnet.toonprotocol.dev</code>, that sells nothing, on purpose. It costs 1 base unit plus 1 per KiB, on Base Sepolia or Solana devnet, and it answers each paid packet with a <strong>Mirror</strong>: the request as it arrived and the payment as it arrived, including what it was charged. Pay it first, before a route that sells something real, and a failure is your payer's, not the service's.</p>
 
 <p>The walkthrough, the <a href="https://github.com/toon-protocol/echo-merchant/blob/main/docs/guide/echo-flow.md">Echo flow</a>, lives in the <a href="https://github.com/toon-protocol/echo-merchant">echo-merchant</a> repository: install, fund, open a channel, pay, read the Mirror and withdraw.</p>
 
