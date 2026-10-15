@@ -1,7 +1,7 @@
 <!doctype html>
 <!-- The social preview card: the full mark on Paper and the tagline in Ink, nothing else.
-     Render to toon-card.png, 1200 by 630, with a headless Chromium (Playwright's chromium-headless-shell works):
-     page.setViewportSize({width:1200,height:630}); page.goto("file:///.../assets/og/card.html"); page.screenshot({path:"assets/og/toon-card.png"}) -->
+     Render to toon-card.png, 1200 by 630, from the repository root with a headless Chromium (Playwright's chrome-headless-shell works too):
+     chromium --headless=new --hide-scrollbars --window-size=1200,630 --screenshot=assets/og/toon-card.png "file://$PWD/assets/og/card.html" -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
