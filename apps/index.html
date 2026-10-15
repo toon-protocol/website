@@ -32,64 +32,64 @@
 <header class="ph">
   <div>
     <p class="eyebrow">The apps</p>
-    <h1>Built behind a node.</h1>
-    <p class="lede">Open-source services that run behind a TOON node and are paid per request. None of them contains payment code; the node in front does the charging. Run any of them with <code>toon add</code>, or put your own behind a node and get listed.</p>
-    <p class="trust"><i class="dot live"></i><span>Four are priced on the live mainnet node today. Prices are what it answers at <a href="https://connector.167-233-221-236.sslip.io/ilp"><code>GET /ilp</code></a>, read on 2026-10-03.</span></p>
+    <h1>Apps behind a connector.</h1>
+    <p class="lede">Open-source apps that sit behind a connector and are paid per request. None of them contains payment code: the connector in front refuses an unpaid request with the price. Run any of them with <code>toon add</code>, or put your own behind your agent node and get listed.</p>
+    <p class="trust"><i class="dot live"></i><span>Live on mainnet: 4 apps, priced in USDC, settled on Base mainnet and Solana mainnet. Each price is what the live agent node answers at <a href="https://connector.167-233-221-236.sslip.io/ilp"><code>GET /ilp</code></a>, read on 2026-10-03. The other 2 apps are source or devnet only.</span></p>
   </div>
   <aside class="ph-side">
     <b>6</b>
     <span>apps, each one open source</span>
-    <a href="../docs/adding-an-app.html">Put yours behind a node →</a>
+    <a href="../docs/adding-an-app.html">Put yours behind a connector →</a>
   </aside>
 </header>
 
 <section class="shelf">
   <div class="shelf-head">
     <h2>Browse everything</h2>
-    <p>every app, priced live or source to run</p>
+    <p>every app: priced on mainnet, or source to run</p>
   </div>
   <ul class="appgrid" role="list">
     <li>
       <a class="head" href="https://github.com/toon-protocol/relay"><span class="av"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></span><span class="title"><span class="owner">toon-protocol/</span><b>relay</b></span><span class="go">↗</span></a>
       <span class="badge live">Priced live</span>
-      <p>A Nostr relay you get paid to write to. Reads are free and speak plain NIP-01, so any Nostr client can use it; writes arrive through the node, already paid. Every agent node carries one.</p>
+      <p>A Nostr relay you get paid to write to. Reads are free and speak plain NIP-01, so any Nostr client can use it. Writes reach it through the connector, already paid. Every agent node carries one.</p>
       <div class="meta"><span class="stat"><i class="star">★</i>0</span><span class="stat"><i class="lang" style="background:#dea584"></i>Rust</span><span class="stat ver">rust-2026.10.03.4</span></div>
-      <div class="foot"><span>write a message <b>$0.001</b></span><span>devnet <code>g.toon.relay</code></span></div>
+      <div class="foot"><span>write a message <b>0.001 USDC</b></span><span>mainnet, read 2026-10-03 · route <code>g.toon.relay</code></span></div>
     </li>
     <li>
       <a class="head" href="https://github.com/toon-protocol/store"><span class="av"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></span><span class="title"><span class="owner">toon-protocol/</span><b>store</b></span><span class="go">↗</span></a>
       <span class="badge live">Priced live</span>
-      <p>A paid Arweave blob store that uploads through AR.IO's Turbo and returns the transaction id. Also brokers ArNS name purchases. This site was stored through it.</p>
+      <p>A paid Arweave blob store that uploads through AR.IO's Turbo and returns the transaction id. It also brokers ArNS name purchases. This site was stored through it.</p>
       <div class="meta"><span class="stat"><i class="star">★</i>0</span><span class="stat"><i class="lang" style="background:#3178c6"></i>TypeScript</span></div>
-      <div class="foot"><span>store a file <b>$0.001 + $0.00003 / KiB</b></span><span>devnet <code>g.toon.store</code></span></div>
+      <div class="foot"><span>store a file <b>0.001 USDC + 0.00003 USDC / KiB</b></span><span>mainnet, read 2026-10-03 · route <code>g.toon.store</code></span></div>
     </li>
     <li>
       <a class="head" href="https://github.com/toon-protocol/anytoon"><span class="av"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></span><span class="title"><span class="owner">toon-protocol/</span><b>anytoon</b></span><span class="go">↗</span></a>
       <span class="badge live">Priced live</span>
-      <p>The Anyone Protocol credentials issuer behind a node, reached only at a <code>.anyone</code> hidden-service address. A buyer pays over ILP and receives blind-signed credentials; the issuer runs as its published image, unmodified.</p>
+      <p>The Anyone Protocol credentials issuer behind a connector, reached only at a <code>.anyone</code> address, as a hidden service with no open port and no public address. Whoever pays sends an ILP payment and receives blind-signed credentials. The issuer runs as its published image, unmodified.</p>
       <div class="meta"><span class="stat"><i class="star">★</i>1</span><span class="stat"><i class="lang" style="background:#3178c6"></i>TypeScript</span></div>
-      <div class="foot"><span>fetch a URL anonymously <b>$0.001</b></span><span>ANYONE on Ethereum, or USDC on Base</span></div>
+      <div class="foot"><span>fetch a URL anonymously <b>0.001 USDC</b></span><span>mainnet, read 2026-10-03 · route behind a <code>.anyone</code> address</span></div>
     </li>
     <li>
       <a class="head" href="https://github.com/toon-protocol/gas-station"><span class="av"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></span><span class="title"><span class="owner">toon-protocol/</span><b>gas-station</b></span><span class="go">↗</span></a>
       <span class="badge live">Priced live</span>
-      <p>Pays other people's gas. A peer holding no SOL gets a Solana transaction landed; a peer holding no ETH gets an EVM call mined. They pay in whatever they do hold.</p>
+      <p>Pays other people's gas. A peer holding no SOL gets a Solana transaction landed. A peer holding no ETH gets an EVM call mined. They pay in the token they do hold.</p>
       <div class="meta"><span class="stat"><i class="star">★</i>0</span><span class="stat"><i class="lang" style="background:#3178c6"></i>TypeScript</span><span class="stat ver">MIT</span></div>
-      <div class="foot"><span>a Solana fee paid for you <b>$0.012</b></span><span>devnet <code>g.toon.gas</code></span></div>
+      <div class="foot"><span>a Solana fee paid for you <b>0.012 USDC</b></span><span>mainnet, read 2026-10-03 · route <code>g.toon.gas</code></span></div>
     </li>
     <li>
       <a class="head" href="https://github.com/toon-protocol/provider"><span class="av"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></span><span class="title"><span class="owner">toon-protocol/</span><b>provider</b></span><span class="go">↗</span></a>
       <span class="badge src">Source</span>
-      <p>A compute provider that sells leases on OCI workloads over TOON payment channels, with a <a href="https://github.com/toon-protocol/gateway">gateway</a> that fronts a workload at a stable hostname and follows it across hosts.</p>
+      <p>A compute provider that sells leases on OCI workloads over TOON channels, with a <a href="https://github.com/toon-protocol/gateway">gateway</a> that fronts a workload at a stable hostname and follows it across hosts.</p>
       <div class="meta"><span class="stat"><i class="star">★</i>0</span><span class="stat"><i class="lang" style="background:#dea584"></i>Rust</span><span class="stat ver">Apache-2.0</span></div>
       <div class="foot"><span>spec: TOON_Network</span><span>a hard fork of Paygress</span></div>
     </li>
     <li>
       <a class="head" href="https://github.com/toon-protocol/echo-merchant"><span class="av"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></span><span class="title"><span class="owner">toon-protocol/</span><b>echo-merchant</b></span><span class="go">↗</span></a>
       <span class="badge src">Devnet</span>
-      <p>A priced route that sells nothing, on purpose. Pay it to prove your payer's whole flow before risking money: it answers with a Mirror of what arrived and what it was charged.</p>
+      <p>A priced route that sells nothing, on purpose. Pay it to test your whole payment flow before you risk money. It answers with a Mirror of what arrived and what it was charged.</p>
       <div class="meta"><span class="stat"><i class="star">★</i>0</span><span class="stat"><i class="lang" style="background:#dea584"></i>Rust</span></div>
-      <div class="foot"><span>pay a packet <b>1 + 1 / KiB</b> base units</span><span>devnet <code>g.toon.echo</code></span></div>
+      <div class="foot"><span>pay a packet <b>1 + 1 / KiB</b> base units of test USDC</span><span>devnet only, the figure in its README · route <code>g.toon.echo</code></span></div>
     </li>
   </ul>
 </section>
@@ -98,9 +98,9 @@
   <div class="publish">
     <p class="kicker"># publish</p>
     <h3>Want your app listed?</h3>
-    <p>Any HTTP service in a container image. Listen on a port, answer a request, and let the node in front of it take the payment. One <code>toon add</code> puts it behind your node at the price you choose; the store's repository is the worked example. Then open a pull request on this site.</p>
+    <p>Any HTTP service in a container image. Listen on a port and answer a request. The connector in front of it takes the payment. One <code>toon add</code> puts it behind your agent node at the price you choose. The store's repository is the worked example. Then open a pull request on this site.</p>
     <div class="cta">
-      <a class="button primary" href="../docs/adding-an-app.html">Put your app behind a node</a>
+      <a class="button primary" href="../docs/adding-an-app.html">Put your app behind a connector</a>
       <a class="button ghost" href="https://github.com/toon-protocol/store">The worked example</a>
       <a class="button ghost" href="https://github.com/toon-protocol/website">Get listed</a>
     </div>
