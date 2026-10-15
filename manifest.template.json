@@ -14,9 +14,6 @@
     "assets/docs.js": {
       "id": "<arweave tx id of this file>"
     },
-    "assets/fonts/archivo-800.woff2": {
-      "id": "<arweave tx id of this file>"
-    },
     "assets/fonts/ibm-plex-mono-400.woff2": {
       "id": "<arweave tx id of this file>"
     },
@@ -42,9 +39,6 @@
       "id": "<arweave tx id of this file>"
     },
     "assets/fonts/ibm-plex-sans-condensed-OFL.txt": {
-      "id": "<arweave tx id of this file>"
-    },
-    "assets/fonts/jetbrains-mono.woff2": {
       "id": "<arweave tx id of this file>"
     },
     "assets/icon/toon-icon-16-dark.svg": {
