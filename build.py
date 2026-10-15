@@ -455,9 +455,9 @@ def sync_demo():
     if DEMO:
         if not (DEMO.get("label") and DEMO.get("lines") and DEMO.get("links")):
             raise SystemExit("build.py: DEMO needs its label, its lines and its links, or nothing")
-        links = " · ".join('<a href="' + html.escape(url, quote=True) + '">' + html.escape(text) + "</a>"
+        links = " · ".join('<a href="' + html.escape(url, quote=True) + '">' + html.escape(text, quote=False) + "</a>"
                            for text, url in DEMO["links"])
-        block = ('<div class="demo-proof" id="demo">\n<p>' + html.escape(DEMO["label"]) + "</p>\n"
+        block = ('<div class="demo-proof" id="demo">\n<p>' + html.escape(DEMO["label"], quote=False) + "</p>\n"
                  + "<pre>" + "\n".join(html.escape(line, quote=False) for line in DEMO["lines"]) + "</pre>\n"
                  + '<p class="demo-links">' + links + "</p>\n</div>\n")
     page.write_text(html_text[:start] + "\n" + block + html_text[end:])
