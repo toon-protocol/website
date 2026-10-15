@@ -244,7 +244,26 @@ def search_records(slug, title, anchored):
 
 MENU = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path class="open" d="M4 6h16M4 12h16M4 18h16"/>'
         '<path class="shut" d="M6 6l12 12M18 6 6 18"/></svg>')
-SUN_MOON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>'
+THEME_ICONS = {
+    "dark": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>',
+    "light": ('<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/>'
+              '<path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'),
+    "auto": ('<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/>'
+             '<path d="M8 20h8M12 16v4"/></svg>'),
+}
+CHECK = '<svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>'
+
+
+def theme_picker():
+    """The theme picker: a button and a menu of three, opened by assets/docs.js."""
+    options = "".join(
+        f'<li role="option" data-value="{value}" aria-selected="{"true" if value == "auto" else "false"}" tabindex="-1">'
+        f'{THEME_ICONS[value]}<span>{name}</span>{CHECK}</li>'
+        for value, name in (("dark", "Dark"), ("light", "Light"), ("auto", "Auto")))
+    return (f'<div class="theme" hidden><button type="button" class="theme-btn" aria-haspopup="listbox" aria-expanded="false" '
+            f'aria-controls="theme-menu" aria-label="Theme: Auto"><span class="icon">{THEME_ICONS["auto"]}</span>'
+            f'<span class="label">Auto</span>{CHEVRON}</button>'
+            f'<ul class="theme-menu" id="theme-menu" role="listbox" aria-label="Theme" hidden>{options}</ul></div>')
 SOURCE = "https://github.com/toon-protocol/website/blob/main/src/docs"
 
 
@@ -266,7 +285,7 @@ def docs_header(with_menu):
   <div class="mid">{SEARCH_BUTTON}</div>
   <div class="right">
       {social()}
-    <label class="theme" hidden>{SUN_MOON}<span class="sr">Theme</span><select aria-label="Theme"><option value="dark">Dark</option><option value="light">Light</option><option value="auto" selected>Auto</option></select>{CHEVRON}</label>
+    {theme_picker()}
   </div>
 </header>"""
 
