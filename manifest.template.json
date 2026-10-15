@@ -47,12 +47,6 @@
     "assets/icon/toon-icon-16.svg": {
       "id": "<arweave tx id of this file>"
     },
-    "assets/icon/toon-icon-512.png": {
-      "id": "<arweave tx id of this file>"
-    },
-    "assets/icon/toon-icon-64.png": {
-      "id": "<arweave tx id of this file>"
-    },
     "assets/icon/toon-icon-dark.svg": {
       "id": "<arweave tx id of this file>"
     },
@@ -60,9 +54,6 @@
       "id": "<arweave tx id of this file>"
     },
     "assets/icon/toon-icon-small.svg": {
-      "id": "<arweave tx id of this file>"
-    },
-    "assets/icon/toon-icon-transparent.svg": {
       "id": "<arweave tx id of this file>"
     },
     "assets/icon/toon-icon.svg": {
