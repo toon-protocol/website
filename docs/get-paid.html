@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Get paid · TOON Protocol docs</title>
+<title>Take payment from anyone · TOON Protocol docs</title>
 <meta name="description" content="A node anyone on Base or Solana can open a channel to and pay, with no gas.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f3efe6'/%3E%3Crect x='2' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='11' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='5' y='4' width='3' height='8' fill='%232b2f36'/%3E%3Crect x='9' y='4' width='3' height='8' fill='%23c9a24a'/%3E%3C/svg%3E">
 <script>try{var t=localStorage.getItem("toon-theme");if(t==="dark"||t==="light")document.documentElement.dataset.theme=t}catch(e){}</script>
@@ -57,7 +57,7 @@
       <summary>The connector, by hand<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
       <a href="run-a-node.html">Run a node</a>
       <a href="put-your-app-behind-it.html">Put your app behind it</a>
-      <a href="get-paid.html" aria-current="page">Get paid</a>
+      <a href="get-paid.html" aria-current="page">Take payment from anyone</a>
       <a href="peering-by-hand.html">Peer with another node</a>
       <a href="operator-surface.html">The operator surface</a>
       <a href="hidden-services.html">Hidden services</a>
@@ -97,7 +97,7 @@
     <a href="#checking-it" class="h2">Checking it</a>
     <a href="#before-you-rely-on-it" class="h2">Before you rely on it</a>
     </nav></details>
-    <div class="titlebar"><p class="section">The connector, by hand</p><h1 id="_top">Get paid</h1></div>
+    <div class="titlebar"><p class="section">The connector, by hand</p><h1 id="_top">Take payment from anyone</h1></div>
     <div class="doc">
     <p class="lede">A node anyone on Base or Solana can open a channel to and pay, with no gas.</p>
 <p>A price makes a route cost something. A <strong>settlement backend</strong> is what lets anyone actually pay it. There are two chains, and a node may carry either table or both; with both, it accepts vouchers on both at once. Every channel is an x402 <code>batch-settlement</code> channel: on EVM that is x402's audited <code>x402BatchSettlement</code> contract, and on Solana the Solana Foundation's <code>payment-channels</code> program. Both are <strong>constants of the binary</strong>, the same address on every network, so there is nothing chain-specific to name beyond your own RPC, token and key.</p>
