@@ -816,6 +816,9 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
 .tapewrap { margin-top:2rem; }
 .demo-proof { margin-top:1.5rem; padding:1rem 1.2rem; border:1px solid var(--line-strong); border-left:4px solid var(--gold); background:var(--bg-raised); }
 .demo-proof p { margin:0; }
+/* The excerpt wraps inside the Night panel, so a long line never scrolls the page sideways. */
+.demo-proof pre { margin:0.8rem 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+.demo-links { font:0.78rem/1.7 var(--mono); }
 @media (max-width:900px) { .twocol > div { min-width:0; } }
 </style>
 </head>
@@ -849,7 +852,7 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
   <div class="wrap">
     <p class="eyebrow">TOON Protocol</p>
     <h1>Your machine. <span>Paid per request.</span></h1>
-    <p class="lede">Run your app or agent where it already lives, reachable with no server, no domain and no open port. TOON gets requests to your app and makes sure each one is paid before your code sees it.</p>
+    <p class="lede">Run your app or agent where it already lives, reachable with no server, no domain and <a href="#demo">no open port</a> (shown on devnet). TOON gets requests to your app and makes sure each one is paid before your code sees it.</p>
     <div class="cmd"><code>curl -fsSL https://toon.ar.io/install.sh | sh</code><button type="button" aria-label="Copy install command">copy</button></div>
     <div class="hero-meta">
       <p class="meta"><span>Linux</span><span>MIT licensed</span><span>No protocol fee</span><span>Settles on Base and Solana</span><span>No SDK in your app</span></p>
@@ -1051,6 +1054,18 @@ The gas a deposit needs is not held: 0x173780d7…52d9 (evm): 0.001 ETH for gas.
         <p>A new TOON app is reachable as a hidden service, at an <code>.anyone</code> address, with no open port and no public address. A hidden service is reached through the Anyone network, so it hides where your app is, though not who it pays: payments are on a public chain.</p>
         <p><a href="docs/hidden-services.html">How hidden services work →</a></p>
 <!-- demo -->
+<div class="demo-proof" id="demo">
+<p>Shown on devnet, with test USDC, through one relay the project operates: an app in a VM behind NAT, no port forwarded, paid from a machine on another network.</p>
+<pre># Payer: pay the app behind NAT through the devnet relay, at its public https address
+(the payer runs no anon daemon. The relay carries the packet over the Anyone overlay to the provider.)
+FULFILL 200  paid 3 to the hub
+
+# Payer: scan the home's public address (masked here) from the Linode
+linode-payer# nmap -n -Pn -T4 --top-ports 1000 &lt;home-ip&gt;
+All 1000 scanned ports on &lt;home-ip&gt; are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)</pre>
+<p class="demo-links"><a href="https://github.com/toon-protocol/echo-merchant/tree/main/demo/behind-nat">The demo</a> · <a href="https://github.com/toon-protocol/echo-merchant/blob/main/demo/behind-nat/recording/behind-nat.cast">The recording</a> · <a href="https://sepolia.basescan.org/tx/0x4b7f7860e3485d438008c7abcc77286f80a18aba3645395adc66ff72b54ff21a">The settlement transaction</a></p>
+</div>
 <!-- /demo -->
       </div>
     </div>

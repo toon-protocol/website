@@ -194,8 +194,9 @@ NEVER_SAY = [
 ]
 # .brand/messaging.md, 07 Things not to say, Competitor-adjacent language: "Get paid." as a sentence.
 NEVER_SAY_SENTENCE = ["Get paid."]
-# .brand/messaging.md, 07 Things not to say: "No open port" and "Hidden service" in headlines.
-HEADLINE_BANNED = ["open port", "hidden service"]
+# .brand/voice.md, Rule for "hidden service": keep it out of headlines. "No open port" may go in a
+# headline; messaging.md 07 Things not to say only bans it without a link to the demo.
+HEADLINE_BANNED = ["hidden service"]
 # .brand/messaging.md, 07 Things not to say: never "onion". Marketing pages only: the docs keep
 # "onion endpoint", the term toon_cli/CONTEXT.md defines.
 MARKETING_BANNED_WORDS = ["onion"]
@@ -293,7 +294,59 @@ def rule_landing_copy(page):
     for where, text in heads.items():
         for p in HEADLINE_BANNED:
             if p in text.lower():
-                yield "no open port or hidden service in the headline or titles", f'"{p}" in {where}'
+                yield "no hidden service in the headline or titles", f'"{p}" in {where}'
+
+
+# .brand/messaging.md, 04 Level 3 Message 1 and 07 Things not to say: "No open port" links the demo and says
+# it's shown on devnet. The landing page carries the demo proof block, which links these.
+DEMO_README = "https://github.com/toon-protocol/echo-merchant/tree/main/demo/behind-nat"
+SETTLEMENT_TX = re.compile(r"^https://[^/]+/tx/0x[0-9a-fA-F]{64}$")  # any run's transaction on an explorer
+DEMO_SAYS = "devnet"
+
+
+class DemoProof(HTMLParser):
+    """The text and the links inside the landing page's .demo-proof block."""
+
+    def __init__(self):
+        super().__init__()
+        self.found = False
+        self.depth = 0
+        self.text = []
+        self.links = []
+
+    def handle_starttag(self, tag, attrs):
+        a = {k: v for k, v in attrs if v is not None}
+        if self.depth and tag not in VOID:
+            self.depth += 1
+        elif not self.found and "demo-proof" in a.get("class", "").split():
+            self.found, self.depth = True, 1
+        if self.depth and tag == "a" and "href" in a:
+            self.links.append(a["href"])
+
+    def handle_endtag(self, tag):
+        if self.depth and tag not in VOID:
+            self.depth -= 1
+
+    def handle_data(self, data):
+        if self.depth:
+            self.text.append(data)
+
+
+def rule_landing_demo(page):
+    if page != LANDING:
+        return
+    rule = "landing page carries the demo proof: a .demo-proof block that says devnet and links the demo and its settlement"
+    d = DemoProof()
+    d.feed((ROOT / page).read_text(encoding="utf-8"))
+    if not d.found:
+        yield rule, "no .demo-proof block"
+        return
+    if DEMO_SAYS not in " ".join(d.text).lower():
+        yield rule, f'the block does not say "{DEMO_SAYS}"'
+    if DEMO_README not in d.links:
+        yield rule, f"the block does not link {DEMO_README}"
+    if not any(SETTLEMENT_TX.match(h) for h in d.links):
+        yield rule, "the block links no settlement transaction"
 
 
 def rule_marketing_words(page):
@@ -561,7 +614,7 @@ def rule_manifest():
             yield MANIFEST, "manifest lists every page and referenced asset", target + " (from " + page + ")"
 
 
-PAGE_RULES = [rule_links, rule_fragments, rule_never_say, rule_landing_copy, rule_marketing_words, rule_sidebar, rule_hosts, rule_scripts, rule_favicon, rule_header_mark, rule_status_chip]  # each yields (rule, offending text)
+PAGE_RULES = [rule_links, rule_fragments, rule_never_say, rule_landing_copy, rule_landing_demo, rule_marketing_words, rule_sidebar, rule_hosts, rule_scripts, rule_favicon, rule_header_mark, rule_status_chip]  # each yields (rule, offending text)
 SITE_RULES = [rule_manifest, rule_fonts, rule_retired, rule_contrast]  # each yields (page, rule, offending text)
 
 

@@ -789,4 +789,7 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
 .tapewrap { margin-top:2rem; }
 .demo-proof { margin-top:1.5rem; padding:1rem 1.2rem; border:1px solid var(--line-strong); border-left:4px solid var(--gold); background:var(--bg-raised); }
 .demo-proof p { margin:0; }
+/* The excerpt wraps inside the Night panel, so a long line never scrolls the page sideways. */
+.demo-proof pre { margin:0.8rem 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+.demo-links { font:0.78rem/1.7 var(--mono); }
 @media (max-width:900px) { .twocol > div { min-width:0; } }

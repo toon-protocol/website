@@ -1,4 +1,4 @@
-<!-- Copied verbatim from toon-protocol/brand: identity.md at commit 49e5970fee2b15a4e187c316f3ef9bc34514d435 (branch brand/positioning-messaging-voice, ahead of brand's main, which still says pre-launch on devnet). Edit it there, then copy it again. -->
+<!-- Copied verbatim from toon-protocol/brand: identity.md at commit 80b44741f572ffeae4c75d63c615c239386aac52 (main). Edit it there, then copy it again. -->
 
 # Visual Identity Brief: TOON Protocol
 

@@ -110,9 +110,11 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
    scroll, terminals wrap or scroll inside their own panel. With the system theme dark, the
    landing, apps and agents pages stay Paper, the docs turn Night, and the mark shows in both.
    Check the favicon in a light and a dark browser.
-9. **The home-router demo.** `DEMO` in `build.py` holds the demo's link and a one-line caption.
-   While it is empty the landing page shows nothing in its place. Setting it does not move
-   "no open port" into the headline.
+9. **The home-router demo.** `DEMO` in `build.py` holds the demo proof: the label saying where
+   it ran (devnet, test USDC, the project's relay), lines copied verbatim from the recording,
+   and links to the demo, the recording and the settlement transaction. A re-run changes only
+   `DEMO`. The hero's "no open port" links to the block and says "shown on devnet"; keep both
+   while the demo is devnet-only. "No open port" may go in the title; "hidden service" may not.
 
 ## What the gate checks
 
@@ -124,9 +126,11 @@ changes a list, update it there by hand.
 
 - **Copy.** The landing h1 is "Your machine. Paid per request." and the supporting statement is
   present. The retired taglines, the "never say" phrases and "Get paid." as a sentence of its
-  own appear on no page (title and meta tags included) except the proof page's receipts. "open port" and "hidden service" stay out of the landing h1, title and social
-  titles. "onion" stays off the marketing pages, which have no exclamation mark outside code.
-  The docs sidebar has no banned phrase.
+  own appear on no page (title and meta tags included) except the proof page's receipts. "hidden
+  service" stays out of the landing h1, title and social titles; "open port" may appear there.
+  The landing page carries the demo proof: a `.demo-proof` block that says "devnet" and links
+  the demo README and a settlement transaction. "onion" stays off the marketing pages, which
+  have no exclamation mark outside code. The docs sidebar has no banned phrase.
 - **Chrome.** Every page links the 16px favicon as files, the light one by default and the dark
   one for a dark scheme. Its header mark is the two-bar mark with no wire and no colours of its
   own, so the page's theme sets its light and dark variant. It has exactly one status chip that

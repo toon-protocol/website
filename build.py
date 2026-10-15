@@ -419,10 +419,29 @@ def build_page(slug, body):
             + "\n</div>\n</body>\n</html>\n")
 
 
-# The home-router demo slot on the landing page: (the demo's URL, a one-line caption). Empty:
-# nothing renders. Set both, and a proof block appears in the reachability section.
-# The headline and the title do not change.
-DEMO = ("", "")
+# The home-router demo slot on the landing page: a label saying where the demo ran, lines
+# copied verbatim from its recording, and its links as (text, URL). Empty: nothing renders.
+# Set, a proof block appears in the reachability section, and the hero's "no open port"
+# links to it. A re-run, or a run on mainnet, changes only this.
+DEMO = {
+    "label": "Shown on devnet, with test USDC, through one relay the project operates: "
+             "an app in a VM behind NAT, no port forwarded, paid from a machine on another network.",
+    "lines": [
+        "# Payer: pay the app behind NAT through the devnet relay, at its public https address",
+        "(the payer runs no anon daemon. The relay carries the packet over the Anyone overlay to the provider.)",
+        "FULFILL 200  paid 3 to the hub",
+        "",
+        "# Payer: scan the home's public address (masked here) from the Linode",
+        "linode-payer# nmap -n -Pn -T4 --top-ports 1000 <home-ip>",
+        "All 1000 scanned ports on <home-ip> are in ignored states.",
+        "Not shown: 1000 filtered tcp ports (no-response)",
+    ],
+    "links": [
+        ("The demo", "https://github.com/toon-protocol/echo-merchant/tree/main/demo/behind-nat"),
+        ("The recording", "https://github.com/toon-protocol/echo-merchant/blob/main/demo/behind-nat/recording/behind-nat.cast"),
+        ("The settlement transaction", "https://sepolia.basescan.org/tx/0x4b7f7860e3485d438008c7abcc77286f80a18aba3645395adc66ff72b54ff21a"),
+    ],
+}
 
 
 def sync_demo():
@@ -432,13 +451,15 @@ def sync_demo():
     start_tag, end_tag = "<!-- demo -->", "<!-- /demo -->"
     start = html_text.index(start_tag) + len(start_tag)
     end = html_text.index(end_tag, start)
-    link, caption = DEMO
-    if bool(link) != bool(caption):
-        raise SystemExit("build.py: DEMO needs both its link and its caption, or neither")
     block = ""
-    if link:
-        block = ('<div class="demo-proof"><p>' + html.escape(caption) + ' <a href="' + html.escape(link, quote=True)
-                 + '">See the demo →</a></p></div>\n')
+    if DEMO:
+        if not (DEMO.get("label") and DEMO.get("lines") and DEMO.get("links")):
+            raise SystemExit("build.py: DEMO needs its label, its lines and its links, or nothing")
+        links = " · ".join('<a href="' + html.escape(url, quote=True) + '">' + html.escape(text) + "</a>"
+                           for text, url in DEMO["links"])
+        block = ('<div class="demo-proof" id="demo">\n<p>' + html.escape(DEMO["label"]) + "</p>\n"
+                 + "<pre>" + "\n".join(html.escape(line, quote=False) for line in DEMO["lines"]) + "</pre>\n"
+                 + '<p class="demo-links">' + links + "</p>\n</div>\n")
     page.write_text(html_text[:start] + "\n" + block + html_text[end:])
     print("demo slot:", "set" if block else "empty")
 
