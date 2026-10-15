@@ -128,6 +128,14 @@ export async function loadGate(sandbox: Sandbox, base: string): Promise<Gate> {
 }
 
 /**
+ * Wrap `command` so it runs under bash with `-e -o pipefail`. The sandbox's
+ * exec goes through `sh` (dash in the image), which has no `pipefail`.
+ */
+function bashScript(command: string): string {
+  return `exec bash -eo pipefail -c '${command.replace(/'/g, `'\\''`)}'`;
+}
+
+/**
  * Run `steps` in order, stopping at the first failure.
  *
  * Failure is returned, not thrown, so the caller can decide between a fix
@@ -139,7 +147,7 @@ export async function runGate(sandbox: Sandbox, steps: readonly GateStep[]): Pro
   for (const step of steps) {
     console.log(`  [gate] ${step.name}: ${step.command}`);
     const lines: string[] = [];
-    const result = await sandbox.exec(`set -eo pipefail\n${step.command}`, {
+    const result = await sandbox.exec(bashScript(step.command), {
       onLine: (line) => {
         lines.push(line);
         // Stream sparingly: full build output would bury the runner log.
