@@ -505,7 +505,8 @@ def rule_favicon(page):
             yield rule, "a data-URI favicon"
     for media, name in want.items():
         if not any(m == media and href.rsplit("/", 1)[-1] == name for href, m in icons):
-            yield rule, f"no <link rel=\"icon\"{f' media=\"{media}\"' if media else ' without media'}> for {name}"
+            where = f'media="{media}"' if media else "without media"
+            yield rule, f'no <link rel="icon" {where}> for {name}'
 
 
 def rule_header_mark(page):
