@@ -197,9 +197,11 @@ NEVER_SAY_SENTENCE = ["Get paid."]
 # .brand/messaging.md, 07 Things not to say: "Hidden service" in headlines. "No open port" is allowed
 # when it links the demo and is not shown as if on mainnet; DEMO_PROOF below holds the demo.
 HEADLINE_BANNED = ["hidden service"]
-# The landing page's demo proof (the .demo-proof block): the links it carries and the word it says.
-DEMO_PROOF_LINKS = ["https://github.com/toon-protocol/echo-merchant/tree/main/demo/behind-nat",
-                    "https://sepolia.basescan.org/tx/0x4b7f7860e3485d438008c7abcc77286f80a18aba3645395adc66ff72b54ff21a"]
+# The landing page's demo proof (the .demo-proof block), from .brand/messaging.md, 02 Value proposition
+# (Proof) and 07 Things not to say: it links the demo README and a settlement transaction, and says
+# where it ran. The transaction is matched by shape, so a re-run changes only DEMO in build.py.
+DEMO_PROOF_LINKS = [("the demo README", re.escape("https://github.com/toon-protocol/echo-merchant/tree/main/demo/behind-nat")),
+                    ("a settlement transaction", r"https://(?:sepolia\.)?basescan\.org/tx/0x[0-9a-f]{64}")]
 DEMO_PROOF_WORD = "devnet"
 # .brand/messaging.md, 07 Things not to say: never "onion". Marketing pages only: the docs keep
 # "onion endpoint", the term toon_cli/CONTEXT.md defines.
@@ -308,9 +310,9 @@ def rule_demo_proof(page):
     if not m:
         yield "landing page carries the demo proof", "no .demo-proof block"
         return
-    for u in DEMO_PROOF_LINKS:
-        if f'href="{u}"' not in m.group(1):
-            yield "landing page carries the demo proof", f"the .demo-proof block does not link {u}"
+    for name, pattern in DEMO_PROOF_LINKS:
+        if not re.search(f'href="{pattern}"', m.group(1)):
+            yield "landing page carries the demo proof", f"the .demo-proof block does not link {name}"
     if DEMO_PROOF_WORD not in m.group(1).lower():
         yield "landing page carries the demo proof", f'the .demo-proof block does not say "{DEMO_PROOF_WORD}"'
 

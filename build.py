@@ -423,7 +423,6 @@ def build_page(slug, body):
 # block: the excerpt lines (copied verbatim from the recording, home IP masked as in the recording;
 # a line starting with "#" renders as a comment), the label that says where it ran, and the links
 # as (text, url). Empty ({}): nothing renders. The headline and the title do not change.
-DEMO_URL = "https://github.com/toon-protocol/echo-merchant/tree/main/demo/behind-nat"
 DEMO = {
     "lines": [
         "# Payer: pay the app behind NAT through the devnet relay, at its public https address",
@@ -437,7 +436,7 @@ DEMO = {
     ],
     "label": "Shown on devnet, with test USDC, through one relay the project operates.",
     "links": [
-        ("Demo README", DEMO_URL),
+        ("Demo README", "https://github.com/toon-protocol/echo-merchant/tree/main/demo/behind-nat"),
         ("Recording", "https://github.com/toon-protocol/echo-merchant/blob/main/demo/behind-nat/recording/behind-nat.cast"),
         ("Settlement transaction", "https://sepolia.basescan.org/tx/0x4b7f7860e3485d438008c7abcc77286f80a18aba3645395adc66ff72b54ff21a"),
     ],
@@ -453,10 +452,10 @@ def sync_demo():
     end = html_text.index(end_tag, start)
     block = ""
     if DEMO:
-        q = lambda t: html.escape(t, quote=False)
-        lines = "\n".join('<span class="c">' + q(l) + "</span>" if l.startswith("#") else q(l) for l in DEMO["lines"])
-        links = " · ".join('<a href="' + html.escape(u, quote=True) + '">' + q(t) + "</a>" for t, u in DEMO["links"])
-        block = ('<div class="demo-proof">\n<pre>' + lines + "</pre>\n<p>" + q(DEMO["label"]) + " " + links + "</p>\n</div>\n")
+        lines = "\n".join('<span class="c">' + html.escape(line, quote=False) + "</span>" if line.startswith("#") else html.escape(line, quote=False)
+                          for line in DEMO["lines"])
+        links = " · ".join('<a href="' + html.escape(url, quote=True) + '">' + html.escape(text, quote=False) + "</a>" for text, url in DEMO["links"])
+        block = ('<div class="demo-proof">\n<pre>' + lines + "</pre>\n<p>" + html.escape(DEMO["label"], quote=False) + " " + links + "</p>\n</div>\n")
     page.write_text(html_text[:start] + "\n" + block + html_text[end:])
     print("demo slot:", "set" if block else "empty")
 

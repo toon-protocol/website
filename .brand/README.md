@@ -1,7 +1,7 @@
 # .brand
 
-The brand source text the site is written from, copied from `toon-protocol/brand`, which is
-public, so that work on this repository needs nothing outside it. Each file is copied
+The brand source text the site is written from, copied from the public `toon-protocol/brand`
+so that work on this repository needs nothing outside it. Each file is copied
 verbatim and starts with a comment naming its source file and commit. The directory starts
 with a dot, so `build.py` leaves it out of the Arweave manifest.
 
