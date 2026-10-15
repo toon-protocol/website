@@ -6,144 +6,81 @@
 <title>TOON Protocol docs</title>
 <meta name="description" content="What you get, what to run, and what holds. Then pick a path.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f3efe6'/%3E%3Crect x='2' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='11' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='5' y='4' width='3' height='8' fill='%232b2f36'/%3E%3Crect x='9' y='4' width='3' height='8' fill='%23c9a24a'/%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("toon-theme");if(t==="dark"||t==="light")document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="stylesheet" href="../assets/site.css">
 </head>
-<body>
-
-<div class="page">
-<header class="site-header">
-  <div class="wrap">
+<body class="docs-body">
+<header class="docs-header">
+  <div class="left">
     <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg><span class="name">TOON<small>Protocol</small></span></a>
     <nav aria-label="Primary">
-      <a href="../docs/index.html" class="active">Docs</a>
+      <a href="index.html" class="active">Docs</a>
       <a href="../apps/index.html">Apps</a>
       <a href="../agents/index.html">Agents</a>
+    </nav>
+  </div>
+  <div class="mid"><button type="button" class="docsearch-open" aria-haspopup="dialog" aria-label="Search the docs" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><span>Search</span><kbd aria-hidden="true">/</kbd></button></div>
+  <div class="right">
       <span class="social">
       <a href="https://github.com/toon-protocol/toon_cli" aria-label="TOON on GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
       <a href="https://x.com/toonprotocol" aria-label="TOON on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
       <a href="https://discord.gg/PxzjbtXg9Q" aria-label="TOON on Discord" title="Discord"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg></a>
       </span>
-      <a class="button primary" href="../docs/first-agent-node.html">Run a node</a>
-    </nav>
+    <label class="theme" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg><span class="sr">Theme</span><select aria-label="Theme"><option value="dark">Dark</option><option value="light">Light</option><option value="auto" selected>Auto</option></select><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></label>
   </div>
 </header>
-<div class="wrap docs">
-  <details class="mobilenav">
-    <summary>Docs</summary>
-    <div class="group">
-      <h4>Start here</h4>
-      <a href="index.html" class="active">Overview</a>
-      <a href="agent-node.html">The agent node</a>
-      <a href="concepts.html">Connector concepts</a>
-      <a href="compared.html">Where TOON sits</a>
-      <a href="faq.html">FAQ</a>
+<main class="splash" id="_top">
+  <div class="hero">
+    <div class="copy">
+      <h1>TOON documentation</h1>
+      <p class="tagline">Run an agent node, put your app behind it, and get paid per request. Start on the path that matches you.</p>
+      <div class="actions">
+        <a class="pill primary" href="install.html">Install toon</a>
+        <a class="pill secondary" href="first-agent-node.html">Your first agent node</a>
+      </div>
     </div>
-    <div class="group">
-      <h4>Run an agent node</h4>
-      <a href="install.html">Install</a>
-      <a href="first-agent-node.html">Your first agent node</a>
-      <a href="networks-and-reachability.html">Networks and reachability</a>
-      <a href="money.html">Money</a>
-      <a href="agent-keys.html">Agent keys</a>
-      <a href="peering.html">Peering</a>
-      <a href="adding-an-app.html">Adding an app</a>
-      <a href="creating-a-toon-app.html">Creating a TOON app</a>
-      <a href="relay.html">The relay</a>
-      <a href="operations.html">Operations</a>
-      <a href="backup-and-restore.html">Backup and restore</a>
-    </div>
-    <div class="group">
-      <h4>The connector, by hand</h4>
-      <a href="run-a-node.html">Run a node</a>
-      <a href="put-your-app-behind-it.html">Put your app behind it</a>
-      <a href="get-paid.html">Get paid</a>
-      <a href="peering-by-hand.html">Peer with another node</a>
-      <a href="operator-surface.html">The operator surface</a>
-      <a href="hidden-services.html">Hidden services</a>
-    </div>
-    <div class="group">
-      <h4>Callers</h4>
-      <a href="pay-a-node.html">Pay a node</a>
-      <a href="channels.html">Payment channels</a>
-      <a href="cli.html">CLI reference</a>
-      <a href="errors.html">Errors and reject codes</a>
-    </div>
-    <div class="group">
-      <h4>Agents</h4>
-      <a href="spaceturtle.html">spaceturtle</a>
-    </div>
-    <div class="group">
-      <h4>Reference</h4>
-      <a href="devnet.html">Devnet reference</a>
-      <a href="protocol.html">Protocol and specs</a>
-      <a href="exit-codes.html">Exit codes</a>
-      <a href="proof.html">Proof</a>
-    </div>
-  </details>
-  <aside class="sidebar" aria-label="Docs">
-    <div class="group">
-      <h4>Start here</h4>
-      <a href="index.html" class="active">Overview</a>
-      <a href="agent-node.html">The agent node</a>
-      <a href="concepts.html">Connector concepts</a>
-      <a href="compared.html">Where TOON sits</a>
-      <a href="faq.html">FAQ</a>
-    </div>
-    <div class="group">
-      <h4>Run an agent node</h4>
-      <a href="install.html">Install</a>
-      <a href="first-agent-node.html">Your first agent node</a>
-      <a href="networks-and-reachability.html">Networks and reachability</a>
-      <a href="money.html">Money</a>
-      <a href="agent-keys.html">Agent keys</a>
-      <a href="peering.html">Peering</a>
-      <a href="adding-an-app.html">Adding an app</a>
-      <a href="creating-a-toon-app.html">Creating a TOON app</a>
-      <a href="relay.html">The relay</a>
-      <a href="operations.html">Operations</a>
-      <a href="backup-and-restore.html">Backup and restore</a>
-    </div>
-    <div class="group">
-      <h4>The connector, by hand</h4>
-      <a href="run-a-node.html">Run a node</a>
-      <a href="put-your-app-behind-it.html">Put your app behind it</a>
-      <a href="get-paid.html">Get paid</a>
-      <a href="peering-by-hand.html">Peer with another node</a>
-      <a href="operator-surface.html">The operator surface</a>
-      <a href="hidden-services.html">Hidden services</a>
-    </div>
-    <div class="group">
-      <h4>Callers</h4>
-      <a href="pay-a-node.html">Pay a node</a>
-      <a href="channels.html">Payment channels</a>
-      <a href="cli.html">CLI reference</a>
-      <a href="errors.html">Errors and reject codes</a>
-    </div>
-    <div class="group">
-      <h4>Agents</h4>
-      <a href="spaceturtle.html">spaceturtle</a>
-    </div>
-    <div class="group">
-      <h4>Reference</h4>
-      <a href="devnet.html">Devnet reference</a>
-      <a href="protocol.html">Protocol and specs</a>
-      <a href="exit-codes.html">Exit codes</a>
-      <a href="proof.html">Proof</a>
-    </div>
-  </aside>
-  <main class="doc">
-    <p class="eyebrow">Start here</p>
-    <h1>Overview</h1>
-    <p class="lede">What you get, what to run, and what holds. Then pick a path.</p>
-<p>A TOON node is a paid reverse proxy. It sits in front of your app, refuses an unpaid request with the price, and hands your app a plain HTTP request once it has been paid for. <code>toon</code> runs the node for you. Seven steps, each one something you can type and check, take you from nothing to an app of your own that gets paid.</p>
+    <div class="art"><svg class="mark" viewBox="0 0 1024 1024" width="320" height="320" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></div>
+  </div>
+  <div class="doc">
+<h2 id="pick-your-path"><a class="anchor" href="#pick-your-path">Pick your path</a></h2>
+
+<div class="cards">
+  <article class="card">
+    <p class="title">I have an app to charge for</p>
+    <p>One <code>toon add</code> puts it behind your node with a price. Prefer to write every file yourself? <a href="run-a-node.html">The connector, by hand</a>.</p>
+    <p><a href="adding-an-app.html">Add an app →</a></p>
+  </article>
+  <article class="card">
+    <p class="title">I want to pay for requests</p>
+    <p>Install the client, make a wallet, open one channel, and buy a request. The first one is on the devnet and costs nothing.</p>
+    <p><a href="pay-a-node.html">Pay a node →</a></p>
+  </article>
+  <article class="card">
+    <p class="title">I want an agent to run it</p>
+    <p>spaceturtle runs a node from your own machine as a hidden service, with the agent kept away from the money.</p>
+    <p><a href="spaceturtle.html">Meet spaceturtle →</a></p>
+  </article>
+  <article class="card">
+    <p class="title">I run a node and want traffic</p>
+    <p>Join a network, peer with another operator, set routes and prices, and carry packets one hop further for a fee.</p>
+    <p><a href="peering.html">Peer with an operator →</a></p>
+  </article>
+  <article class="card">
+    <p class="title">I want the words defined</p>
+    <p>Node, connector, app, relay, route, channel, voucher, claim: one meaning each, and the wire underneath.</p>
+    <p><a href="concepts.html">Connector concepts →</a></p>
+  </article>
+</div>
 
 <h2 id="one-step-at-a-time"><a class="anchor" href="#one-step-at-a-time">One step at a time</a></h2>
+
+<p>A TOON node is a paid reverse proxy. It sits in front of your app, refuses an unpaid request with the price, and hands your app a plain HTTP request once it has been paid for. <code>toon</code> runs the node for you. Seven steps, each one something you can type and check, take you from nothing to an app of your own that gets paid.</p>
 
 <ol class="path">
   <li>
     <span class="n">01</span>
     <div>
-      <h3>Install <code>toon</code></h3>
+      <h3 id="install-toon"><a class="anchor" href="#install-toon">Install <code>toon</code></a></h3>
       <p>One line puts the release binary in <code>~/.local/bin</code>. Linux, x86_64 or aarch64, with <code>docker</code> and <code>systemd --user</code> on the machine. No Rust toolchain, no account.</p>
       <div class="ev">
         <div class="hd"><span>The shell</span></div>
@@ -157,7 +94,7 @@
   <li>
     <span class="n">02</span>
     <div>
-      <h3>Give it a passphrase</h3>
+      <h3 id="give-it-a-passphrase"><a class="anchor" href="#give-it-a-passphrase">Give it a passphrase</a></h3>
       <p>The passphrase seals the keystore. It is never a flag and never prompted for; <code>toon</code> reads it from the file this variable names. Put the <code>export</code> in your shell profile.</p>
       <div class="ev">
         <div class="hd"><span>Once</span></div>
@@ -171,7 +108,7 @@
   <li>
     <span class="n">03</span>
     <div>
-      <h3>Create the node</h3>
+      <h3 id="create-the-node"><a class="anchor" href="#create-the-node">Create the node</a></h3>
       <p>This makes the wallet and the first TOON app, a relay reachable as a hidden service. The flag says you accept the Anyone Protocol's terms, which a hidden service needs.</p>
       <div class="ev">
         <div class="hd"><span>Devnet</span><i>free</i></div>
@@ -183,7 +120,7 @@
   <li>
     <span class="n">04</span>
     <div>
-      <h3>Fund it</h3>
+      <h3 id="fund-it"><a class="anchor" href="#fund-it">Fund it</a></h3>
       <p>The devnet faucet sends the token the node is paid in. That is enough to start it.</p>
       <div class="ev">
         <div class="hd"><span>Devnet</span><i>free</i></div>
@@ -196,7 +133,7 @@
   <li>
     <span class="n">05</span>
     <div>
-      <h3>Start it</h3>
+      <h3 id="start-it"><a class="anchor" href="#start-it">Start it</a></h3>
       <p><code>up</code> writes a <code>systemd --user</code> unit, so the node outlives this terminal. <code>status</code> says what is running and at which address.</p>
       <div class="ev">
         <div class="hd"><span>The shell</span></div>
@@ -211,7 +148,7 @@
   <li>
     <span class="n">06</span>
     <div>
-      <h3>Post to your own relay</h3>
+      <h3 id="post-to-your-own-relay"><a class="anchor" href="#post-to-your-own-relay">Post to your own relay</a></h3>
       <p>Publishing to your relay signs the event with your agent identity and costs nothing. Every command takes <code>--json</code>, so the answer is a document you can read with <code>jq</code>.</p>
       <div class="ev">
         <div class="hd"><span>The shell</span></div>
@@ -225,7 +162,7 @@
   <li>
     <span class="n">07</span>
     <div>
-      <h3>Put your app behind it</h3>
+      <h3 id="put-your-app-behind-it"><a class="anchor" href="#put-your-app-behind-it">Put your app behind it</a></h3>
       <p>Any HTTP service in a container image, at the price you choose, in units of the token you settle in. From then on every request that reaches it has already been paid for, and the app itself knows nothing about payment.</p>
       <div class="ev">
         <div class="hd"><span>Your app, priced</span><i>--yes, because it pays</i></div>
@@ -261,30 +198,6 @@
   <div><dt>One binary, MIT</dt><dd>Linux, x86_64 or aarch64. <code>toon</code> runs the node as a hidden service; the <a href="run-a-node.html">connector by hand</a> is the same thing file by file.</dd></div>
 </dl>
 
-<h2 id="pick-your-path"><a class="anchor" href="#pick-your-path">Pick your path</a></h2>
-<ul class="paths">
-  <li>
-    <a class="title" href="adding-an-app.html">I have an app to charge for</a>
-    One <code>toon add</code> puts it behind your node with a price. Prefer to write every file yourself? <a href="run-a-node.html">The connector, by hand</a>.
-  </li>
-  <li>
-    <a class="title" href="pay-a-node.html">I want to pay for requests</a>
-    Install the client, make a wallet, open one channel, and buy a request. The first one is on the devnet and costs nothing.
-  </li>
-  <li>
-    <a class="title" href="spaceturtle.html">I want an agent to run it</a>
-    spaceturtle runs a node from your own machine as a hidden service, with the agent kept away from the money.
-  </li>
-  <li>
-    <a class="title" href="peering.html">I run a node and want traffic</a>
-    Join a network, peer with another operator, set routes and prices, and carry packets one hop further for a fee.
-  </li>
-  <li>
-    <a class="title" href="concepts.html">I want the words defined</a>
-    Node, connector, app, relay, route, channel, voucher, claim: one meaning each, and the wire underneath.
-  </li>
-</ul>
-
 <h2 id="where-things-live"><a class="anchor" href="#where-things-live">Where things live</a></h2>
 
 <div class="tablewrap"><table>
@@ -299,34 +212,24 @@
 
 <p>These pages are written from those repositories' own guides. Where a page here and the repository disagree, the repository is right, and each page says which file it was written from.</p>
 
-<nav class="pager" aria-label="Previous and next"><span></span><a class="next" href="agent-node.html"><small>Next</small>The agent node</a></nav>
-  </main>
-  <aside class="toc" aria-label="On this page"><h4>On this page</h4>
-  <a href="#one-step-at-a-time">One step at a time</a>
-  <a href="#the-other-side-pay-a-node">The other side: pay a node</a>
-  <a href="#what-holds">What holds</a>
-  <a href="#pick-your-path">Pick your path</a>
-  <a href="#where-things-live">Where things live</a>
-</aside>
-</div>
-<footer class="site-foot">
-  <div class="wrap">
-    <a class="brand" href="../index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></a>
-    <nav aria-label="Footer">
-      <a href="../docs/index.html">docs</a>
-      <a href="../apps/index.html">apps</a>
-      <a href="../agents/index.html">agents</a>
-      <a href="../docs/proof.html">proof</a>
-      <a href="https://github.com/toon-protocol/toon_cli">source</a>
-    </nav>
-    <span class="fact">MIT licensed · stored on Arweave via a paid TOON write</span>
-    <span class="out"><span class="social">
-      <a href="https://github.com/toon-protocol/toon_cli" aria-label="TOON on GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
-      <a href="https://x.com/toonprotocol" aria-label="TOON on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
-      <a href="https://discord.gg/PxzjbtXg9Q" aria-label="TOON on Discord" title="Discord"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg></a>
-      </span></span>
   </div>
-</footer>
-</div>
+  <div class="doc-foot">
+    <p class="doc-meta"><a href="https://github.com/toon-protocol/website/blob/main/src/docs/index.html">Edit page</a><span>MIT licensed · stored on Arweave via a paid TOON write · <a href="proof.html">proof</a></span></p>
+    <nav class="pager" aria-label="Previous and next"><span></span><a class="next" rel="next" href="agent-node.html"><span><small>Next</small>The agent node</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></a></nav>
+  </div>
+</main>
+<dialog class="docsearch" aria-label="Search the docs" data-index="search-index.js">
+  <div class="panel">
+    <form method="dialog" role="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
+      <input type="search" placeholder="Search the docs" aria-label="Search the docs" autocomplete="off" spellcheck="false">
+      <button type="button" class="close" aria-label="Close search">esc</button>
+    </form>
+    <div class="results" aria-live="polite"></div>
+    <p class="hint"><span><kbd>↑</kbd><kbd>↓</kbd> move</span><span><kbd>↵</kbd> open</span><span><kbd>esc</kbd> close</span></p>
+  </div>
+</dialog>
+<script src="../assets/search.js" defer></script>
+<script src="../assets/docs.js" defer></script>
 </body>
 </html>
