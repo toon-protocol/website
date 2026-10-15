@@ -17,7 +17,40 @@
     "assets/fonts/archivo-800.woff2": {
       "id": "<arweave tx id of this file>"
     },
+    "assets/fonts/ibm-plex-mono-400.woff2": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/fonts/ibm-plex-mono-500.woff2": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/fonts/ibm-plex-mono-OFL.txt": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/fonts/ibm-plex-sans-400.woff2": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/fonts/ibm-plex-sans-600.woff2": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/fonts/ibm-plex-sans-OFL.txt": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/fonts/ibm-plex-sans-condensed-600.woff2": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/fonts/ibm-plex-sans-condensed-700.woff2": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/fonts/ibm-plex-sans-condensed-OFL.txt": {
+      "id": "<arweave tx id of this file>"
+    },
     "assets/fonts/jetbrains-mono.woff2": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/icon/toon-icon-16-dark.svg": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/icon/toon-icon-16.svg": {
       "id": "<arweave tx id of this file>"
     },
     "assets/icon/toon-icon-512.png": {
@@ -26,10 +59,16 @@
     "assets/icon/toon-icon-64.png": {
       "id": "<arweave tx id of this file>"
     },
+    "assets/icon/toon-icon-dark.svg": {
+      "id": "<arweave tx id of this file>"
+    },
     "assets/icon/toon-icon-small-16.png": {
       "id": "<arweave tx id of this file>"
     },
     "assets/icon/toon-icon-small-32.png": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/icon/toon-icon-small-dark.svg": {
       "id": "<arweave tx id of this file>"
     },
     "assets/icon/toon-icon-small.svg": {

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" shape-rendering="crispEdges">
+  <title>TOON: two-bar mark for 24 to 48px</title>
+  <rect x="10" y="8" width="12" height="32" fill="#f3efe6"/>
+  <rect x="12" y="10" width="4" height="4" fill="#1c1f24"/>
+  <rect x="26" y="8" width="12" height="32" fill="#c9a24a"/>
+</svg>

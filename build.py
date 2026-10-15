@@ -19,6 +19,7 @@ No dependencies beyond the standard library.
 import html
 import json
 import re
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -443,9 +444,11 @@ def main():
         out = ROOT / slug / "index.html"
         out.write_text(build_page(slug, (SRC / f"{slug}.html").read_text()))
         print("wrote", out.relative_to(ROOT))
-    # A path manifest for Arweave: every file under the site, keyed by path.
+    # A path manifest for Arweave: every file git tracks under the site, keyed by path, so an
+    # untracked draft in the working tree never reaches it and a local build matches CI's.
+    tracked = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT, capture_output=True, text=True, check=True).stdout
     paths = {}
-    for p in sorted(ROOT.rglob("*")):
+    for p in sorted(ROOT / name for name in tracked.split("\0") if name):
         if p.is_file() and not any(part.startswith(".") or part in ("src", "__pycache__", "build.py", "check.py", "README.md", "CLAUDE.md") for part in p.relative_to(ROOT).parts):
             paths[str(p.relative_to(ROOT))] = {"id": "<arweave tx id of this file>"}
     manifest = {"manifest": "arweave/paths", "version": "0.2.0", "index": {"path": "index.html"}, "paths": paths}

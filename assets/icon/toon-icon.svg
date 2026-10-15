@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
   <title>TOON: a packet that is data and value at once</title>
-  <rect width="1024" height="1024" fill="#f3efe6"/>
   <g fill="#6b6f76">
     <rect x="112" y="484" width="56" height="56"/>
     <rect x="168" y="499" width="120" height="26"/>
