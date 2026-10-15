@@ -788,16 +788,29 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
 #route .sub, #run .sub, #paid .sub, #agents .sub { color:var(--ink-dim); max-width:46rem; }
 #route, #run, #paid, #agents, #pay-section { padding:3.5rem 0; }
 .route { margin:2rem 0 0; }
-.route-scroll { overflow-x:auto; border:1px solid var(--line-strong); background:var(--bg-raised); padding:1rem; }
-.route-scroll:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
-.route svg { display:block; width:100%; min-width:640px; height:auto; font:500 15px/1 var(--mono); }
+.route-plate { border:1px solid var(--line-strong); background:var(--bg-raised); padding:clamp(0.75rem, 2vw, 1.5rem); }
+.route svg { display:block; width:100%; height:auto; font:500 15px/1 var(--mono); }
+.route svg.tall { display:none; max-width:26rem; margin:0 auto; }
+@media (max-width:900px) { .route svg.wide { display:none; } .route svg.tall { display:block; } }
 .route .wires rect { fill:var(--wire); }
 .route .blocks rect { fill:var(--ink); }
 .route .slivers rect { fill:var(--gold); }
-.route .inside text { fill:var(--bg); font-family:var(--mono); font-size:14px; }
-.route .labels text { fill:var(--ink); font-family:var(--mono); font-size:15px; font-weight:500; text-anchor:middle; }
-.route .labels text.tok { fill:var(--ink-dim); font-size:13px; font-weight:400; }
-.route .labels text.chg { fill:var(--ink); font-weight:500; }
+.route .machine { fill:none; stroke:var(--wire); stroke-width:1.5; stroke-dasharray:6 4; }
+.route .machine-tag { fill:var(--bg-raised); }
+.route text.cap { font:500 10.5px var(--mono); letter-spacing:0.12em; text-transform:uppercase; fill:var(--bg); opacity:0.62; }
+.route text.cap.dim { fill:var(--ink-dim); opacity:1; }
+.route .inside .name { font:600 18px var(--display); fill:var(--bg); }
+.route .inside .det { font:400 12px var(--mono); fill:var(--bg); opacity:0.8; }
+.route .labels text { fill:var(--ink); text-anchor:middle; }
+.route .tall .labels text { text-anchor:start; }
+.route .labels .amt { font:500 16px var(--mono); }
+.route .labels .tok { font:400 12px var(--mono); fill:var(--ink-dim); }
+.route .labels .tok.chg { fill:var(--accent); font-weight:500; }
+.route .rule { fill:var(--line-strong); }
+.route .ledger text { font:500 13px var(--mono); fill:var(--ink); }
+.route .ledger .fee { fill:var(--accent); }
+.route .ledger .ok { fill:var(--good); }
+.route .ledger .sub { font-weight:400; font-size:12px; fill:var(--ink-dim); }
 .route .packet .a { fill:var(--ink); } .route .packet .b { fill:var(--gold); } .route .packet .hole { fill:var(--bg-raised); }
 .route figcaption { margin:0.8rem 0 0; color:var(--ink-dim); font-size:0.9rem; max-width:46rem; }
 .tapewrap { margin-top:2rem; }
@@ -863,46 +876,65 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
     <h2>One packet, paid hop by hop.</h2>
     <p class="sub">Whoever pays sends one packet. Each connector on the way keeps its hop fee and passes the rest on. The last connector hands your app a plain HTTP request.</p>
     <figure class="route">
-      <div class="route-scroll" tabindex="0" role="group" aria-label="Route diagram, scrolls sideways on a narrow screen">
-      <svg viewBox="0 0 960 300" role="img" aria-labelledby="route-t route-d" xmlns="http://www.w3.org/2000/svg">
+      <div class="route-plate">
+      <svg class="wide" viewBox="0 44 960 256" role="img" aria-labelledby="route-t route-d" xmlns="http://www.w3.org/2000/svg">
         <title id="route-t">One paid packet crossing two connectors to an app</title>
         <desc id="route-d">An example route, left to right. Whoever pays sends a packet that carries a price of 2,000 units of USDC on Base. Hop one: the first connector keeps a hop fee of 100 and passes on 1,900 units of USDC on Base. Hop two: the second connector keeps a hop fee of 100, converts the token, and passes on 1,800 units of USDC on Solana. The app on the operator's machine receives a plain HTTP request that has been paid for. The numbers are an example, and each operator sets the real price. Paid hops run on mainnet today; the token change runs on devnet.</desc>
-        <g class="wires">
-          <rect x="150" y="149" width="150" height="2"/>
-          <rect x="420" y="149" width="150" height="2"/>
-          <rect x="690" y="149" width="110" height="2"/>
-        </g>
-        <g class="blocks">
-          <rect x="30" y="110" width="120" height="80"/>
-          <rect x="300" y="110" width="120" height="80"/>
-          <rect x="570" y="110" width="120" height="80"/>
-          <rect x="800" y="110" width="130" height="80"/>
-        </g>
-        <g class="slivers">
-          <rect x="336" y="190" width="48" height="12"/>
-          <rect x="606" y="190" width="48" height="12"/>
-        </g>
+        <rect class="machine" x="812" y="84" width="134" height="132"/>
+        <rect class="machine-tag" x="840" y="76" width="98" height="16"/>
+        <text class="cap dim" x="846" y="88">Your machine</text>
+        <g class="wires"><rect x="170" y="151" width="654" height="2"/></g>
+        <g class="blocks"><rect x="24" y="104" width="146" height="96"/><rect x="290" y="104" width="146" height="96"/><rect x="556" y="104" width="146" height="96"/><rect x="824" y="104" width="110" height="96"/></g>
         <g class="inside">
-          <text x="90" y="145" text-anchor="middle">Whoever</text><text x="90" y="165" text-anchor="middle">pays</text>
-          <text x="360" y="145" text-anchor="middle">Connector</text><text x="360" y="165" text-anchor="middle">one</text>
-          <text x="630" y="145" text-anchor="middle">Connector</text><text x="630" y="165" text-anchor="middle">two</text>
-          <text x="865" y="145" text-anchor="middle">Your app</text><text x="865" y="165" text-anchor="middle">on your machine</text>
+          <text class="cap" x="38" y="126">Payer</text><text class="name" x="38" y="160">Whoever pays</text><text class="det" x="38" y="186">signs 2,000</text>
+          <text class="cap" x="304" y="126">Hop 1</text><text class="name" x="304" y="160">Connector</text><text class="det" x="304" y="186">keeps 100</text>
+          <text class="cap" x="570" y="126">Hop 2</text><text class="name" x="570" y="160">Connector</text><text class="det" x="570" y="186">keeps 100, swaps</text>
+          <text class="cap" x="838" y="126">App</text><text class="name" x="838" y="160">Your app</text><text class="det" x="838" y="186">plain HTTP</text>
         </g>
-        <g class="packet" transform="translate(190 94)">
-          <rect class="a" x="0" y="0" width="22" height="48"/><rect class="hole" x="5" y="6" width="8" height="8"/>
-          <rect class="b" x="26" y="0" width="22" height="48"/>
-        </g>
+        <g class="slivers"><rect x="304" y="200" width="40" height="10"/><rect x="570" y="200" width="40" height="10"/></g>
+        <g class="packet" transform="translate(212 130)"><rect class="a" x="0" y="0" width="16" height="44"/><rect class="hole" x="4" y="5" width="6" height="6"/><rect class="b" x="20" y="0" width="16" height="44"/></g>
+        <g class="packet" transform="translate(478 130)"><rect class="a" x="0" y="0" width="16" height="44"/><rect class="hole" x="4" y="5" width="6" height="6"/><rect class="b" x="20" y="0" width="16" height="44"/></g>
+        <g class="packet" transform="translate(739 130)"><rect class="a" x="0" y="0" width="16" height="44"/><rect class="hole" x="4" y="5" width="6" height="6"/><rect class="b" x="20" y="0" width="16" height="44"/></g>
         <g class="labels">
-          <text x="190" y="72">Price 2,000</text><text x="190" y="90" class="tok">USDC on Base</text>
-          <text x="460" y="72">1,900</text><text x="460" y="90" class="tok">USDC on Base</text>
-          <text x="700" y="72">1,800</text><text x="700" y="90" class="tok chg">USDC on Solana</text>
-          <text x="360" y="224">Hop fee 100</text>
-          <text x="630" y="224">Hop fee 100</text>
-          <text x="630" y="244" class="tok chg">Token changes here</text>
-          <text x="865" y="224">Plain HTTP, already paid</text>
+          <text class="amt" x="230" y="74">2,000</text><text class="tok" x="230" y="94">USDC · Base</text>
+          <text class="amt" x="496" y="74">1,900</text><text class="tok" x="496" y="94">USDC · Base</text>
+          <text class="amt" x="757" y="74">1,800</text><text class="tok chg" x="757" y="94">USDC · Solana</text>
         </g>
-        <g class="packet small" transform="translate(460 118)"><rect class="a" x="0" y="0" width="12" height="28"/><rect class="b" x="15" y="0" width="12" height="28"/></g>
-        <g class="packet small" transform="translate(720 118)"><rect class="a" x="0" y="0" width="12" height="28"/><rect class="b" x="15" y="0" width="12" height="28"/></g>
+        <rect class="rule" x="24" y="236" width="922" height="1"/>
+        <g class="ledger">
+          <text x="24" y="262">2,000 sent</text>
+          <text class="fee" x="304" y="262">−100 fee</text>
+          <text class="fee" x="570" y="262">−100 fee</text><text class="sub" x="570" y="282">Base → Solana</text>
+          <text class="ok" x="824" y="262">1,800 arrives</text><text class="sub" x="824" y="282">already paid</text>
+        </g>
+      </svg>
+      <svg class="tall" viewBox="0 0 360 640" role="img" aria-labelledby="route-t route-d" xmlns="http://www.w3.org/2000/svg">
+        <rect class="machine" x="6" y="488" width="200" height="128"/>
+        <rect class="machine-tag" x="16" y="608" width="98" height="16"/>
+        <text class="cap dim" x="22" y="620">Your machine</text>
+        <g class="wires"><rect x="105" y="108" width="2" height="406"/></g>
+        <g class="blocks"><rect x="16" y="24" width="180" height="84"/><rect x="16" y="184" width="180" height="84"/><rect x="16" y="344" width="180" height="84"/><rect x="16" y="514" width="180" height="84"/></g>
+        <g class="inside">
+          <text class="cap" x="30" y="46">Payer</text><text class="name" x="30" y="74">Whoever pays</text><text class="det" x="30" y="96">signs 2,000</text>
+          <text class="cap" x="30" y="206">Hop 1</text><text class="name" x="30" y="234">Connector</text><text class="det" x="30" y="256">keeps 100</text>
+          <text class="cap" x="30" y="366">Hop 2</text><text class="name" x="30" y="394">Connector</text><text class="det" x="30" y="416">keeps 100, swaps</text>
+          <text class="cap" x="30" y="536">App</text><text class="name" x="30" y="564">Your app</text><text class="det" x="30" y="586">plain HTTP</text>
+        </g>
+        <g class="slivers"><rect x="196" y="198" width="10" height="40"/><rect x="196" y="358" width="10" height="40"/></g>
+        <g class="packet" transform="translate(84 128)"><rect class="a" x="0" y="0" width="44" height="16"/><rect class="hole" x="33" y="5" width="6" height="6"/><rect class="b" x="0" y="20" width="44" height="16"/></g>
+        <g class="packet" transform="translate(84 288)"><rect class="a" x="0" y="0" width="44" height="16"/><rect class="hole" x="33" y="5" width="6" height="6"/><rect class="b" x="0" y="20" width="44" height="16"/></g>
+        <g class="packet" transform="translate(84 436)"><rect class="a" x="0" y="0" width="44" height="16"/><rect class="hole" x="33" y="5" width="6" height="6"/><rect class="b" x="0" y="20" width="44" height="16"/></g>
+        <g class="labels">
+          <text class="amt" x="144" y="144">2,000</text><text class="tok" x="144" y="162">USDC · Base</text>
+          <text class="amt" x="144" y="304">1,900</text><text class="tok" x="144" y="322">USDC · Base</text>
+          <text class="amt" x="144" y="452">1,800</text><text class="tok chg" x="144" y="470">USDC · Solana</text>
+        </g>
+        <g class="ledger">
+          <text x="222" y="64">2,000 sent</text>
+          <text class="fee" x="222" y="224">−100 fee</text>
+          <text class="fee" x="222" y="384">−100 fee</text><text class="sub" x="222" y="404">Base → Solana</text>
+          <text class="ok" x="222" y="554">1,800 arrives</text><text class="sub" x="222" y="574">already paid</text>
+        </g>
       </svg>
       </div>
       <figcaption>An example route with made-up numbers. The packet is drawn as the TOON mark and carries its price; the Gold slivers are the fees each connector keeps. You set the real price, and TOON adds no fee of its own. Paid hops like these run on mainnet today; the token change runs on devnet.</figcaption>
