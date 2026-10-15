@@ -50,8 +50,8 @@ before it.
   for code, commands, prices and labels), all served from `assets/fonts/`. Labels and live/next
   tags are the only uppercase text. The landing, apps and agents pages are always Paper, with
   Night terminals; only the docs follow `prefers-color-scheme` and the theme picker. Colours are
-  tokens at the top of `assets/site.css`; `check.py` holds the text pairings that must reach
-  4.5:1 in both sets, so change a token and run the check.
+  tokens at the top of `assets/site.css`; change a token and run `python3 check.py`, which
+  holds the text pairings that must reach 4.5:1 (see "What the gate checks").
 - **A docs page** is a body fragment in `src/docs/<slug>.html`. The title, summary, section
   and order come from `NAV` in `build.py`. Every `<h2>` gets an anchor and an entry in the
   page's table of contents. End each page with a `<p class="source">` naming the
@@ -98,14 +98,19 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
 6. **Copy.** Read for what the check cannot catch: the tone rules in `.brand/voice.md`,
    claims that need proof (`.brand/messaging.md` marks which are owed), a "paid" page carrying
    the live/devnet label, whether the route diagram reads well, and whether the terminal
-   output still matches what the named `toon` release prints. The typing tape in the operators
+   output still matches what the named `toon` release prints. The header carries "Run a node"
+   and the footer states "No protocol fee"; the check enforces neither. The typing tape in the operators
    section is a CSS animation over real commands in workflow order; reduced motion holds its
    first line.
 7. **The status chip.** Every header carries one chip saying what is live and what is next,
    built from `STATUS_LIVE`, `STATUS_NEXT` and `OPERATORS` in `build.py`. When the network
    changes, change them there and rebuild. `OPERATORS` is the number of independent connector
    operators and renders only above zero.
-8. **The home-router demo.** `DEMO` in `build.py` holds the demo's link and a one-line caption.
+8. **How the pages look.** Open each page at phone width and at desktop width: no sideways
+   scroll, terminals wrap or scroll inside their own panel. With the system theme dark, the
+   landing, apps and agents pages stay Paper, the docs turn Night, and the mark shows in both.
+   Check the favicon in a light and a dark browser.
+9. **The home-router demo.** `DEMO` in `build.py` holds the demo's link and a one-line caption.
    While it is empty the landing page shows nothing in its place. Setting it does not move
    "no open port" into the headline.
 
@@ -113,25 +118,29 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
 
 `python3 check.py` reads the built site, never the sources, and prints one line per violation
 naming the page, the rule and the offending text. The CI gate runs it after the build, so the
-factory's agents and every human PR meet the same bar. Its lists sit at the top of `check.py`,
-each naming the `.brand/` file it was copied from; when the brand package changes a list,
-update it there by hand.
+factory's agents and every human PR meet the same bar. Its rules hold their lists as plain
+data in `check.py`, each naming the `.brand/` file it was copied from; when the brand package
+changes a list, update it there by hand.
 
 - **Copy.** The landing h1 is "Your machine. Paid per request." and the supporting statement is
-  present. The retired taglines and the "never say" phrases appear on no page except the proof
-  page's receipts. "open port" and "hidden service" stay out of the landing h1, title and social
+  present. The retired taglines, the "never say" phrases and "Get paid." as a sentence of its
+  own appear on no page (title and meta tags included) except the proof page's receipts. "open port" and "hidden service" stay out of the landing h1, title and social
   titles. "onion" stays off the marketing pages, which have no exclamation mark outside code.
   The docs sidebar has no banned phrase.
-- **Chrome.** Every page links the 16px favicon in light and dark, carries a header mark with
-  both theme variants, and has exactly one status chip that says "Live" and "Next".
-- **Type, colour and hosts.** The stylesheet declares only the three Plex families and every
-  font file it names exists. Archivo, JetBrains Mono and the retired accent `#d9b65c` appear
-  nowhere. Each text pairing it lists reaches 4.5:1 in the light and the dark set. No page loads
-  a stylesheet, font, script or image from another host. The landing page has one script; the
-  apps and agents pages have none.
+- **Chrome.** Every page links the 16px favicon as files, the light one by default and the dark
+  one for a dark scheme. Its header mark is the two-bar mark with no wire and no colours of its
+  own, so the page's theme sets its light and dark variant. It has exactly one status chip that
+  says "Live" and "Next".
+- **Type, colour and hosts.** The stylesheet declares only the three Plex families, its type
+  stacks lead with one, and every font file it names exists. Archivo, JetBrains Mono and the
+  retired accent `#d9b65c` appear nowhere in the stylesheet, the landing page's inlined copy or
+  the manifest. Each text pairing in `PAIRINGS` reaches 4.5:1 in the light set and in both dark
+  sets (the theme picker's and the docs' system theme). No tag on any page, and no `url()` in the
+  landing page's inlined stylesheet, loads a stylesheet, font, script or image from another
+  host. The landing page has one script; the apps and agents pages have none.
 - **Links and manifest.** Every internal `href` and `src` resolves to a file, and every
   same-site `#fragment` to an id on its page. The manifest lists every page and referenced
-  asset, and nothing under `src/`, `__pycache__/` or a dot-directory.
+  asset, only files that exist, and nothing under `src/`, `__pycache__/` or a dot-directory.
 
 ## The install URL
 
