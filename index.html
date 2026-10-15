@@ -22,7 +22,8 @@
 <meta name="twitter:image" content="https://toon.ar.io/assets/og/toon-card.png">
 <meta name="twitter:image:alt" content="TOON Protocol. Your machine. Paid per request.">
 <meta name="theme-color" content="#f3efe6">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f3efe6'/%3E%3Crect x='2' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='11' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='5' y='4' width='3' height='8' fill='%232b2f36'/%3E%3Crect x='9' y='4' width='3' height='8' fill='%23c9a24a'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="assets/icon/toon-icon-16.svg" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/icon/toon-icon-16-dark.svg" media="(prefers-color-scheme: dark)">
 <style data-src="assets/site.css">
 /* TOON Protocol site: one stylesheet for the landing page, docs/, apps/ and agents/.
    build.py copies it inline into index.html so that file stands alone.
@@ -113,16 +114,18 @@ p { margin:0; }
 .mark { display:block; flex:none; }
 .mark .a { fill:var(--ink); }
 .mark .b { fill:var(--gold); }
-.mark .c { fill:var(--ink-faint); }
+.mark .c { fill:var(--wire); }
 .mark .hole { fill:var(--bg); }
 
 /* ===== header ===== */
 .site-header { position:sticky; top:0; z-index:20; border-bottom:1px solid var(--line);
   background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(10px); }
 .site-header .wrap { display:flex; align-items:center; justify-content:space-between; gap:1rem; height:3.5rem; }
-.brand { display:inline-flex; align-items:center; gap:0.6rem; color:var(--ink); text-decoration:none; white-space:nowrap;
-  font:500 1.05rem/1 var(--mono); letter-spacing:-0.01em; }
-.brand .name small { color:var(--ink-faint); font-weight:400; margin-left:0.45rem; letter-spacing:0; }
+/* The interim lockup (.brand/identity.md "Lockup"): the mark is 36px, so a bar is 9px wide and 24px tall. The gap is one
+   bar width; the cap height is 0.42 of the bar height, 10px, which Plex Sans Condensed (caps 0.7em) sets at 0.9rem. */
+.brand { display:inline-flex; align-items:center; gap:9px; color:var(--ink); text-decoration:none; white-space:nowrap; }
+.brand .name { font:700 0.9rem/1 var(--display); letter-spacing:0.02em; }
+.brand .name small { color:var(--wire); font:400 0.8rem/1 var(--mono); margin-left:0.45rem; letter-spacing:0; }
 .site-header nav { display:flex; gap:1.3rem; align-items:center; }
 .site-header nav a { color:var(--ink-dim); text-decoration:none; font:500 0.8rem/1 var(--mono); letter-spacing:0; }
 .site-header nav a:hover, .site-header nav a.active { color:var(--ink); }
@@ -384,13 +387,9 @@ details pre { margin:0 1.15rem 1.15rem; }
 .hero-meta .new i { font-style:normal; color:var(--ink-faint); transition:margin-left .12s ease; }
 .hero-meta .new:hover i { margin-left:0.3rem; color:var(--accent); }
 .hero .lede strong { color:var(--ink); }
-/* The mark's drawing starts 24.6% down its square box. Its top edge is put level with the lede, so the headline runs clear above it. */
-.hero .bigmark { --mw:min(42rem, 60vw); position:absolute; right:-6rem; top:calc(20rem - var(--mw) * 0.246); width:var(--mw); height:auto; pointer-events:none; }
-@media (max-width:1200px) { .hero .bigmark { display:none; } }
 .bigmark rect { fill:none; stroke:var(--ink); stroke-width:5; opacity:0.16; }
 .bigmark .b { fill:var(--gold); fill-opacity:0.35; stroke:var(--gold); opacity:0.5; }
 .bigmark .hole { stroke:var(--ink); opacity:0.16; }
-@media (max-width:900px) { .hero .bigmark { display:none; } }
 
 /* ===== landing: the mechanics frame, the specs, the pay block ===== */
 .frame { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); border:1px solid var(--line); background:var(--bg-raised); }
@@ -465,7 +464,7 @@ footer .wrap { display:flex; flex-wrap:wrap; gap:0.8rem 1.4rem; align-items:cent
 footer nav { display:flex; flex-wrap:wrap; gap:1.1rem; }
 footer a { color:var(--ink-dim); text-decoration:none; }
 footer a:hover { color:var(--ink); }
-footer .brand .mark { width:1.1rem; height:1.1rem; }
+footer .brand .mark { width:1.5rem; height:1.5rem; }
 footer .fact { color:var(--ink-faint); }
 footer .out { margin-left:auto; }
 @media (max-width:700px) { footer .out { margin-left:0; } }
@@ -770,7 +769,7 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
 <!-- header -->
 <header class="site-header">
   <div class="wrap">
-    <a class="brand" href="#top" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg><span class="name">TOON<small>Protocol</small></span></a>
+    <a class="brand" href="#top" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 48 48" width="36" height="36" aria-hidden="true" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"><rect class="a" x="10" y="8" width="12" height="32"/><rect class="hole" x="12" y="10" width="4" height="4"/><rect class="b" x="26" y="8" width="12" height="32"/></svg><span class="name">TOON<small>Protocol</small></span></a>
     <nav aria-label="Primary">
       <a href="docs/index.html">Docs</a>
       <a href="apps/index.html">Apps</a>
@@ -790,7 +789,6 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
 
 <!-- ============ 1 · THE PRIZE ============ -->
 <section class="hero">
-  <svg class="bigmark mark" viewBox="0 0 1024 1024" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg>
   <div class="wrap">
     <p class="eyebrow">TOON Protocol</p>
     <h1>Your machine. <span>Paid per request.</span></h1>
@@ -944,7 +942,7 @@ answer.fulfilled ? answer.text() : answer.code        <span class="c">// a refus
 <!-- footer -->
 <footer class="site-foot">
   <div class="wrap">
-    <a class="brand" href="index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg></a>
+    <a class="brand" href="index.html" aria-label="TOON Protocol, home"><svg class="mark" viewBox="0 0 48 48" width="36" height="36" aria-hidden="true" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"><rect class="a" x="10" y="8" width="12" height="32"/><rect class="hole" x="12" y="10" width="4" height="4"/><rect class="b" x="26" y="8" width="12" height="32"/></svg></a>
     <nav aria-label="Footer">
       <a href="docs/index.html">docs</a>
       <a href="apps/index.html">apps</a>
