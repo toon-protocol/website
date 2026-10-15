@@ -243,14 +243,17 @@ def contrast(a, b):
 
 
 def token_sets(css):
-    """The light set (:root) and the dark set (:root[data-theme="dark"]) laid over it."""
+    """The light set (:root), and each dark set laid over it: the picker's (:root[data-theme="dark"]) and
+    the system theme's (the docs' block under prefers-color-scheme: dark)."""
     def block(selector_re):
         m = re.search(selector_re + r"\s*{([^}]*)}", css)
         return dict(re.findall(r"(--[\w-]+)\s*:\s*([^;]+?)\s*(?:;|$)", m.group(1))) if m else {}
     light = block(r"(?m)^:root")
-    dark = dict(light)
-    dark.update(block(r':root\[data-theme="dark"\]'))
-    return {"light": light, "dark": dark}
+    sets = {"light": light}
+    for theme, selector_re in (("dark", r'(?m)^:root\[data-theme="dark"\]'),
+                               ("system dark", r':root:has\(body\.docs-body\):not\(\[data-theme="light"\]\)')):
+        sets[theme] = {**light, **block(selector_re)}
+    return sets
 
 
 def rule_contrast():

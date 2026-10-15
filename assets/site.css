@@ -147,6 +147,11 @@ section + section, section + div { border-top:1px solid var(--line); }
 .cta { display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:1.75rem; }
 
 /* ===== terminal: code and the install card ===== */
+/* Terminals are Night on every page and in both themes: inside one, the surface, line and
+   text tokens are the terminal set (check.py holds its pairings). */
+pre, .codeblock, .ev, .cmd { --bg-raised:var(--term); --bg-sunken:var(--term-2); --line:var(--term-line); --line-strong:var(--term-line);
+  --ink:var(--term-ink); --ink-soft:var(--term-ink); --ink-dim:var(--term-dim); --ink-faint:var(--term-dim);
+  --accent:var(--term-gold); --good:var(--term-good); color-scheme:dark; }
 pre { overflow-x:auto; margin:0; padding:0.9rem 1.1rem; background:var(--bg-raised); color:var(--ink);
   border:1px solid var(--line-strong); border-radius:var(--radius); font-size:0.8rem; line-height:1.75; }
 :not(pre) > code { padding:0.08em 0.4em; background:var(--bg-sunken); border:1px solid var(--line); border-radius:var(--radius-sm); font-size:0.85em; color:var(--ink); }
@@ -165,7 +170,7 @@ pre .s { color:var(--good); }
    generated content, so it is not part of what gets copied. The button is the one script
    on the site (index.html, at the end of the body). */
 .cmd { display:inline-flex; align-items:stretch; max-width:100%; margin-top:2rem; border:1px solid var(--line-strong);
-  background:color-mix(in srgb, var(--bg-raised) 82%, transparent); backdrop-filter:blur(6px); }
+  background:var(--bg-raised); }
 .cmd code { display:flex; align-items:center; gap:0.7rem; padding:0.85rem 1.2rem; font-size:0.86rem; white-space:nowrap; overflow-x:auto; scrollbar-width:none;
   background:none; border:0; border-radius:0; color:var(--ink); }
 .cmd code::before { content:"$"; color:var(--gold); font-weight:500; }
@@ -446,6 +451,10 @@ footer .out { margin-left:auto; }
    picker, the copy buttons and the "On this page" highlight; without it the pages read
    the same, the sidebar sitting above the page on a phone. */
 :root { --docs-nav-h:4rem; --docs-side-w:18.5rem; --docs-toc-w:17rem; --docs-pad:1.5rem; }
+/* Focus, the theme menu and the search panel are drawn in Ink (Paper in dark) and Wire, which hold
+   3:1 against the page in both themes; Gold on Paper would not. */
+body.docs-body :focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
+body.docs-body .theme-menu li:focus-visible { outline-offset:-2px; }
 html:has(body.docs-body) { scroll-padding-top:calc(var(--docs-nav-h) + 1.5rem); }
 body.docs-body { background:var(--bg); background-image:none; padding-bottom:0; }
 body.docs-body svg.chev { width:0.85rem; height:0.85rem; flex:none; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
@@ -472,10 +481,9 @@ html.nav-open .docs-header .menu .shut { display:inline; }
   border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink-dim); font:500 0.88rem/1 var(--body); }
 .theme-btn .icon { display:inline-flex; }
 .theme-btn:hover, .theme-btn[aria-expanded="true"] { color:var(--ink); border-color:var(--line-strong); }
-.theme-btn:focus-visible { outline:2px solid var(--gold); outline-offset:1px; }
 .theme-btn[aria-expanded="true"] .chev { transform:rotate(180deg); }
 .theme-menu { position:absolute; top:calc(100% + 0.5rem); right:0; z-index:40; min-width:10rem; margin:0; padding:0.35rem; list-style:none;
-  border:1px solid var(--line-strong); border-radius:8px; background:var(--bg); box-shadow:0 12px 32px -8px rgba(0,0,0,.35); }
+  border:1px solid var(--wire); border-radius:8px; background:var(--bg); box-shadow:0 12px 32px -8px rgba(0,0,0,.35); }
 .theme-menu[hidden] { display:none; }
 .theme-menu li { display:flex; align-items:center; gap:0.65rem; padding:0.55rem 0.7rem; border-radius:5px; cursor:pointer;
   color:var(--ink-dim); font:500 0.9rem/1.2 var(--body); outline:0; }
@@ -580,7 +588,7 @@ html.nav-open .docs-header .menu .shut { display:inline; }
 .doc h3 { font-size:1.25rem; margin:2rem 0 0.6rem; }
 .doc h2 a.anchor, .doc h3 a.anchor { color:inherit; text-decoration:none; }
 .doc h2 a.anchor:hover::after, .doc h3 a.anchor:hover::after { content:" #"; color:var(--gold); font-weight:400; }
-.doc p, .doc li { color:var(--ink-dim); line-height:1.75; }
+.doc p, .doc li { color:var(--ink-dim); line-height:1.55; }
 .doc p { max-width:var(--measure); margin:0 0 0.9rem; }
 .doc ul, .doc ol { max-width:var(--measure); padding-left:1.4rem; margin:0 0 1rem; }
 .doc li { margin-bottom:0.4rem; }
@@ -693,7 +701,6 @@ html.nav-open .docs-header .menu .shut { display:inline; }
 .docsearch-open { display:flex; align-items:center; gap:0.55rem; width:100%; height:2.4rem; padding:0 0.6rem 0 0.75rem; cursor:pointer;
   border:1px solid var(--line); border-radius:var(--radius); background:var(--bg-raised); color:var(--ink-faint); font:0.88rem/1 var(--body); text-align:left; }
 .docsearch-open:hover { border-color:var(--line-strong); color:var(--ink-dim); }
-.docsearch-open:focus-visible { outline:2px solid var(--gold); outline-offset:1px; }
 .docsearch-open[hidden] { display:none; }
 .docsearch-open span { flex:1; }
 .docsearch-open svg, .docsearch form svg { width:1rem; height:1rem; flex:none; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; }
@@ -703,7 +710,7 @@ html.nav-open .docs-header .menu .shut { display:inline; }
 html.searching { overflow:hidden; }
 dialog.docsearch { width:min(42rem, calc(100vw - 2rem)); max-width:none; max-height:none; margin:12vh auto 0; padding:0; border:0; background:none; color:var(--ink); }
 dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur(2px); }
-.docsearch .panel { display:flex; flex-direction:column; max-height:76vh; border:1px solid var(--line-strong); border-radius:6px;
+.docsearch .panel { display:flex; flex-direction:column; max-height:76vh; border:1px solid var(--wire); border-radius:6px;
   background:var(--bg); box-shadow:0 24px 60px -12px rgba(0,0,0,.45); overflow:hidden; }
 .docsearch form { display:flex; align-items:center; gap:0.75rem; padding:0 1rem; border-bottom:1px solid var(--line); color:var(--ink-faint); }
 .docsearch form svg { width:1.15rem; height:1.15rem; }
