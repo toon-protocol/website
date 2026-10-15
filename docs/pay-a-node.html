@@ -147,7 +147,7 @@ npx toon-client claim-state                          <span class="c"># what the 
 
 <p>Each step below says what one of those does and shows the same thing from the library.</p>
 
-<p>Pay the <strong>Echo Merchant</strong> first. Its route <code>g.toon.echo</code> sells nothing and answers with a Mirror of what arrived and what it was charged, so you can prove this whole flow before paying a service that matters. Its <a href="https://github.com/toon-protocol/echo-merchant/blob/main/docs/guide/echo-flow.md">Echo flow</a> is the same steps aimed at it, and the <a href="devnet.html">devnet reference</a> says more.</p>
+<p>Pay the <strong>Echo Merchant</strong> first. Its route <code>g.toon.echo</code> sells nothing and answers with a Mirror of what arrived and what it was charged, so you can prove this whole flow before paying a service that matters. Its guide <a href="https://github.com/toon-protocol/echo-merchant/blob/main/docs/guide/paying-with-toon-client.md">Paying with toon-client</a> is the same steps aimed at it, and the <a href="devnet.html#the-echo-merchant">devnet reference</a> says more.</p>
 
 <p>The node used throughout is the devnet store, <code>https://proxy.ario.devnet.toonprotocol.dev</code>, which serves the route <code>g.toon.store</code> at 1000 base units (0.001 USDC) plus 10 per kibibyte. The <a href="devnet.html">devnet reference</a> has the full table.</p>
 
@@ -276,7 +276,7 @@ console.log(channel.channel.channelId, channel.depositTotal);</pre>
   <li><a href="https://github.com/toon-protocol/toon-client/blob/main/docs/api.md">Library API</a> on GitHub: every method, option and returned type.</li>
 </ul>
 
-<p class="source">Written from <code>toon-client/docs/getting-started.md</code> and <code>packages/client/README.md</code>.</p>
+<p class="source">Written from <code>toon-client/docs/getting-started.md</code> and <code>packages/client/README.md</code>, and the Echo Merchant from <code>echo-merchant/docs/guide/paying-with-toon-client.md</code>.</p>
 
 <nav class="pager" aria-label="Previous and next"><a class="prev" href="hidden-services.html"><small>Previous</small>Hidden services</a><a class="next" href="channels.html"><small>Next</small>Payment channels</a></nav>
   </main>
