@@ -10,7 +10,7 @@ push, open a PR or close the issue. The runner does all three once you finish.
 ## This repository
 
 - This is the source of [toon.ar.io](https://toon.ar.io): the TOON Protocol landing page,
-  the docs, and the ecosystem, apps and agents pages. It is static HTML and CSS with one
+  the docs, and the apps and agents pages. It is static HTML and CSS with one
   build step, `python3 build.py`, which uses the Python standard library only. There is no
   package manager and nothing to install.
 - `CLAUDE.md` says how the factory works, and `README.md` says how the site is edited
@@ -18,10 +18,10 @@ push, open a PR or close the issue. The runner does all three once you finish.
   vocabulary) and `.agents/adr/` (decisions) when they exist and the ticket touches them.
   `docs/` is the built site, not documentation for you. Where an ADR and another document
   disagree, the ADR wins. Use the glossary's terms.
-- Edit the sources, never the build output: `src/docs/<slug>.html`, `src/ecosystem.html`,
+- Edit the sources, never the build output: `src/docs/<slug>.html`,
   `src/apps.html`, `src/agents.html`, `assets/site.css`, and `index.html` outside its
   `<!-- header -->`/`<!-- footer -->` markers and its `<style>` copy. Then run
-  `python3 build.py` and commit what it rewrote (`docs/`, `ecosystem/`, `apps/`, `agents/`,
+  `python3 build.py` and commit what it rewrote (`docs/`, `apps/`, `agents/`,
   `index.html`, `manifest.template.json`) together with the source change.
 - Before you commit, run the internal checks from README.md's "Before publishing": the
   one-script grep must print only `./index.html`, and no page may load a stylesheet, font
@@ -36,7 +36,7 @@ push, open a PR or close the issue. The runner does all three once you finish.
   can do from here. Say so in a comment on the issue rather than guessing. Here that means
   publishing: uploading to Arweave, filling transaction ids into the manifest, pointing the
   ArNS record `toon`, and adding receipts to `src/docs/proof.html`. It also means rereading
-  the live node's prices for the ecosystem page. Leave all of that to a human.
+  the live node's prices for the apps page. Leave all of that to a human.
 - `install.sh` is served at `https://toon.ar.io/install.sh` and piped into `sh` by every
   install command on the site. Do not change it unless the ticket is about it.
 

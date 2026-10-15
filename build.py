@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Build docs/ and ecosystem/ from the fragments in src/.
+"""Build docs/, apps/ and agents/ from the fragments in src/.
 
     python3 build.py
 
 Each src/docs/<slug>.html is a body fragment. This script wraps it in the docs layout
 (header, sidebar, table of contents, pager, footer) and writes docs/<slug>.html.
-src/ecosystem.html becomes ecosystem/index.html. index.html at the root is hand-written;
+src/apps.html and src/agents.html become apps/index.html and agents/index.html. index.html at the root is hand-written;
 the only thing this script does to it is copy assets/site.css between its <style> markers,
 so the one file stands alone while the stylesheet stays the single source.
 
@@ -127,7 +127,6 @@ def footer(root):
       <a href="{root}docs/index.html">docs</a>
       <a href="{root}apps/index.html">apps</a>
       <a href="{root}agents/index.html">agents</a>
-      <a href="{root}ecosystem/index.html">ecosystem</a>
       <a href="{root}docs/proof.html">proof</a>
       <a href="{GITHUB}">source</a>
     </nav>
@@ -229,9 +228,6 @@ def build_doc(index, slug, title, summary, section, body):
 
 
 PAGES = {
-    "ecosystem": ("Ecosystem · TOON Protocol",
-                  "The apps behind TOON nodes, the clients that pay them, and the rails underneath: "
-                  "AR.IO, Arweave, Anyone Protocol, x402, Solana, Base, Interledger."),
     "apps": ("Apps · TOON Protocol",
              "Open-source services that run behind a TOON node and are paid per request. "
              "None contains payment code."),

@@ -1,4 +1,4 @@
-/* TOON Protocol site: one stylesheet for the landing page, docs/ and ecosystem/.
+/* TOON Protocol site: one stylesheet for the landing page, docs/, apps/ and agents/.
    build.py copies it inline into index.html so that file stands alone.
    Palette from the icon: cream, charcoal, gold, grey. The only script is the copy button. */
 
@@ -114,7 +114,6 @@ p { margin:0; }
 /* ===== sections ===== */
 section { padding:4rem 0; }
 section + section, section + div { border-top:1px solid var(--line); }
-section.tint { background:var(--bg-tint); }
 .cta { display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:1.75rem; }
 
 /* ===== terminal: code and the install card ===== */
@@ -330,9 +329,7 @@ details pre { margin:0 1.15rem 1.15rem; }
 .bigmark rect { fill:none; stroke:var(--ink); stroke-width:5; opacity:0.16; }
 .bigmark .b { fill:var(--gold); fill-opacity:0.35; stroke:var(--gold); opacity:0.5; }
 .bigmark .hole { stroke:var(--ink); opacity:0.16; }
-.hero.split .wrap { display:grid; grid-template-columns:minmax(0, 1.05fr) minmax(0, 1fr); gap:3rem; align-items:center; }
-.hero.split h1 { font-size:clamp(2.4rem, 4.8vw, 3.6rem); }
-@media (max-width:900px) { .hero.split .wrap { grid-template-columns:1fr; gap:2.5rem; } .hero .bigmark { display:none; } }
+@media (max-width:900px) { .hero .bigmark { display:none; } }
 
 /* ===== landing: the mechanics frame, the specs, the pay block ===== */
 .frame { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); border:1px solid var(--line); background:var(--bg-raised); }
@@ -533,54 +530,6 @@ footer .out { margin-left:auto; }
 .publish p { color:var(--ink-dim); max-width:var(--measure); }
 .publish .cta { margin-top:1.4rem; }
 
-/* ===== ecosystem ===== */
-.priced { list-style:none; padding:1px; margin:0; display:grid; gap:1px; grid-template-columns:repeat(auto-fit, minmax(15rem, 1fr)); }
-.priced li { padding:1.4rem 1.4rem 1.3rem; background:var(--bg-raised); box-shadow:0 0 0 1px var(--line); display:flex; flex-direction:column; gap:0.55rem; font-size:0.93rem; color:var(--ink-dim); position:relative; }
-.priced li::before { content:""; position:absolute; inset:0 auto 0 0; width:3px; background:var(--gold); }
-.priced li > b { font:800 2rem/1 var(--display); letter-spacing:-0.04em; color:var(--ink); }
-.priced li > b small { font:500 0.85rem/1 var(--body); letter-spacing:0; color:var(--ink-dim); margin-left:0.2rem; }
-.priced .what { color:var(--ink-faint); font:600 0.7rem/1.4 var(--mono); letter-spacing:0.12em; text-transform:uppercase; margin-top:-0.25rem; }
-.priced .top { display:flex; justify-content:space-between; align-items:center; gap:0.6rem; margin-top:0.5rem; padding-top:0.8rem; border-top:1px solid var(--line); }
-.priced .top a { font:700 0.98rem/1.2 var(--mono); letter-spacing:-0.02em; color:var(--ink); text-decoration:none; }
-.priced .top a:hover { color:var(--accent); }
-.priced li > p { margin:0; }
-.priced .foot { margin-top:auto; padding-top:0.5rem; color:var(--ink-faint); font:0.76rem/1.6 var(--mono); }
-.live-grid { display:grid; grid-template-columns:minmax(0, 1.5fr) minmax(0, 1fr); gap:1.5rem; align-items:start; }
-.live-grid .tablewrap { margin:0; }
-.live-grid .codeblock { margin:0 0 1rem; }
-@media (max-width:980px) { .live-grid { grid-template-columns:1fr; } }
-.roles { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
-@media (max-width:860px) { .roles { grid-template-columns:1fr; } }
-.role { border:1px solid var(--line); border-radius:var(--radius); background:var(--bg-raised); overflow:hidden; }
-.role h3 { padding:0.75rem 1.3rem; background:var(--bg-sunken); border-bottom:1px solid var(--line); font:600 0.7rem/1.4 var(--mono); letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-faint); }
-.role ul { list-style:none; padding:0; margin:0; }
-.role li { padding:1.1rem 1.3rem; display:flex; flex-direction:column; gap:0.5rem; font-size:0.93rem; color:var(--ink-dim); }
-.role li + li { border-top:1px solid var(--line); }
-.role .top { display:flex; justify-content:space-between; align-items:center; gap:0.6rem; }
-.role .top a { font:700 0.98rem/1.2 var(--mono); letter-spacing:-0.02em; color:var(--ink); text-decoration:none; }
-.role .top a:hover { color:var(--accent); }
-.role li > p { margin:0; }
-.role strong { color:var(--ink); }
-.role .more { color:var(--ink-faint); font:0.76rem/1.6 var(--mono); }
-.role a.more { color:var(--accent); text-decoration:none; }
-.role a.more:hover { text-decoration:underline; }
-.railrows { list-style:none; padding:0; margin:0; border-top:1px solid var(--line); }
-.railrows li { display:grid; grid-template-columns:13rem minmax(0, 1fr) 11rem; gap:1.5rem; padding:1.4rem 0; border-bottom:1px solid var(--line); font-size:0.93rem; color:var(--ink-dim); }
-.railrows .who { display:flex; flex-direction:column; align-items:flex-start; gap:0.5rem; }
-.railrows .who a { display:flex; align-items:center; gap:0.6rem; font:700 0.98rem/1.2 var(--mono); letter-spacing:-0.02em; color:var(--ink); text-decoration:none; }
-.railrows .who a:hover { color:var(--accent); }
-.railrows .who i { width:0.6rem; height:0.6rem; display:inline-block; flex:none; border:1px solid var(--line-strong); }
-.railrows .how h4 { font:800 1rem/1.25 var(--display); letter-spacing:-0.025em; text-transform:none; color:var(--ink); margin-bottom:0.45rem; }
-.railrows .how p { margin:0; max-width:var(--measure); }
-.railrows .link { display:flex; flex-direction:column; gap:0.3rem; color:var(--ink-faint); font:0.76rem/1.6 var(--mono); overflow-wrap:anywhere; }
-.railrows .link a { color:var(--accent); text-decoration:none; }
-.railrows .link a:hover { text-decoration:underline; }
-.railrows .link code { white-space:normal; }
-@media (max-width:900px) { .railrows li { grid-template-columns:1fr; gap:0.7rem; } .railrows .link { flex-direction:row; flex-wrap:wrap; gap:0.3rem 1rem; } }
-.cta-band { padding:4rem 0; border-top:1px solid var(--line); background:var(--bg-tint); text-align:center; }
-.cta-band h2 { font-size:clamp(2rem, 4.4vw, 3.2rem); margin:0 auto; }
-.cta-band p { margin:1rem auto 0; max-width:40rem; color:var(--ink-dim); font-size:1.05rem; }
-.cta-band .cta { justify-content:center; }
 @media (max-width:640px) { .cmd { display:flex; flex-wrap:wrap; width:100%; } .cmd code { flex:1 1 100%; white-space:pre-wrap; overflow-wrap:anywhere; align-items:flex-start; font-size:0.8rem; }
   .cmd button { flex:1 1 100%; justify-content:flex-start; border-left:0; border-top:1px solid var(--line-strong); padding:0.7rem 1.2rem; } }
 @media (max-width:460px) { .ev .hd i { display:none; } .hero h1 { font-size:9vw; } }
