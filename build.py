@@ -113,6 +113,19 @@ def social():
     return "\n      ".join(out)
 
 
+# The status chip in every header: what is live and what is next. The wording is the maintainer's; check.py
+# insists the chip says "Live" and "Next". OPERATORS is the number of independent connector operators, shown
+# only once it is above zero so the site never implies a network size that doesn't exist.
+STATUS_LIVE = "Live: mainnet USDC on Base and Solana, devnet to test"
+STATUS_NEXT = "Next: independent operators"
+OPERATORS = 0
+
+
+def status_chip():
+    count = f' <b class="count">{OPERATORS:,} independent operators</b>' if OPERATORS > 0 else ""
+    return f'<p class="status-chip"><span>{STATUS_LIVE}</span> <span>{STATUS_NEXT}</span>{count}</p>'
+
+
 def header(root, active):
     """The header of every page. On the landing page (root == "") the brand and the button
     point at anchors in the page itself."""
@@ -122,6 +135,7 @@ def header(root, active):
     return f"""<header class="site-header">
   <div class="wrap">
     <a class="brand" href="{'#top' if home else root + 'index.html'}" aria-label="TOON Protocol, home">{SMALL_MARK}{BRAND_NAME}</a>
+    {status_chip()}
     <nav aria-label="Primary">
       <a href="{root}docs/index.html"{cls('docs')}>Docs</a>
       <a href="{root}apps/index.html"{cls('apps')}>Apps</a>
@@ -144,7 +158,7 @@ def footer(root):
       <a href="{root}docs/proof.html">proof</a>
       <a href="{GITHUB}">source</a>
     </nav>
-    <span class="fact">MIT licensed · stored on Arweave via a paid TOON write</span>
+    <span class="fact">MIT licensed · No protocol fee · stored on Arweave via a paid TOON write</span>
     <span class="out">{social()}</span>
   </div>
 </footer>"""
@@ -284,6 +298,7 @@ def docs_header(with_menu):
     return f"""<header class="docs-header">
 {menu}  <div class="left">
     <a class="brand" href="../index.html" aria-label="TOON Protocol, home">{SMALL_MARK}{BRAND_NAME}</a>
+    {status_chip()}
     <nav aria-label="Primary">
       <a href="index.html" class="active">Docs</a>
       <a href="../apps/index.html">Apps</a>
@@ -294,6 +309,7 @@ def docs_header(with_menu):
   <div class="right">
       {social()}
     {theme_picker()}
+    <a class="button primary" href="first-agent-node.html">Run a node</a>
   </div>
 </header>"""
 
@@ -312,7 +328,7 @@ def pager_html(index):
 
 def doc_foot(slug, index):
     return f"""  <div class="doc-foot">
-    <p class="doc-meta"><a href="{SOURCE}/{slug}.html">Edit page</a><span>MIT licensed · stored on Arweave via a paid TOON write · <a href="proof.html">proof</a></span></p>
+    <p class="doc-meta"><a href="{SOURCE}/{slug}.html">Edit page</a><span>MIT licensed · No protocol fee · stored on Arweave via a paid TOON write · <a href="proof.html">proof</a></span></p>
     {pager_html(index)}
   </div>"""
 
