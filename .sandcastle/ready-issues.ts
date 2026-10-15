@@ -35,7 +35,9 @@ interface IssueFacts {
   body: string;
   labels: { nodes: { name: string }[] };
   subIssues: { totalCount: number };
-  blockedBy: { nodes: { number: number; state: string }[] };
+  blockedBy: {
+    nodes: { number: number; state: string; repository: { nameWithOwner: string } }[];
+  };
 }
 
 function gh(args: string[]): string {
@@ -54,7 +56,7 @@ function facts(number: number): IssueFacts {
         number state body
         labels(first:50){ nodes{ name } }
         subIssues(first:1){ totalCount }
-        blockedBy(first:50){ nodes{ number state } }
+        blockedBy(first:50){ nodes{ number state repository{ nameWithOwner } } }
       }
     }
   }`;
@@ -111,8 +113,15 @@ function reasonToSkip(issue: IssueFacts): string | null {
   if (issue.subIssues.totalCount > 0) return 'has sub-issues (a spec, not a ticket)';
   if (/^##\s+User Stories\s*$/im.test(issue.body)) return 'written from the to-spec template';
 
-  const native = issue.blockedBy.nodes.filter((b) => b.state === 'OPEN').map((b) => b.number);
-  if (native.length > 0) return `blocked by #${native.join(', #')}`;
+  // A native blocker can live in another repo, so name its repo unless it is this one.
+  const native = issue.blockedBy.nodes
+    .filter((b) => b.state === 'OPEN')
+    .map((b) =>
+      b.repository.nameWithOwner === `${owner}/${repo}`
+        ? `#${b.number}`
+        : `${b.repository.nameWithOwner}#${b.number}`,
+    );
+  if (native.length > 0) return `blocked by ${native.join(', ')}`;
 
   const listed = blockersInBody(issue.body).filter((n) => n !== issue.number && isOpen(n));
   if (listed.length > 0) return `blocked by #${listed.join(', #')} (## Blocked by)`;
