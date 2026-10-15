@@ -27,5 +27,7 @@ jobs:
             git diff
             exit 1
           fi
+      - name: Site check
+        run: python3 check.py
       - name: install.sh parses
         run: sh -n install.sh
