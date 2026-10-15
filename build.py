@@ -9,7 +9,12 @@ src/apps.html and src/agents.html become apps/index.html and agents/index.html. 
 the only thing this script does to it is copy assets/site.css between its <style> markers,
 so the one file stands alone while the stylesheet stays the single source.
 
-No dependencies beyond the standard library. No scripts are emitted into any page.
+It also writes docs/search-index.js, one record per page section, which assets/search.js
+loads when a reader first uses the docs search box. The docs pages also carry
+assets/docs.js (phone menu, theme picker, "On this page" highlight, copy buttons); without
+either script the search box and theme picker stay hidden and the pages read the same.
+
+No dependencies beyond the standard library.
 """
 import html
 import json
@@ -136,7 +141,13 @@ def footer(root):
 </footer>"""
 
 
-def head(title, description, root):
+# Docs pages set the reader's chosen theme before the stylesheet paints; without a choice,
+# or without storage, the page follows the system as every other page does.
+THEME_SCRIPT = ("<script>try{var t=localStorage.getItem(\"toon-theme\");"
+                "if(t===\"dark\"||t===\"light\")document.documentElement.dataset.theme=t}catch(e){}</script>")
+
+
+def head(title, description, root, docs=False):
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -145,20 +156,24 @@ def head(title, description, root):
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(description, quote=True)}">
 <link rel="icon" href="{FAVICON}">
-<link rel="stylesheet" href="{root}assets/site.css">
+{THEME_SCRIPT + chr(10) if docs else ""}<link rel="stylesheet" href="{root}assets/site.css">
 </head>
-<body>
+<body{' class="docs-body"' if docs else ""}>
 """
 
 
-def nav_groups(active, wrapper_class):
+CHEVRON = '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>'
+
+
+def nav_groups(active):
+    """The sidebar: one collapsible group per section, every group open."""
     out = []
-    active_attr = ' class="active"'
+    current = ' aria-current="page"'
     for section, pages in NAV:
         links = "\n".join(
-            f'      <a href="{slug}.html"{active_attr if slug == active else ""}>{html.escape(title)}</a>'
+            f'      <a href="{slug}.html"{current if slug == active else ""}>{html.escape(title)}</a>'
             for slug, title, _ in pages)
-        out.append(f'    <div class="group">\n      <h4>{html.escape(section)}</h4>\n{links}\n    </div>')
+        out.append(f'    <details class="group" open>\n      <summary>{html.escape(section)}{CHEVRON}</summary>\n{links}\n    </details>')
     return "\n".join(out)
 
 
@@ -172,59 +187,175 @@ def slugify(text):
 
 
 def add_anchors(body):
-    """Give every h2 an id and an anchor link; collect (id, text) for the table of contents."""
+    """Give every h2 and h3 an id and an anchor link; collect (level, id, text) for the
+    table of contents."""
     toc = []
 
     def repl(m):
-        attrs, inner = m.group(1), m.group(2)
+        level, attrs, inner = m.group(1), m.group(2), m.group(3)
         idm = re.search(r'id="([^"]+)"', attrs)
         hid = idm.group(1) if idm else slugify(inner)
-        toc.append((hid, re.sub(r"<[^>]+>", "", inner)))
+        toc.append((int(level), hid, re.sub(r"<[^>]+>", "", inner)))
         attrs = re.sub(r'\s*id="[^"]+"', "", attrs)
-        return f'<h2 id="{hid}"{attrs}><a class="anchor" href="#{hid}">{inner}</a></h2>'
+        return f'<h{level} id="{hid}"{attrs}><a class="anchor" href="#{hid}">{inner}</a></h{level}>'
 
-    body = re.sub(r"<h2([^>]*)>(.*?)</h2>", repl, body, flags=re.S)
+    body = re.sub(r"<h([23])([^>]*)>(.*?)</h\1>", repl, body, flags=re.S)
     return body, toc
 
 
-def build_doc(index, slug, title, summary, section, body):
-    body, toc = add_anchors(body)
+GLASS = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>'
+
+# The button in the docs header that opens the search.
+SEARCH_BUTTON = ('<button type="button" class="docsearch-open" aria-haspopup="dialog" aria-label="Search the docs" hidden>'
+                 + GLASS + '<span>Search</span><kbd aria-hidden="true">/</kbd></button>')
+
+# The search itself, one per page, opened over it by assets/search.js.
+SEARCH_DIALOG = f"""<dialog class="docsearch" aria-label="Search the docs" data-index="search-index.js">
+  <div class="panel">
+    <form method="dialog" role="search">
+      {GLASS}
+      <input type="search" placeholder="Search the docs" aria-label="Search the docs" autocomplete="off" spellcheck="false">
+      <button type="button" class="close" aria-label="Close search">esc</button>
+    </form>
+    <div class="results" aria-live="polite"></div>
+    <p class="hint"><span><kbd>↑</kbd><kbd>↓</kbd> move</span><span><kbd>↵</kbd> open</span><span><kbd>esc</kbd> close</span></p>
+  </div>
+</dialog>"""
+
+BLOCK_RE = re.compile(r"</?(?:p|li|ul|ol|dt|dd|dl|pre|div|table|tr|td|th|h3|h4|blockquote|figure|figcaption|br)\b[^>]*>")
+
+
+def plain(fragment):
+    """The text of an HTML fragment, one line, for the search index."""
+    text = re.sub(r"<[^>]+>", "", BLOCK_RE.sub(" ", fragment))
+    return re.sub(r"\s+", " ", html.unescape(text)).strip()
+
+
+def search_records(slug, title, anchored):
+    """One record per section of an anchored page body: the text before the first h2, then
+    each h2 with the text up to the next."""
+    parts = re.split(r'<h2 id="([^"]+)"[^>]*>(.*?)</h2>', anchored, flags=re.S)
+    records = [{"u": f"{slug}.html", "p": title, "s": "", "t": plain(parts[0])}]
+    for i in range(1, len(parts), 3):
+        hid, heading, text = parts[i], parts[i + 1], parts[i + 2]
+        records.append({"u": f"{slug}.html#{hid}", "p": title, "s": plain(heading), "t": plain(text)})
+    return records
+
+
+MENU = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path class="open" d="M4 6h16M4 12h16M4 18h16"/>'
+        '<path class="shut" d="M6 6l12 12M18 6 6 18"/></svg>')
+SUN_MOON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>'
+SOURCE = "https://github.com/toon-protocol/website/blob/main/src/docs"
+
+
+def docs_header(with_menu):
+    """The docs header, as on herdr.dev/docs: brand and sections on the left, the search in
+    the middle, the socials and the theme on the right. assets/docs.js unhides the menu
+    button and the theme picker; without it the sidebar sits above the page on a phone."""
+    menu = ('  <button type="button" class="menu" aria-label="Menu" aria-controls="docs-nav" aria-expanded="false" hidden>'
+            + MENU + '</button>\n') if with_menu else ""
+    return f"""<header class="docs-header">
+{menu}  <div class="left">
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home">{MARK}<span class="name">TOON<small>Protocol</small></span></a>
+    <nav aria-label="Primary">
+      <a href="index.html" class="active">Docs</a>
+      <a href="../apps/index.html">Apps</a>
+      <a href="../agents/index.html">Agents</a>
+    </nav>
+  </div>
+  <div class="mid">{SEARCH_BUTTON}</div>
+  <div class="right">
+      {social()}
+    <label class="theme" hidden>{SUN_MOON}<span class="sr">Theme</span><select aria-label="Theme"><option value="dark">Dark</option><option value="light">Light</option><option value="auto" selected>Auto</option></select>{CHEVRON}</label>
+  </div>
+</header>"""
+
+
+def pager_html(index):
     prev_page = FLAT[index - 1] if index > 0 else None
     next_page = FLAT[index + 1] if index + 1 < len(FLAT) else None
-    pager = '<nav class="pager" aria-label="Previous and next">'
-    pager += (f'<a class="prev" href="{prev_page[0]}.html"><small>Previous</small>{html.escape(prev_page[1])}</a>'
-              if prev_page else "<span></span>")
-    pager += (f'<a class="next" href="{next_page[0]}.html"><small>Next</small>{html.escape(next_page[1])}</a>'
-              if next_page else "<span></span>")
-    pager += "</nav>"
-    toc_html = ""
-    if toc:
-        toc_html = '<aside class="toc" aria-label="On this page"><h4>On this page</h4>\n' + "\n".join(
-            f'  <a href="#{hid}">{html.escape(text)}</a>' for hid, text in toc) + "\n</aside>"
-    page_title = f"{title} · TOON Protocol docs" if slug != "index" else "TOON Protocol docs"
-    return (head(page_title, summary, "../")
-            + '\n<div class="page">\n' + header("../", "docs")
+    arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="{d}"/></svg>'
+    out = '<nav class="pager" aria-label="Previous and next">'
+    out += (f'<a class="prev" rel="prev" href="{prev_page[0]}.html">{arrow.format(d="M15 18l-6-6 6-6")}'
+            f'<span><small>Previous</small>{html.escape(prev_page[1])}</span></a>' if prev_page else "<span></span>")
+    out += (f'<a class="next" rel="next" href="{next_page[0]}.html"><span><small>Next</small>{html.escape(next_page[1])}</span>'
+            f'{arrow.format(d="M9 18l6-6-6-6")}</a>' if next_page else "<span></span>")
+    return out + "</nav>"
+
+
+def doc_foot(slug, index):
+    return f"""  <div class="doc-foot">
+    <p class="doc-meta"><a href="{SOURCE}/{slug}.html">Edit page</a><span>MIT licensed · stored on Arweave via a paid TOON write · <a href="proof.html">proof</a></span></p>
+    {pager_html(index)}
+  </div>"""
+
+
+def toc_links(toc):
+    return "\n".join(f'    <a href="#{hid}" class="h{level}">{html.escape(text)}</a>' for level, hid, text in toc)
+
+
+# The docs home is a splash, as herdr.dev/docs is: a hero, then the page, with no sidebar.
+HERO_TITLE = "TOON documentation"
+HERO_TAGLINE = ("Run an agent node, put your app behind it, and get paid per request. "
+                "Start on the path that matches you.")
+
+
+def build_splash(index, slug, title, summary, body):
+    body, _ = add_anchors(body)
+    return (head("TOON Protocol docs", summary, "../", docs=True)
+            + docs_header(with_menu=False)
             + f"""
-<div class="wrap docs">
-  <details class="mobilenav">
-    <summary>Docs</summary>
-{nav_groups(slug, 'mobilenav')}
-  </details>
-  <aside class="sidebar" aria-label="Docs">
-{nav_groups(slug, 'sidebar')}
-  </aside>
-  <main class="doc">
-    <p class="eyebrow">{html.escape(section)}</p>
-    <h1>{html.escape(title)}</h1>
+<main class="splash" id="_top">
+  <div class="hero">
+    <div class="copy">
+      <h1>{HERO_TITLE}</h1>
+      <p class="tagline">{HERO_TAGLINE}</p>
+      <div class="actions">
+        <a class="pill primary" href="install.html">Install toon</a>
+        <a class="pill secondary" href="first-agent-node.html">Your first agent node</a>
+      </div>
+    </div>
+    <div class="art">{MARK.replace('width="28" height="28"', 'width="320" height="320"')}</div>
+  </div>
+  <div class="doc">
+{body}
+  </div>
+{doc_foot(slug, index)}
+</main>
+"""
+            + SEARCH_DIALOG + '\n<script src="../assets/search.js" defer></script>\n<script src="../assets/docs.js" defer></script>\n</body>\n</html>\n')
+
+
+def build_doc(index, slug, title, summary, section, body):
+    if slug == "index":
+        return build_splash(index, slug, title, summary, body)
+    body, toc = add_anchors(body)
+    toc_html = mtoc_html = ""
+    if toc:
+        links = toc_links([(2, "_top", "Overview")] + toc)
+        toc_html = f'  <aside class="toc" aria-label="On this page">\n    <h2>On this page</h2>\n{links}\n  </aside>'
+        mtoc_html = (f'    <details class="mtoc"><summary>On this page <span>Overview</span>{CHEVRON}</summary>\n'
+                     f'    <nav aria-label="On this page">\n{links}\n    </nav></details>')
+    return (head(f"{title} · TOON Protocol docs", summary, "../", docs=True)
+            + docs_header(with_menu=True)
+            + f"""
+<nav class="sidebar" id="docs-nav" aria-label="Docs">
+{nav_groups(slug)}
+</nav>
+<div class="main-pane">
+  <main class="content" aria-labelledby="_top">
+{mtoc_html}
+    <div class="titlebar"><p class="section">{html.escape(section)}</p><h1 id="_top">{html.escape(title)}</h1></div>
+    <div class="doc">
     <p class="lede">{html.escape(summary)}</p>
 {body}
-{pager}
+    </div>
+{doc_foot(slug, index)}
   </main>
-  {toc_html}
+{toc_html}
 </div>
 """
-            + footer("../")
-            + "\n</div>\n</body>\n</html>\n")
+            + SEARCH_DIALOG + '\n<script src="../assets/search.js" defer></script>\n<script src="../assets/docs.js" defer></script>\n</body>\n</html>\n')
 
 
 PAGES = {
@@ -276,11 +407,18 @@ def main():
     sync_landing_chrome()
     inline_stylesheet()
     (ROOT / "docs").mkdir(exist_ok=True)
+    records = []
     for i, (slug, title, summary, section) in enumerate(FLAT):
         src = SRC / "docs" / f"{slug}.html"
         out = ROOT / "docs" / f"{slug}.html"
-        out.write_text(build_doc(i, slug, title, summary, section, src.read_text()))
+        body = src.read_text()
+        out.write_text(build_doc(i, slug, title, summary, section, body))
+        records += search_records(slug, title, add_anchors(body)[0])
         print("wrote", out.relative_to(ROOT))
+    index = ROOT / "docs" / "search-index.js"
+    index.write_text("/* Built by build.py from src/docs: one record per page section. */\n"
+                     "window.TOON_DOCS_INDEX = " + json.dumps(records, separators=(",", ":")) + ";\n")
+    print("wrote", index.relative_to(ROOT), "with", len(records), "sections")
     for slug in PAGES:
         (ROOT / slug).mkdir(exist_ok=True)
         out = ROOT / slug / "index.html"

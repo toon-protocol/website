@@ -1,6 +1,36 @@
-<p>A TOON node is a paid reverse proxy. It sits in front of your app, refuses an unpaid request with the price, and hands your app a plain HTTP request once it has been paid for. <code>toon</code> runs the node for you. Seven steps, each one something you can type and check, take you from nothing to an app of your own that gets paid.</p>
+<h2>Pick your path</h2>
+
+<div class="cards">
+  <article class="card">
+    <p class="title">I have an app to charge for</p>
+    <p>One <code>toon add</code> puts it behind your node with a price. Prefer to write every file yourself? <a href="run-a-node.html">The connector, by hand</a>.</p>
+    <p><a href="adding-an-app.html">Add an app →</a></p>
+  </article>
+  <article class="card">
+    <p class="title">I want to pay for requests</p>
+    <p>Install the client, make a wallet, open one channel, and buy a request. The first one is on the devnet and costs nothing.</p>
+    <p><a href="pay-a-node.html">Pay a node →</a></p>
+  </article>
+  <article class="card">
+    <p class="title">I want an agent to run it</p>
+    <p>spaceturtle runs a node from your own machine as a hidden service, with the agent kept away from the money.</p>
+    <p><a href="spaceturtle.html">Meet spaceturtle →</a></p>
+  </article>
+  <article class="card">
+    <p class="title">I run a node and want traffic</p>
+    <p>Join a network, peer with another operator, set routes and prices, and carry packets one hop further for a fee.</p>
+    <p><a href="peering.html">Peer with an operator →</a></p>
+  </article>
+  <article class="card">
+    <p class="title">I want the words defined</p>
+    <p>Node, connector, app, relay, route, channel, voucher, claim: one meaning each, and the wire underneath.</p>
+    <p><a href="concepts.html">Connector concepts →</a></p>
+  </article>
+</div>
 
 <h2>One step at a time</h2>
+
+<p>A TOON node is a paid reverse proxy. It sits in front of your app, refuses an unpaid request with the price, and hands your app a plain HTTP request once it has been paid for. <code>toon</code> runs the node for you. Seven steps, each one something you can type and check, take you from nothing to an app of your own that gets paid.</p>
 
 <ol class="path">
   <li>
@@ -123,30 +153,6 @@
   <div><dt>Hidden by default</dt><dd>A new node is reached at a <code>.anyone</code> address: no domain, no certificate, no open port.</dd></div>
   <div><dt>One binary, MIT</dt><dd>Linux, x86_64 or aarch64. <code>toon</code> runs the node as a hidden service; the <a href="run-a-node.html">connector by hand</a> is the same thing file by file.</dd></div>
 </dl>
-
-<h2>Pick your path</h2>
-<ul class="paths">
-  <li>
-    <a class="title" href="adding-an-app.html">I have an app to charge for</a>
-    One <code>toon add</code> puts it behind your node with a price. Prefer to write every file yourself? <a href="run-a-node.html">The connector, by hand</a>.
-  </li>
-  <li>
-    <a class="title" href="pay-a-node.html">I want to pay for requests</a>
-    Install the client, make a wallet, open one channel, and buy a request. The first one is on the devnet and costs nothing.
-  </li>
-  <li>
-    <a class="title" href="spaceturtle.html">I want an agent to run it</a>
-    spaceturtle runs a node from your own machine as a hidden service, with the agent kept away from the money.
-  </li>
-  <li>
-    <a class="title" href="peering.html">I run a node and want traffic</a>
-    Join a network, peer with another operator, set routes and prices, and carry packets one hop further for a fee.
-  </li>
-  <li>
-    <a class="title" href="concepts.html">I want the words defined</a>
-    Node, connector, app, relay, route, channel, voucher, claim: one meaning each, and the wire underneath.
-  </li>
-</ul>
 
 <h2>Where things live</h2>
 

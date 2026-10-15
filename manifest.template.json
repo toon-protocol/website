@@ -14,6 +14,9 @@
     "apps/index.html": {
       "id": "<arweave tx id of this file>"
     },
+    "assets/docs.js": {
+      "id": "<arweave tx id of this file>"
+    },
     "assets/fonts/archivo-800.woff2": {
       "id": "<arweave tx id of this file>"
     },
@@ -45,6 +48,9 @@
       "id": "<arweave tx id of this file>"
     },
     "assets/og/toon-card.png": {
+      "id": "<arweave tx id of this file>"
+    },
+    "assets/search.js": {
       "id": "<arweave tx id of this file>"
     },
     "assets/site.css": {
@@ -138,6 +144,9 @@
       "id": "<arweave tx id of this file>"
     },
     "docs/run-a-node.html": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search-index.js": {
       "id": "<arweave tx id of this file>"
     },
     "docs/spaceturtle.html": {

@@ -26,7 +26,8 @@
 <style data-src="assets/site.css">
 /* TOON Protocol site: one stylesheet for the landing page, docs/, apps/ and agents/.
    build.py copies it inline into index.html so that file stands alone.
-   Palette from the icon: cream, charcoal, gold, grey. The only script is the copy button. */
+   Palette from the icon: cream, charcoal, gold, grey. The landing page's one script is the copy
+   button; the docs pages add assets/search.js and assets/docs.js. */
 
 @font-face { font-family:"Archivo"; font-style:normal; font-weight:800; font-display:swap;
   src:url("assets/fonts/archivo-800.woff2") format("woff2");
@@ -48,8 +49,9 @@
   --body:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color-scheme:light;
 }
+/* Dark follows the system unless a docs reader picked a theme (data-theme on <html>). */
 @media (prefers-color-scheme: dark) {
-  :root { --bg:#1c1f24; --bg-raised:#23272d; --bg-sunken:#15181c; --bg-tint:#202429;
+  :root:not([data-theme="light"]) { --bg:#1c1f24; --bg-raised:#23272d; --bg-sunken:#15181c; --bg-tint:#202429;
     --ink:#f3efe6; --ink-soft:#e6e1d5; --ink-dim:#b6bbc4; --ink-faint:#878d97;
     --line:#31363e; --line-strong:#454b56; --bg-outer:#141619; --grid:#1f2328;
     --gold:#c9a24a; --accent:#d9b65c; --accent-ink:#1c1f24; --accent-soft:rgba(201,162,74,.14);
@@ -57,6 +59,13 @@
     --term:#111317; --term-2:#0d0f12; --term-line:#2a2f37; --term-ink:#f3efe6; --term-dim:#9aa0ab; --term-faint:#6a707a;
     color-scheme:dark; }
 }
+:root[data-theme="dark"] { --bg:#1c1f24; --bg-raised:#23272d; --bg-sunken:#15181c; --bg-tint:#202429;
+    --ink:#f3efe6; --ink-soft:#e6e1d5; --ink-dim:#b6bbc4; --ink-faint:#878d97;
+    --line:#31363e; --line-strong:#454b56; --bg-outer:#141619; --grid:#1f2328;
+    --gold:#c9a24a; --accent:#d9b65c; --accent-ink:#1c1f24; --accent-soft:rgba(201,162,74,.14);
+    --good:#6cc08a; --good-soft:rgba(108,192,138,.12); --bad:#e07067;
+    --term:#111317; --term-2:#0d0f12; --term-line:#2a2f37; --term-ink:#f3efe6; --term-dim:#9aa0ab; --term-faint:#6a707a;
+    color-scheme:dark; }
 
 * { box-sizing:border-box; }
 html, body { margin:0; padding:0; }
@@ -435,35 +444,135 @@ footer .fact { color:var(--ink-faint); }
 footer .out { margin-left:auto; }
 @media (max-width:700px) { footer .out { margin-left:0; } }
 
-/* ===== docs layout ===== */
-.docs { display:grid; grid-template-columns:15rem minmax(0, 1fr) 13rem; gap:3rem; padding-top:2.5rem; padding-bottom:5rem; }
-@media (max-width:1180px) { .docs { grid-template-columns:15rem minmax(0, 1fr); } .toc { display:none; } }
-@media (max-width:860px) { .docs { grid-template-columns:1fr; gap:1.5rem; } .sidebar { display:none; } .docs .mobilenav { display:block; } }
-.mobilenav { display:none; border:1px solid var(--line); border-radius:var(--radius); background:var(--bg-raised); }
-.mobilenav summary { cursor:pointer; padding:0.8rem 1rem; list-style:none; display:flex; justify-content:space-between; font:600 0.76rem/1.4 var(--mono); letter-spacing:0.1em; text-transform:uppercase; }
-.mobilenav summary::-webkit-details-marker { display:none; }
-.mobilenav summary::after { content:"+"; color:var(--gold); }
-.mobilenav[open] summary::after { content:"−"; }
-.mobilenav .group { padding:0 0.6rem 0.8rem; }
-.sidebar { position:sticky; top:4.5rem; align-self:start; max-height:calc(100vh - 5.5rem); overflow:auto; font-size:0.9rem; padding-right:0.5rem; }
-.sidebar .group, .mobilenav .group { margin-bottom:1.4rem; }
-.sidebar h4, .mobilenav h4, .toc h4 { margin:0 0.75rem 0.5rem; }
-.sidebar a, .mobilenav a { display:block; padding:0.3rem 0.75rem; border-left:2px solid transparent; color:var(--ink-dim); text-decoration:none; }
-.sidebar a:hover, .mobilenav a:hover { color:var(--ink); }
-.sidebar a.active, .mobilenav a.active { color:var(--ink); border-color:var(--gold); background:var(--accent-soft); font-weight:600; }
-.toc { position:sticky; top:4.5rem; align-self:start; font-size:0.84rem; }
-.toc a { display:block; padding:0.25rem 0.75rem; color:var(--ink-dim); text-decoration:none; border-left:1px solid var(--line); }
-.toc a:hover { color:var(--ink); border-color:var(--gold); }
+/* ===== docs layout =====
+   After herdr.dev/docs: a header the full width of the window with the search in its
+   middle, the sidebar flush left, the page between, and "On this page" flush right.
+   The docs home is a splash with no sidebar. assets/docs.js adds the phone menu, the theme
+   picker, the copy buttons and the "On this page" highlight; without it the pages read
+   the same, the sidebar sitting above the page on a phone. */
+:root { --docs-nav-h:4rem; --docs-side-w:18.5rem; --docs-toc-w:17rem; --docs-pad:1.5rem; }
+html:has(body.docs-body) { scroll-padding-top:calc(var(--docs-nav-h) + 1.5rem); }
+body.docs-body { background:var(--bg); background-image:none; padding-bottom:0; }
+body.docs-body svg.chev { width:0.85rem; height:0.85rem; flex:none; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+.docs-header { position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:1rem; height:var(--docs-nav-h); padding:0 var(--docs-pad);
+  background:var(--bg-tint); border-bottom:1px solid var(--line); }
+.docs-header .left { display:flex; align-items:center; gap:1.4rem; flex:1 1 0; min-width:0; }
+.docs-header .mid { flex:0 1 22rem; display:flex; justify-content:center; }
+.docs-header .right { flex:1 1 0; display:flex; align-items:center; justify-content:flex-end; gap:0.6rem; }
+.docs-header nav { display:flex; gap:1rem; }
+.docs-header nav a { color:var(--ink-dim); text-decoration:none; font-weight:600; font-size:0.9rem; }
+.docs-header nav a:hover, .docs-header nav a.active { color:var(--ink); }
+.docs-header .social { display:flex; gap:0.15rem; padding-right:0.6rem; border-right:1px solid var(--line); }
+.docs-header .social a { border:0; min-width:2rem; height:2rem; padding:0 0.4rem; }
+.docs-header .menu { display:none; align-items:center; justify-content:center; width:2.25rem; height:2.25rem; flex:none; padding:0; margin-left:-0.4rem;
+  border:0; border-radius:var(--radius); background:none; color:var(--ink); cursor:pointer; }
+.docs-header .menu svg { width:1.3rem; height:1.3rem; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; }
+.docs-header .menu .shut, html.nav-open .docs-header .menu .open { display:none; }
+html.nav-open .docs-header .menu .shut { display:inline; }
+.theme { position:relative; display:inline-flex; align-items:center; gap:0.35rem; color:var(--ink-dim); }
+.theme[hidden] { display:none; }
+.theme > svg:first-child { width:0.95rem; height:0.95rem; fill:none; stroke:currentColor; stroke-width:2; stroke-linejoin:round; pointer-events:none; }
+.theme select { appearance:none; -webkit-appearance:none; border:0; background:none; color:inherit; font:500 0.88rem/1 var(--body); padding:0.4rem 1rem 0.4rem 0; margin-right:-1rem; cursor:pointer; }
+.theme select option { background:var(--bg); color:var(--ink); }
+.theme .chev { pointer-events:none; }
+.theme:hover { color:var(--ink); }
+
+.docs-header .docsearch-open { width:100%; max-width:22rem; height:2.4rem; border-radius:6px; background:var(--bg); }
+
+/* The sidebar: fixed under the header, its own scroll, every section a collapsible group. */
+.sidebar { position:fixed; top:var(--docs-nav-h); bottom:0; left:0; z-index:20; width:var(--docs-side-w); overflow-y:auto; overscroll-behavior:contain;
+  padding:1rem var(--docs-pad) 2rem; background:var(--bg-tint); border-right:1px solid var(--line); scrollbar-width:thin; }
+.sidebar .group { margin-bottom:0.5rem; border:0; border-radius:0; background:none; }
+.sidebar details[open] summary::after, .sidebar summary::after, .mtoc[open] summary::after, .mtoc summary::after { content:none; }
+.sidebar summary { display:flex; align-items:center; justify-content:space-between; gap:0.5rem; padding:0.3rem 0.25rem 0.3rem 0; cursor:pointer; list-style:none;
+  color:var(--ink); font:600 1rem/1.4 var(--body); letter-spacing:-0.01em; }
+.sidebar summary::-webkit-details-marker { display:none; }
+.sidebar summary .chev { color:var(--ink-faint); transition:transform .15s ease; }
+.sidebar details:not([open]) summary .chev { transform:rotate(-90deg); }
+.sidebar summary:hover .chev { color:var(--ink); }
+.sidebar a { display:block; margin:1px 0 1px 0.6rem; padding:0.2rem 0.6rem; border-left:2px solid transparent; border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  color:var(--ink-dim); font-size:0.9rem; line-height:1.45; text-decoration:none; }
+.sidebar a:hover { color:var(--ink); }
+.sidebar a[aria-current="page"] { color:var(--ink); background:var(--accent-soft); border-left-color:var(--gold); font-weight:600; }
+
+/* The page and "On this page", to the right of the sidebar. */
+.main-pane { display:flex; margin-left:var(--docs-side-w); min-height:calc(100vh - var(--docs-nav-h)); }
+.main-pane .content { flex:1 1 auto; min-width:0; }
+.titlebar { padding:2.5rem var(--docs-pad) 1.6rem; border-bottom:1px solid var(--line); }
+.titlebar > * { max-width:48rem; margin-left:auto; margin-right:auto; }
+.main-pane .doc, .main-pane .doc-foot { max-width:calc(48rem + 2 * var(--docs-pad)); margin-left:auto; margin-right:auto; }
+.titlebar .section { color:var(--accent); font-size:0.9rem; font-weight:600; margin-bottom:0.4rem; }
+.titlebar h1 { font-size:clamp(2.1rem, 4vw, 2.75rem); letter-spacing:-0.035em; line-height:1.1; }
+.main-pane .doc { padding:2rem var(--docs-pad) 0; }
+.toc { flex:none; width:var(--docs-toc-w); position:sticky; top:var(--docs-nav-h); align-self:flex-start; max-height:calc(100vh - var(--docs-nav-h)); overflow-y:auto;
+  padding:1rem var(--docs-pad) 2rem; border-left:1px solid var(--line); font-size:0.8rem; }
+.toc h2, .mtoc summary { margin:0.1rem 0 0.6rem; color:var(--ink); font:600 1rem/1.4 var(--body); letter-spacing:-0.01em; }
+.toc a, .mtoc a { display:block; padding:0.2rem 0 0.2rem 0.4rem; color:var(--ink-faint); line-height:1.4; text-decoration:none; }
+.toc a.h3, .mtoc a.h3 { padding-left:1.2rem; }
+.toc a:hover, .mtoc a:hover { color:var(--ink); }
+.toc a[aria-current="true"], .mtoc a[aria-current="true"] { color:var(--accent); }
+/* On a narrower screen "On this page" folds into a bar under the header. */
+.mtoc { display:none; position:sticky; top:var(--docs-nav-h); z-index:10; border:0; border-radius:0; border-bottom:1px solid var(--line); background:var(--bg-tint); font-size:0.88rem; }
+.mtoc summary { display:flex; align-items:center; gap:0.75rem; margin:0; padding:0.7rem var(--docs-pad); cursor:pointer; list-style:none; font-size:0.85rem; }
+.mtoc summary::-webkit-details-marker { display:none; }
+.mtoc summary span { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0.15rem 0.6rem; border:1px solid var(--line); border-radius:var(--radius-sm);
+  color:var(--ink-dim); font-weight:400; }
+.mtoc[open] summary .chev { transform:rotate(180deg); }
+.mtoc nav { max-height:60vh; overflow-y:auto; padding:0 var(--docs-pad) 0.8rem; }
+@media (max-width:72rem) { .toc { display:none; } .mtoc { display:block; } }
+@media (max-width:50rem) {
+  .docs-header { gap:0.6rem; padding:0 1rem; }
+  .docs-header nav, .docs-header .right .social, .docs-header .brand .name small { display:none; }
+  .docs-header .mid { flex:1 1 auto; justify-content:flex-end; }
+  .docs-header .docsearch-open { width:2.4rem; padding:0; justify-content:center; }
+  .docs-header .docsearch-open span, .docs-header .docsearch-open kbd { display:none; }
+  .docs-header .right { flex:none; }
+  .docs-header .menu:not([hidden]) { display:inline-flex; }
+  .main-pane { margin-left:0; }
+  :root { --docs-pad:1rem; }
+  /* Without the script the sidebar is a block above the page; with it, a sheet the menu opens. */
+  .sidebar { position:static; width:auto; border-right:0; border-bottom:1px solid var(--line); }
+  html.js .sidebar { position:fixed; inset:var(--docs-nav-h) 0 0 0; width:auto; display:none; border:0; }
+  html.js.nav-open .sidebar { display:block; }
+  html.nav-open { overflow:hidden; }
+  .mtoc { top:var(--docs-nav-h); }
+}
+
+/* The docs home: a hero, then the page in one centred column. */
+.splash { max-width:68rem; margin:0 auto; padding:0 var(--docs-pad) 0; }
+.splash .hero { display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:center; gap:3rem; padding:5rem 0 4rem; }
+.splash .hero h1 { font-size:clamp(2.2rem, 4.2vw, 3.2rem); letter-spacing:-0.04em; line-height:1.05; }
+.splash .tagline { max-width:34rem; margin-top:1rem; color:var(--ink-dim); font-size:1.15rem; line-height:1.6; }
+.splash .actions { display:flex; flex-wrap:wrap; gap:0.75rem 1rem; margin-top:2rem; }
+.pill { display:inline-flex; align-items:center; gap:0.5rem; padding:0.7rem 1.4rem; border-radius:999px; border:1px solid var(--ink);
+  font-weight:600; font-size:0.95rem; line-height:1.1; text-decoration:none; color:var(--ink); }
+.pill.primary { background:var(--gold); border-color:var(--gold); color:#2b2f36; }
+.pill:hover { text-decoration:none; filter:brightness(1.06); }
+.pill.secondary:hover { border-color:var(--gold); }
+.splash .art { display:flex; align-items:center; justify-content:center; width:clamp(14rem, 26vw, 20rem); aspect-ratio:1; background:var(--bg-tint); border:1px solid var(--line); }
+.splash .art .mark { width:100%; height:100%; }
+.splash .doc { max-width:none; }
+.splash .doc-foot { max-width:none; padding-left:0; padding-right:0; }
+@media (max-width:50rem) { .splash .hero { grid-template-columns:1fr; gap:2rem; padding:3rem 0 2rem; } .splash .art { order:-1; width:9rem; } }
+
+/* Cards, as on the docs home: a title, a sentence, a link. */
+.cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(19rem, 1fr)); gap:1rem; margin:1.25rem 0 1.5rem; }
+.card { display:flex; flex-direction:column; gap:0.6rem; padding:1.5rem 1.6rem; border:1px solid var(--line); background:var(--bg-tint); }
+.doc .card p { margin:0; font-size:0.95rem; }
+.doc .card p.title { color:var(--ink); font:700 1.2rem/1.3 var(--body); letter-spacing:-0.02em; }
+.card p:last-child { margin-top:auto; padding-top:0.3rem; }
+.card p:last-child a { font-weight:600; text-decoration:none; }
+.card p:last-child a:hover { text-decoration:underline; }
 
 .doc { min-width:0; }
-.doc .eyebrow { margin-bottom:1rem; }
-.doc h1 { font-size:clamp(2rem, 4vw, 2.8rem); margin-bottom:0.8rem; }
-.doc .lede { font-size:1.12rem; margin:0 0 2rem; }
-.doc h2 { font-size:1.6rem; margin:2.75rem 0 0.9rem; padding-top:0.5rem; }
-.doc h3 { font-size:1.12rem; margin:1.8rem 0 0.6rem; }
+.doc .lede { font-size:1.12rem; margin:0 0 1.5rem; }
+.doc h2 { font-size:clamp(1.6rem, 2.6vw, 2rem); letter-spacing:-0.035em; line-height:1.15; margin:3rem 0 1rem; }
+.doc > h2:first-child { margin-top:0; }
+.doc h3 { font-size:1.25rem; margin:2rem 0 0.6rem; }
 .doc h2 a.anchor, .doc h3 a.anchor { color:inherit; text-decoration:none; }
-.doc h2 a.anchor:hover::after { content:" #"; color:var(--gold); font-weight:400; }
-.doc p, .doc li { color:var(--ink-dim); }
+.doc h2 a.anchor:hover::after, .doc h3 a.anchor:hover::after { content:" #"; color:var(--gold); font-weight:400; }
+.doc p, .doc li { color:var(--ink-dim); line-height:1.75; }
 .doc p { max-width:var(--measure); margin:0 0 0.9rem; }
 .doc ul, .doc ol { max-width:var(--measure); padding-left:1.4rem; margin:0 0 1rem; }
 .doc li { margin-bottom:0.4rem; }
@@ -474,15 +583,26 @@ footer .out { margin-left:auto; }
 .doc .steps li { padding:1rem 1.1rem; background:var(--bg-raised); font-size:0.92rem; margin:0; box-shadow:0 0 0 1px var(--line); }
 .doc .steps li b { display:block; color:var(--gold); font:600 0.7rem/1 var(--mono); letter-spacing:0.12em; margin-bottom:0.5rem; }
 .doc .steps li strong { display:block; margin-bottom:0.3rem; }
-.paths { list-style:none; padding:1px; margin:1.5rem 0; display:grid; gap:1px; grid-template-columns:repeat(auto-fit, minmax(15rem, 1fr)); max-width:none; }
-.paths li { padding:1.2rem 1.3rem; background:var(--bg-raised); font-size:0.93rem; margin:0; box-shadow:0 0 0 1px var(--line); }
-.paths li a.title { display:block; font:800 1.05rem/1.2 var(--display); letter-spacing:-0.03em; color:var(--ink); text-decoration:none; margin-bottom:0.45rem; }
-.paths li a.title:hover { color:var(--accent); }
-.pager { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid var(--line); }
-.pager a { display:block; padding:0.9rem 1.1rem; border:1px solid var(--line); border-radius:var(--radius); text-decoration:none; color:var(--ink); background:var(--bg-raised); font-weight:600; }
+/* Previous and next, as cards under the page. */
+.doc-foot { padding:3rem var(--docs-pad) 4rem; }
+.doc-foot .doc-meta { display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.5rem 1.5rem; margin:0 0 1.5rem; color:var(--ink-faint); font-size:0.85rem; }
+.doc-foot .doc-meta a { color:var(--ink-dim); }
+.doc-foot .doc-meta a:hover { color:var(--ink); }
+.pager { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.pager a { display:flex; align-items:center; gap:0.75rem; padding:1rem 1.1rem; border:1px solid var(--line); border-radius:var(--radius); text-decoration:none;
+  color:var(--ink); background:var(--bg-tint); font:600 1.15rem/1.3 var(--body); letter-spacing:-0.01em; }
+.pager a span { flex:1; min-width:0; }
 .pager a:hover { border-color:var(--gold); }
-.pager a small { display:block; margin-bottom:0.25rem; color:var(--ink-faint); font:600 0.68rem/1.4 var(--mono); letter-spacing:0.12em; text-transform:uppercase; }
+.pager a small { display:block; margin-bottom:0.15rem; color:var(--ink-faint); font:400 0.85rem/1.4 var(--body); letter-spacing:0; }
+.pager a svg { width:1.4rem; height:1.4rem; flex:none; fill:none; stroke:var(--ink-faint); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .pager a.next { text-align:right; }
+@media (max-width:640px) { .pager { grid-template-columns:1fr; } }
+.copybox { position:relative; }
+.copybox button { position:absolute; top:0.5rem; right:0.5rem; padding:0.3rem 0.55rem; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--bg); cursor:pointer;
+  color:var(--ink-faint); font:600 0.66rem/1 var(--mono); letter-spacing:0.08em; text-transform:uppercase; opacity:0; transition:opacity .12s ease; }
+.copybox:hover button, .copybox button:focus-visible, .copybox button.done { opacity:1; }
+.copybox button:hover, .copybox button.done { color:var(--ink); border-color:var(--line-strong); }
+@media (hover:none) { .copybox button { opacity:1; } }
 .doc .source { margin-top:2.5rem; color:var(--ink-faint); font:0.78rem/1.6 var(--mono); }
 .doc .path { list-style:none; padding:0; margin:1rem 0 0; max-width:none; border-top:1px solid var(--line); }
 .doc .path li { display:grid; grid-template-columns:4rem minmax(0, 1fr); gap:0 1rem; padding:1.75rem 0; margin:0; border-bottom:1px solid var(--line); }
@@ -559,6 +679,48 @@ footer .out { margin-left:auto; }
 @media (max-width:640px) { .cmd { display:flex; flex-wrap:wrap; width:100%; } .cmd code { flex:1 1 100%; white-space:pre-wrap; overflow-wrap:anywhere; align-items:flex-start; font-size:0.8rem; }
   .cmd button { flex:1 1 100%; justify-content:flex-start; border-left:0; border-top:1px solid var(--line-strong); padding:0.7rem 1.2rem; } }
 @media (max-width:460px) { .ev .hd i { display:none; } .hero h1 { font-size:9vw; } }
+
+/* ===== docs search =====
+   assets/search.js unhides the buttons and opens the dialog; without it neither shows. */
+.docsearch-open { display:flex; align-items:center; gap:0.55rem; width:100%; height:2.4rem; padding:0 0.6rem 0 0.75rem; cursor:pointer;
+  border:1px solid var(--line); border-radius:var(--radius); background:var(--bg-raised); color:var(--ink-faint); font:0.88rem/1 var(--body); text-align:left; }
+.docsearch-open:hover { border-color:var(--line-strong); color:var(--ink-dim); }
+.docsearch-open:focus-visible { outline:2px solid var(--gold); outline-offset:1px; }
+.docsearch-open[hidden] { display:none; }
+.docsearch-open span { flex:1; }
+.docsearch-open svg, .docsearch form svg { width:1rem; height:1rem; flex:none; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; }
+.docsearch kbd, .docsearch-open kbd { display:inline-block; min-width:1.3rem; padding:0.1rem 0.35rem; border:1px solid var(--line); border-bottom-width:2px;
+  border-radius:var(--radius-sm); background:var(--bg); color:var(--ink-faint); font-size:0.7rem; line-height:1.3; text-align:center; }
+
+html.searching { overflow:hidden; }
+dialog.docsearch { width:min(42rem, calc(100vw - 2rem)); max-width:none; max-height:none; margin:12vh auto 0; padding:0; border:0; background:none; color:var(--ink); }
+dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur(2px); }
+.docsearch .panel { display:flex; flex-direction:column; max-height:76vh; border:1px solid var(--line-strong); border-radius:6px;
+  background:var(--bg); box-shadow:0 24px 60px -12px rgba(0,0,0,.45); overflow:hidden; }
+.docsearch form { display:flex; align-items:center; gap:0.75rem; padding:0 1rem; border-bottom:1px solid var(--line); color:var(--ink-faint); }
+.docsearch form svg { width:1.15rem; height:1.15rem; }
+.docsearch input { flex:1; min-width:0; height:3.5rem; border:0; outline:0; background:none; color:var(--ink); font:1.05rem/1 var(--body); -webkit-appearance:none; appearance:none; }
+.docsearch input::placeholder { color:var(--ink-faint); }
+.docsearch input::-webkit-search-cancel-button { display:none; }
+.docsearch .close { padding:0.2rem 0.45rem; cursor:pointer; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--bg-raised);
+  color:var(--ink-faint); font:0.7rem/1.3 var(--mono); }
+.docsearch .close:hover { color:var(--ink); }
+.docsearch .results { overflow-y:auto; overscroll-behavior:contain; padding:0.4rem 0.6rem 0.6rem; }
+.docsearch .results .hits { padding-top:0.5rem; }
+.docsearch .results .hits + .hits { margin-top:0.3rem; border-top:1px solid var(--line); }
+.docsearch .results h4 { margin:0.3rem 0.6rem 0.35rem; }
+.docsearch .results a { display:block; padding:0.6rem 0.75rem; border-radius:var(--radius); border-left:2px solid transparent; color:var(--ink-dim); text-decoration:none; }
+.docsearch .results a.active { background:var(--accent-soft); border-left-color:var(--gold); }
+.docsearch .results .title { display:block; color:var(--ink); font-weight:600; font-size:0.95rem; line-height:1.35; }
+.docsearch .results .text { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; margin-top:0.2rem;
+  color:var(--ink-faint); font-size:0.84rem; line-height:1.5; }
+.docsearch .results mark { background:none; color:var(--ink); font-weight:600; }
+.docsearch .results .title mark { color:var(--accent); font-weight:inherit; }
+.docsearch .empty { margin:0; padding:1.8rem 0.75rem; text-align:center; color:var(--ink-faint); font-size:0.9rem; }
+.docsearch .hint { display:flex; gap:1.2rem; margin:0; padding:0.6rem 1rem; border-top:1px solid var(--line); background:var(--bg-raised);
+  color:var(--ink-faint); font:0.7rem/1 var(--mono); }
+.docsearch .hint span { display:flex; align-items:center; gap:0.3rem; }
+@media (max-width:640px) { dialog.docsearch { margin-top:1rem; } .docsearch .panel { max-height:calc(100vh - 2rem); } .docsearch .hint { display:none; } }
 </style>
 </head>
 <body>
