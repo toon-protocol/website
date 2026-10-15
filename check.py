@@ -535,6 +535,23 @@ def rule_hosts(page):
                 yield rule, ref
 
 
+def rule_social(page):
+    """Every built page carries the card's tags. The landing page is hand-written and its og:title differs from its title on purpose."""
+    if page == LANDING:
+        return
+    rule = "carries the social tags: og:title equal to the title, og:description, twitter:card, and the card as og:image and twitter:image"
+    c = copy(page)
+    for key in ("og:title", "og:description", "og:image", "twitter:card", "twitter:image"):
+        if not c.meta.get(key):
+            yield rule, f"missing {key}"
+    if c.meta.get("og:title") and c.meta["og:title"] != c.title:
+        yield rule, f"og:title {c.meta['og:title']!r} is not the title {c.title!r}"
+    image = c.meta.get("og:image")
+    if image:
+        if not image.startswith("https://toon.ar.io/") or not (ROOT / unquote(urlparse(image).path.lstrip("/"))).is_file():
+            yield rule, f"og:image {image} is not an absolute toon.ar.io URL of a file in the repo"
+
+
 def rule_favicon(page):
     rule = "links the 16px favicon as files: the light one by default, the dark one for a dark scheme"
     want = {"": "toon-icon-16.svg", "(prefers-color-scheme: dark)": "toon-icon-16-dark.svg"}  # "": no media, so a browser that ignores media still gets one
@@ -600,7 +617,7 @@ def rule_manifest():
             yield MANIFEST, "manifest lists every page and referenced asset", target + " (from " + page + ")"
 
 
-PAGE_RULES = [rule_links, rule_fragments, rule_never_say, rule_landing_copy, rule_demo_proof, rule_marketing_headings, rule_marketing_words, rule_sidebar, rule_hosts, rule_scripts, rule_favicon, rule_header_mark, rule_status_chip]  # each yields (rule, offending text)
+PAGE_RULES = [rule_links, rule_fragments, rule_never_say, rule_landing_copy, rule_demo_proof, rule_marketing_headings, rule_marketing_words, rule_sidebar, rule_hosts, rule_social, rule_scripts, rule_favicon, rule_header_mark, rule_status_chip]  # each yields (rule, offending text)
 SITE_RULES = [rule_manifest, rule_fonts, rule_retired, rule_contrast]  # each yields (page, rule, offending text)
 
 

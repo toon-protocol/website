@@ -171,7 +171,36 @@ THEME_SCRIPT = ("<script>try{var t=localStorage.getItem(\"toon-theme\");"
                 "if(t===\"dark\"||t===\"light\")document.documentElement.dataset.theme=t}catch(e){}</script>")
 
 
-def head(title, description, root, docs=False):
+SITE_URL = "https://toon.ar.io/"
+CARD_URL = SITE_URL + "assets/og/toon-card.png"
+CARD_ALT = "TOON Protocol. Your machine. Paid per request."
+
+
+def social_tags(title, description, path, og_type):
+    """The Open Graph and Twitter tags, the landing page's set plus og:url. `path` is the built file's path on the site."""
+    def esc(v):
+        return html.escape(v, quote=True)
+    return f"""<meta property="og:site_name" content="TOON Protocol">
+<meta property="og:title" content="{esc(title)}">
+<meta property="og:description" content="{esc(description)}">
+<meta property="og:type" content="{og_type}">
+<meta property="og:url" content="{esc(SITE_URL + path)}">
+<meta property="og:image" content="{CARD_URL}">
+<meta property="og:image:secure_url" content="{CARD_URL}">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{esc(CARD_ALT)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@toonprotocol">
+<meta name="twitter:title" content="{esc(title)}">
+<meta name="twitter:description" content="{esc(description)}">
+<meta name="twitter:image" content="{CARD_URL}">
+<meta name="twitter:image:alt" content="{esc(CARD_ALT)}">
+"""
+
+
+def head(title, description, root, path, docs=False):
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -179,7 +208,7 @@ def head(title, description, root, docs=False):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(description, quote=True)}">
-{favicons(root)}{THEME_SCRIPT + chr(10) if docs else ""}<link rel="stylesheet" href="{root}assets/site.css">
+{social_tags(title, description, path, "article" if docs else "website")}{favicons(root)}{THEME_SCRIPT + chr(10) if docs else ""}<link rel="stylesheet" href="{root}assets/site.css">
 </head>
 <body{' class="docs-body"' if docs else ""}>
 """
@@ -345,7 +374,7 @@ HERO_TAGLINE = "TOON is a reverse proxy for your machine: a request reaches your
 
 def build_splash(index, slug, title, summary, body):
     body, _ = add_anchors(body)
-    return (head("TOON Protocol docs", summary, "../", docs=True)
+    return (head("TOON Protocol docs", summary, "../", f"docs/{slug}.html", docs=True)
             + docs_header(with_menu=False)
             + f"""
 <main class="splash" id="_top">
@@ -379,7 +408,7 @@ def build_doc(index, slug, title, summary, section, body):
         toc_html = f'  <aside class="toc" aria-label="On this page">\n    <h2>On this page</h2>\n{links}\n  </aside>'
         mtoc_html = (f'    <details class="mtoc"><summary>On this page <span>Overview</span>{CHEVRON}</summary>\n'
                      f'    <nav aria-label="On this page">\n{links}\n    </nav></details>')
-    return (head(f"{title} · TOON Protocol docs", summary, "../", docs=True)
+    return (head(f"{title} · TOON Protocol docs", summary, "../", f"docs/{slug}.html", docs=True)
             + docs_header(with_menu=True)
             + f"""
 <nav class="sidebar" id="docs-nav" aria-label="Docs">
@@ -412,7 +441,7 @@ PAGES = {
 
 def build_page(slug, body):
     title, description = PAGES[slug]
-    return (head(title, description, "../")
+    return (head(title, description, "../", f"{slug}/index.html")
             + '\n<div class="page">\n' + header("../", slug)
             + "\n<main>\n" + body + "\n</main>\n"
             + footer("../")
