@@ -143,7 +143,8 @@ def rule_fragments(page):
 HISTORICAL_PAGES = {"docs/proof.html"}
 # The marketing pages: the landing page and the apps and agents pages.
 MARKETING = [LANDING, "apps/index.html", "agents/index.html"]
-# .brand/messaging.md, 04 Messaging hierarchy, Level 1 and Level 2.
+# .brand/messaging.md, 04 Messaging hierarchy, Level 1 and Level 2. SUPPORTING is Level 2 in the
+# shortened wording issue #15 fixed for the landing page.
 TAGLINE = "Your machine. Paid per request."
 SUPPORTING = "TOON gets requests to your app and makes sure each one is paid before your code sees it."
 # .brand/messaging.md, intro: the retired taglines.
@@ -157,14 +158,18 @@ NEVER_SAY = [
     "zero fees", "fully decentralized", "trustless", "100% private", "censorship-proof",
     "limited spots", "don't miss out", "early bird",
     "Hi agents", "Are you an AI agent",
+    # .brand/messaging.md, 07 Things not to say, Category clichés (the ones voice.md 08 lacks).
+    "agentic economy", "the agents are here", "single line of code", "frictionless", "connect anything, anywhere",
 ]
-# .brand/voice.md, 08: "Get paid." as a sentence on its own (the retired tagline's second half).
+# .brand/messaging.md, 07 Things not to say, Competitor-adjacent language: "Get paid." as a sentence.
 NEVER_SAY_SENTENCE = ["Get paid."]
-# .brand/messaging.md, 04 / README of this ticket: words kept out of the landing page's headline and titles.
+# .brand/messaging.md, 07 Things not to say: "No open port" and "Hidden service" in headlines.
 HEADLINE_BANNED = ["open port", "hidden service"]
-# toon_cli/CONTEXT.md defines "onion endpoint", so the docs keep it; the marketing pages do not say onion.
+# .brand/messaging.md, 07 Things not to say: never "onion". Marketing pages only: the docs keep
+# "onion endpoint", the term toon_cli/CONTEXT.md defines.
 MARKETING_BANNED_WORDS = ["onion"]
-# The "Get paid" docs page is renamed; its slug stays.
+# .brand/messaging.md, 07 Things not to say: "Get paid" without the live label. The docs page is
+# renamed; its slug stays.
 SIDEBAR_PAGE_BANNED = ["Get paid"]
 
 
@@ -238,7 +243,7 @@ def rule_never_say(page):
             if phrase_re(p).search(text):
                 yield "no retired tagline or never-say phrase", f'"{p}" in {where}'
         for p in NEVER_SAY_SENTENCE:
-            if re.search(r"(?:^|[.!?]\s+|\n)" + re.escape(p), text):
+            if re.search(r"(?:^|[.!?]|\n)\s*" + re.escape(p), text):
                 yield "no retired tagline or never-say phrase", f'"{p}" as a sentence in {where}'
 
 

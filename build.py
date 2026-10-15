@@ -316,8 +316,7 @@ def toc_links(toc):
 
 # The docs home is a splash, as herdr.dev/docs is: a hero, then the page, with no sidebar.
 HERO_TITLE = "Every request arrives paid."
-HERO_TAGLINE = ("TOON is a reverse proxy for your machine: a request reaches your app only after it is paid. "
-                "Start on the path that matches you.")
+HERO_TAGLINE = "TOON is a reverse proxy for your machine: a request reaches your app only after it is paid."
 
 
 def build_splash(index, slug, title, summary, body):
