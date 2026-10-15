@@ -140,6 +140,14 @@ test('a passing step passes the gate on a sandbox whose sh is dash', async () =>
   assert.deepEqual(result.ran, ['step']);
 });
 
+test('each step runs under bash, not sh', async () => {
+  // $BASH names the running shell: bash invoked as `sh` reports it as sh, and dash leaves it unset.
+  const result = await quietly(() =>
+    runGate(dashLikeSandbox(tmpdir()), [step('test "${BASH##*/}" = bash')])
+  );
+  assert.equal(result.passed, true);
+});
+
 test('each step runs with -e: a failing line stops the step', async () => {
   const result = await quietly(() =>
     runGate(dashLikeSandbox(tmpdir()), [step('false\necho after')])
