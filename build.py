@@ -402,10 +402,10 @@ def build_doc(index, slug, title, summary, section, body):
 
 PAGES = {
     "apps": ("Apps · TOON Protocol",
-             "Open-source services that run behind a TOON node and are paid per request. "
+             "Open-source apps that run behind a connector and are paid per request. "
              "None contains payment code."),
     "agents": ("Agents · TOON Protocol",
-               "Agents that run a TOON node, pay one, or both: spaceturtle and hermes-toon."),
+               "Agents that run an agent node, pay one, or both: spaceturtle and hermes-toon."),
 }
 
 

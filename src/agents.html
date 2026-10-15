@@ -2,8 +2,8 @@
   <div>
     <p class="eyebrow">The agents</p>
     <h1>Agents on the network.</h1>
-    <p class="lede">Agents that run a node, pay a node, or both. One serves your apps from your own machine as a hidden service and is paid per request; one pays a node a tenth of a cent for every page it reads.</p>
-    <p class="trust"><i class="dot idle"></i><span>An agent never holds the wallet. It gets a scoped key with a spending limit, and every paying command states its amount.</span></p>
+    <p class="lede">Agents that run an agent node, pay one, or both. One serves your apps from your own machine and is paid per request. One pays for every page it reads.</p>
+    <p class="trust"><i class="dot idle"></i><span>An agent never holds the wallet. It gets a scoped key with a spending limit, and every command that pays states its amount.</span></p>
   </div>
   <aside class="ph-side">
     <b>2</b>
@@ -20,17 +20,17 @@
   <ul class="appgrid" role="list">
     <li>
       <a class="head" href="https://github.com/toon-protocol/spaceturtle"><span class="av turtle"><svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><path class="a" d="M6 0h4v1h-4zM5 1h6v1h-6zM5 2h6v1h-6zM6 3h4v1h-4zM1 4h3v1h-3zM5 4h6v1h-6zM12 4h3v1h-3zM0 5h16v1h-16zM0 6h2v1h-2zM3 6h10v1h-10zM14 6h2v1h-2zM0 7h1v1h-1zM3 7h3v1h-3zM7 7h2v1h-2zM10 7h3v1h-3zM15 7h1v1h-1zM3 8h10v1h-10zM3 9h1v1h-1zM5 9h2v1h-2zM9 9h2v1h-2zM12 9h1v1h-1zM3 10h10v1h-10zM3 11h3v1h-3zM7 11h2v1h-2zM10 11h3v1h-3zM2 12h12v1h-12zM1 13h3v1h-3zM5 13h6v1h-6zM12 13h3v1h-3zM1 14h2v1h-2zM6 14h4v1h-4zM13 14h2v1h-2zM7 15h2v1h-2z"/><path class="b" d="M6 0h4v1h-4zM5 1h6v1h-6zM5 2h6v1h-6zM6 3h4v1h-4zM5 4h6v1h-6zM2 5h12v1h-12zM1 6h14v1h-14zM0 7h2v1h-2zM3 7h3v1h-3zM7 7h2v1h-2zM10 7h3v1h-3zM14 7h2v1h-2zM0 8h2v1h-2zM3 8h10v1h-10zM14 8h2v1h-2zM0 9h1v1h-1zM3 9h1v1h-1zM5 9h2v1h-2zM9 9h2v1h-2zM12 9h1v1h-1zM15 9h1v1h-1zM3 10h10v1h-10zM3 11h3v1h-3zM7 11h2v1h-2zM10 11h3v1h-3zM3 12h10v1h-10zM2 13h2v1h-2zM5 13h6v1h-6zM12 13h2v1h-2zM2 14h1v1h-1zM6 14h4v1h-4zM13 14h1v1h-1zM7 15h2v1h-2z"/></svg></span><span class="title"><span class="owner">toon-protocol/</span><b>spaceturtle</b></span><span class="go">↗</span></a>
-      <span class="badge live">Runs a node</span>
-      <p>An agent that serves your apps from your own machine, and is paid for each request. No cloud, no domain, no open port: the node is reached as a hidden service. The agent holds no key that pays; you approve, limit and revoke. One line installs it, with no root and no account.</p>
+      <span class="badge live">Runs an agent node</span>
+      <p>An agent that serves your apps from your own machine and is paid for each request. No cloud · no domain: the agent node is reachable as a hidden service, with no open port and no public address. The agent holds no key that pays. You approve, limit and revoke. One command installs it, with no root and no account.</p>
       <div class="meta"><span class="stat"><i class="star">★</i>0</span><span class="stat"><i class="lang" style="background:#89e051"></i>Shell</span><span class="stat ver">v0.2.0</span></div>
       <div class="foot"><span>drives <code>toon</code> · Linux with KVM</span><span><a href="../docs/spaceturtle.html">the guide →</a></span></div>
     </li>
     <li>
       <a class="head" href="https://github.com/drew-dot-com/hermes-toon"><span class="av letter">H</span><span class="title"><span class="owner">drew-dot-com/</span><b>hermes-toon</b></span><span class="go">↗</span></a>
-      <span class="badge src">Pays a node</span>
-      <p>A <a href="https://github.com/nousresearch/hermes-agent">Hermes Agent</a> web-extract provider that pays a TOON node per fetch. Each page comes back as markdown through an Anyone network exit, with a reproducible content hash and a one-line receipt. The destination sees the exit, never your IP. A daily cap and an origin allowlist bound the spend.</p>
+      <span class="badge src">Pays an agent node</span>
+      <p>A <a href="https://github.com/nousresearch/hermes-agent">Hermes Agent</a> web-extract provider that pays an agent node per fetch. Each page comes back as markdown through an Anyone network exit, with a reproducible content hash and a one-line receipt. The destination sees the exit, never your IP. A daily spending limit and an origin allowlist bound the spend.</p>
       <div class="meta"><span class="stat"><i class="star">★</i>0</span><span class="stat"><i class="lang" style="background:#3572a5"></i>Python</span><span class="stat ver">MIT</span></div>
-      <div class="foot"><span>about <b>$0.001</b> per fetch, in USDC</span><span>Python plugin · Node payer sidecar</span></div>
+      <div class="foot"><span>fetch a page <b>0.001 USDC</b> · mainnet, read 2026-10-03</span><span>Python plugin · Node.js payer sidecar</span></div>
     </li>
   </ul>
 </section>
@@ -39,7 +39,7 @@
   <div class="publish">
     <p class="kicker"># yours</p>
     <h3>Want your agent listed?</h3>
-    <p>An agent runs a node with <code>toon</code>, or pays one with <code>@toon-protocol/client</code>. Every command takes <code>--json</code>, every paying command needs <code>--yes</code>, and an agent key caps what it may spend. Then open a pull request on this site.</p>
+    <p>An agent runs an agent node with <code>toon</code>, or pays one with <code>@toon-protocol/client</code>. Every command takes <code>--json</code>, every command that pays needs <code>--yes</code>, and an agent key carries a spending limit. Then open a pull request on this site.</p>
     <div class="cta">
       <a class="button primary" href="../docs/agent-keys.html">Agent keys</a>
       <a class="button ghost" href="../docs/pay-a-node.html">Pay a node</a>
