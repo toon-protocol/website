@@ -143,14 +143,14 @@ pre .s { color:var(--good); }
 /* The command box, as on herdr.dev: the command, and a button that copies it. The "$" is
    generated content, so it is not part of what gets copied. The button is the one script
    on the site (index.html, at the end of the body). */
-.cmd { display:inline-flex; align-items:stretch; max-width:100%; margin-top:2rem; border:1px solid var(--line-strong);
-  background:color-mix(in srgb, var(--bg-raised) 82%, transparent); backdrop-filter:blur(6px); }
+.cmd { display:inline-flex; align-items:stretch; max-width:100%; margin-top:2rem; border:1px solid #1c1f24;
+  background:#1c1f24; }  /* Night panel in both schemes (.brand/identity.md: terminals are Night) */
 .cmd code { display:flex; align-items:center; gap:0.7rem; padding:0.85rem 1.2rem; font-size:0.86rem; white-space:nowrap; overflow-x:auto; scrollbar-width:none;
-  background:none; border:0; border-radius:0; color:var(--ink); }
+  background:none; border:0; border-radius:0; color:#f3efe6; }
 .cmd code::before { content:"$"; color:var(--gold); font-weight:600; }
-.cmd button { display:flex; align-items:center; padding:0 1rem; border:0; border-left:1px solid var(--line-strong); background:none; cursor:pointer; color:var(--ink-faint);
+.cmd button { display:flex; align-items:center; padding:0 1rem; border:0; border-left:1px solid #3a3f47; background:none; cursor:pointer; color:#9aa0ab;
   font:600 0.66rem/1 var(--mono); letter-spacing:0.14em; text-transform:uppercase; white-space:nowrap; }
-.cmd button:hover, .cmd button.done { color:var(--ink); }
+.cmd button:hover, .cmd button.done { color:#f3efe6; }
 /* Evidence panels: every command and example on the landing page sits in one of these,
    the panel herdr draws beside each row. A .l line is a command and gets the prompt; a .o
    line is output; a pre inside keeps its columns. */
@@ -664,7 +664,7 @@ html.nav-open .docs-header .menu .shut { display:inline; }
 .publish .cta { margin-top:1.4rem; }
 
 @media (max-width:640px) { .cmd { display:flex; flex-wrap:wrap; width:100%; } .cmd code { flex:1 1 100%; white-space:pre-wrap; overflow-wrap:anywhere; align-items:flex-start; font-size:0.8rem; }
-  .cmd button { flex:1 1 100%; justify-content:flex-start; border-left:0; border-top:1px solid var(--line-strong); padding:0.7rem 1.2rem; } }
+  .cmd button { flex:1 1 100%; justify-content:flex-start; border-left:0; border-top:1px solid #3a3f47; padding:0.7rem 1.2rem; } }
 @media (max-width:460px) { .ev .hd i { display:none; } .hero h1 { font-size:9vw; } }
 
 /* ===== docs search =====

@@ -91,6 +91,16 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
    in the operators section is a CSS animation over real commands in workflow order;
    reduced motion holds its first line.
 
+7. **Copy.** `python3 check.py` enforces the mechanical copy rules, with the lists in
+   `check.py` copied from `.brand/`: the landing h1 is "Your machine. Paid per request." and
+   carries the supporting statement; the retired taglines and the "never say" phrases appear on
+   no page except the proof page's receipts; "open port" and "hidden service" stay out of the
+   landing headline and titles; "onion" stays off the marketing pages; no marketing page has an
+   exclamation mark outside code; the docs sidebar has no banned phrase. A person still reads
+   for what a list cannot catch: the tone rules in `.brand/voice.md`, claims that need proof
+   (`.brand/messaging.md` marks which are owed), a "paid" page carrying the live/devnet label,
+   and docs body copy, which is not rewritten for the tagline.
+
 ## The install URL
 
 Every install command on the site reads `curl -fsSL https://toon.ar.io/install.sh | sh`.

@@ -50,7 +50,7 @@ NAV = [
     ("The connector, by hand", [
         ("run-a-node", "Run a node", "A node running on your machine and answering GET /ilp, in one command or by hand."),
         ("put-your-app-behind-it", "Put your app behind it", "Your own app behind a priced route, told who paid in three headers."),
-        ("get-paid", "Get paid", "A node anyone on Base or Solana can open a channel to and pay, with no gas."),
+        ("get-paid", "Take payment from anyone", "A node anyone on Base or Solana can open a channel to and pay, with no gas."),
         ("peering-by-hand", "Peer with another node", "Your node carrying another node's packets for a fee, set up from one URL."),
         ("operator-surface", "The operator surface", "A token that reads what you were paid, and a key that moves it."),
         ("hidden-services", "Hidden services", "Your node at a .anyone address with no domain and no open port, and a client that reaches it."),
@@ -315,8 +315,8 @@ def toc_links(toc):
 
 
 # The docs home is a splash, as herdr.dev/docs is: a hero, then the page, with no sidebar.
-HERO_TITLE = "TOON documentation"
-HERO_TAGLINE = ("Run an agent node, put your app behind it, and get paid per request. "
+HERO_TITLE = "Every request arrives paid."
+HERO_TAGLINE = ("TOON is a reverse proxy for your machine: a request reaches your app only after it is paid. "
                 "Start on the path that matches you.")
 
 
