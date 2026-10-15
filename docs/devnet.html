@@ -185,6 +185,12 @@
 
 <p><a href="https://faucet.devnet.toonprotocol.dev">faucet.devnet.toonprotocol.dev</a> mints devnet USDC on both chains to any address. <code>npx toon-client faucet</code> calls it for the wallet in your keystore. The devnet USDC on Base Sepolia is minter-gated, so it comes from the faucet or nowhere.</p>
 
+<h2 id="the-echo-merchant"><a class="anchor" href="#the-echo-merchant">The Echo Merchant</a></h2>
+
+<p>The <strong>Echo Merchant</strong> is a priced route at <code>g.toon.echo</code> that sells nothing, on purpose. It costs 1 base unit plus 1 per KiB, on Base Sepolia or Solana devnet, and it answers each paid packet with a <strong>Mirror</strong>: the request as it arrived and the payment as it arrived, including what it was charged. Pay it first, before a route that sells something real, and a failure is your payer's, not the service's.</p>
+
+<p>The walkthrough, the <a href="https://github.com/toon-protocol/echo-merchant/blob/main/docs/guide/echo-flow.md">Echo flow</a>, lives in the <a href="https://github.com/toon-protocol/echo-merchant">echo-merchant</a> repository: install, fund, open a channel, pay, read the Mirror and withdraw.</p>
+
 <h2 id="mainnet"><a class="anchor" href="#mainnet">Mainnet</a></h2>
 
 <p>The node that serves <a href="../index.html">toon.ar.io</a> settles on Base mainnet and Solana mainnet-beta, in USDC, on the same contract and program at the same addresses. Its prices are on the <a href="../ecosystem/index.html#live">ecosystem page</a> and at its own <a href="https://connector.167-233-221-236.sslip.io/ilp"><code>GET /ilp</code></a>. There is no mainnet faucet; a mainnet payer funds its own wallet with USDC.</p>
@@ -198,6 +204,7 @@
   <a href="#nodes">Nodes</a>
   <a href="#chains">Chains</a>
   <a href="#the-faucet">The faucet</a>
+  <a href="#the-echo-merchant">The Echo Merchant</a>
   <a href="#mainnet">Mainnet</a>
 </aside>
 </div>
