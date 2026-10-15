@@ -761,16 +761,29 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
 #route .sub, #run .sub, #paid .sub, #agents .sub { color:var(--ink-dim); max-width:46rem; }
 #route, #run, #paid, #agents, #pay-section { padding:3.5rem 0; }
 .route { margin:2rem 0 0; }
-.route-scroll { overflow-x:auto; border:1px solid var(--line-strong); background:var(--bg-raised); padding:1rem; }
-.route-scroll:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
-.route svg { display:block; width:100%; min-width:640px; height:auto; font:500 15px/1 var(--mono); }
+.route-plate { border:1px solid var(--line-strong); background:var(--bg-raised); padding:clamp(0.75rem, 2vw, 1.5rem); }
+.route svg { display:block; width:100%; height:auto; font:500 15px/1 var(--mono); }
+.route svg.tall { display:none; max-width:26rem; margin:0 auto; }
+@media (max-width:900px) { .route svg.wide { display:none; } .route svg.tall { display:block; } }
 .route .wires rect { fill:var(--wire); }
 .route .blocks rect { fill:var(--ink); }
 .route .slivers rect { fill:var(--gold); }
-.route .inside text { fill:var(--bg); font-family:var(--mono); font-size:14px; }
-.route .labels text { fill:var(--ink); font-family:var(--mono); font-size:15px; font-weight:500; text-anchor:middle; }
-.route .labels text.tok { fill:var(--ink-dim); font-size:13px; font-weight:400; }
-.route .labels text.chg { fill:var(--ink); font-weight:500; }
+.route .machine { fill:none; stroke:var(--wire); stroke-width:1.5; stroke-dasharray:6 4; }
+.route .machine-tag { fill:var(--bg-raised); }
+.route text.cap { font:500 10.5px var(--mono); letter-spacing:0.12em; text-transform:uppercase; fill:var(--bg); opacity:0.62; }
+.route text.cap.dim { fill:var(--ink-dim); opacity:1; }
+.route .inside .name { font:600 18px var(--display); fill:var(--bg); }
+.route .inside .det { font:400 12px var(--mono); fill:var(--bg); opacity:0.8; }
+.route .labels text { fill:var(--ink); text-anchor:middle; }
+.route .tall .labels text { text-anchor:start; }
+.route .labels .amt { font:500 16px var(--mono); }
+.route .labels .tok { font:400 12px var(--mono); fill:var(--ink-dim); }
+.route .labels .tok.chg { fill:var(--accent); font-weight:500; }
+.route .rule { fill:var(--line-strong); }
+.route .ledger text { font:500 13px var(--mono); fill:var(--ink); }
+.route .ledger .fee { fill:var(--accent); }
+.route .ledger .ok { fill:var(--good); }
+.route .ledger .sub { font-weight:400; font-size:12px; fill:var(--ink-dim); }
 .route .packet .a { fill:var(--ink); } .route .packet .b { fill:var(--gold); } .route .packet .hole { fill:var(--bg-raised); }
 .route figcaption { margin:0.8rem 0 0; color:var(--ink-dim); font-size:0.9rem; max-width:46rem; }
 .tapewrap { margin-top:2rem; }
