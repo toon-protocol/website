@@ -1,7 +1,8 @@
 name: CI
 
 # The `gate` job's `run:` steps are also the AFK factory's gate (.sandcastle/run-gate.ts),
-# run in the sandcastle-agent image, which has Python 3.11. Keep build.py runnable on 3.11.
+# run in the sandcastle-agent image, which has Python 3.11. Keep build.py and check.py
+# runnable on 3.11.
 
 on:
   pull_request:
@@ -27,5 +28,7 @@ jobs:
             git diff
             exit 1
           fi
+      - name: Site check
+        run: python3 check.py
       - name: install.sh parses
         run: sh -n install.sh

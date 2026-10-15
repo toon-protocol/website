@@ -74,9 +74,9 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
    header of `curl -sI https://toon.ar.io`), `sha256sum` of the file as served, byte size,
    the claim on each hop, and the block date. A page cannot contain its own hash, so this
    is always done for the previous revision, never the current one.
-5. **Links.** Every link must resolve. Internal links are checked by the script below;
-   external ones with curl (npmjs.com, basescan and the Solana explorer block curl and must
-   be checked in a browser).
+5. **Links.** Internal links, anchors and the manifest are checked by `python3 check.py`
+   (also a CI gate step). External links are checked with curl (npmjs.com, basescan and
+   the Solana explorer block curl and must be checked in a browser).
 
    ```sh
    python3 build.py
