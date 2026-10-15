@@ -147,7 +147,7 @@
 
 <h2 id="nodes"><a class="anchor" href="#nodes">Nodes</a></h2>
 
-<p>Three nodes, six routes. Each node is the receiver of its own channels, so a channel opened with one buys nothing at the others.</p>
+<p>Four nodes, seven routes. Each node is the receiver of its own channels, so a channel opened with one buys nothing at the others.</p>
 
 <div class="tablewrap"><table>
 <thead><tr><th>Node</th><th>Client-edge URL</th><th>Route</th><th>Price</th><th>Carriage</th></tr></thead>
@@ -158,6 +158,7 @@
 <tr><td><code>g.toon.relay.ephemeral</code></td><td>free</td><td>HTTP or BTP</td></tr>
 <tr><td><code>g.toon.relay.store</code></td><td>1001 <strong>+ 10 per KiB</strong></td><td>HTTP or BTP</td></tr>
 <tr><td><code>g.toon.relay.gas</code></td><td>1001</td><td>HTTP or BTP</td></tr>
+<tr><td><strong><a href="#the-echo-merchant">Echo Merchant</a></strong></td><td><code>https://proxy.echo.devnet.toonprotocol.dev</code></td><td><code>g.toon.echo</code></td><td>1 <strong>+ 1 per KiB</strong></td><td>HTTP or BTP</td></tr>
 </tbody></table></div>
 
 <p>The last two are <strong>forwarded</strong>: the relay carries the packet to the store or the gas station and charges its own hop on top. Forwarding runs one way. A forwarded route needs one thing a direct one does not: the payload is sealed to the connector that <em>terminates</em> the route, so you name the far node yourself with <code>sealTo</code>. Seal to the relay instead and the packet is undeliverable (<code>F01</code>).</p>
@@ -185,11 +186,17 @@
 
 <p><a href="https://faucet.devnet.toonprotocol.dev">faucet.devnet.toonprotocol.dev</a> mints devnet USDC on both chains to any address. <code>npx toon-client faucet</code> calls it for the wallet in your keystore. The devnet USDC on Base Sepolia is minter-gated, so it comes from the faucet or nowhere.</p>
 
+<h2 id="the-echo-merchant"><a class="anchor" href="#the-echo-merchant">The Echo Merchant</a></h2>
+
+<p>The <strong>Echo Merchant</strong> is a priced route at <code>g.toon.echo</code>, served at <code>https://proxy.echo.devnet.toonprotocol.dev</code>, that sells nothing, on purpose. It costs 1 base unit plus 1 per KiB, on Base Sepolia or Solana devnet, and it answers each paid packet with a <strong>Mirror</strong>: the request as it arrived and the payment as it arrived, including what it was charged. Pay it first, before a route that sells something real, and a failure is your payer's, not the service's.</p>
+
+<p>The walkthrough, the <a href="https://github.com/toon-protocol/echo-merchant/blob/main/docs/guide/echo-flow.md">Echo flow</a>, lives in the <a href="https://github.com/toon-protocol/echo-merchant">echo-merchant</a> repository: install, fund, open a channel, pay, read the Mirror and withdraw.</p>
+
 <h2 id="mainnet"><a class="anchor" href="#mainnet">Mainnet</a></h2>
 
-<p>The node that serves <a href="../index.html">toon.ar.io</a> settles on Base mainnet and Solana mainnet-beta, in USDC, on the same contract and program at the same addresses. Its prices are on the <a href="../ecosystem/index.html#live">ecosystem page</a> and at its own <a href="https://connector.167-233-221-236.sslip.io/ilp"><code>GET /ilp</code></a>. There is no mainnet faucet; a mainnet payer funds its own wallet with USDC.</p>
+<p>The node that serves <a href="../index.html">toon.ar.io</a> settles on Base mainnet and Solana mainnet-beta, in USDC, on the same contract and program at the same addresses. Its prices are on the <a href="../apps/index.html">apps page</a> and at its own <a href="https://connector.167-233-221-236.sslip.io/ilp"><code>GET /ilp</code></a>. There is no mainnet faucet; a mainnet payer funds its own wallet with USDC.</p>
 
-<p class="source">Written from <code>toon-client/docs/devnet.md</code> and <code>connector/docs/guide/get-paid.md</code>. The same values ship as <code>DEVNET</code> in <code>@toon-protocol/client</code>.</p>
+<p class="source">Written from <code>toon-client/docs/devnet.md</code> and <code>connector/docs/guide/get-paid.md</code>, and the Echo Merchant from <code>echo-merchant/README.md</code>. The same values ship as <code>DEVNET</code> in <code>@toon-protocol/client</code>.</p>
 
 <nav class="pager" aria-label="Previous and next"><a class="prev" href="spaceturtle.html"><small>Previous</small>spaceturtle</a><a class="next" href="protocol.html"><small>Next</small>Protocol and specs</a></nav>
   </main>
@@ -198,6 +205,7 @@
   <a href="#nodes">Nodes</a>
   <a href="#chains">Chains</a>
   <a href="#the-faucet">The faucet</a>
+  <a href="#the-echo-merchant">The Echo Merchant</a>
   <a href="#mainnet">Mainnet</a>
 </aside>
 </div>
@@ -208,7 +216,6 @@
       <a href="../docs/index.html">docs</a>
       <a href="../apps/index.html">apps</a>
       <a href="../agents/index.html">agents</a>
-      <a href="../ecosystem/index.html">ecosystem</a>
       <a href="../docs/proof.html">proof</a>
       <a href="https://github.com/toon-protocol/toon_cli">source</a>
     </nav>

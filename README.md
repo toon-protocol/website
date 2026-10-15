@@ -1,12 +1,11 @@
 # website
 
 The source of [toon.ar.io](https://toon.ar.io): the TOON Protocol landing page, the docs
-and the ecosystem page.
+and the apps and agents pages.
 
 ```
 index.html              the landing page: hand-written; build.py copies the stylesheet into it
 docs/*.html             built from src/docs/*.html by build.py
-ecosystem/index.html    built from src/ecosystem.html by build.py
 apps/index.html         built from src/apps.html: every app, in the shape of a marketplace
 agents/index.html       built from src/agents.html: every agent that speaks TOON
 install.sh              the installer at https://toon.ar.io/install.sh: a stub that hands over to toon_cli's
@@ -38,10 +37,10 @@ before it.
   and order come from `NAV` in `build.py`. Every `<h2>` gets an anchor and an entry in the
   page's table of contents. End each page with a `<p class="source">` naming the
   repository file it was written from, so the next editor can check it against the source.
-- **The apps, agents and ecosystem pages** are `src/apps.html`, `src/agents.html` and
-  `src/ecosystem.html`. A new app or agent is one `<li>` in the grid and a bump of the count
-  in the page header. Each card's stars, language and version are typed by hand from
-  `gh api repos/<owner>/<name>`; reread them before a publish.
+- **The apps and agents pages** are `src/apps.html` and `src/agents.html`. A new app or
+  agent is one `<li>` in the grid and a bump of the count in the page header. Each card's
+  stars, language and version are typed by hand from `gh api repos/<owner>/<name>`; reread
+  them before a publish.
 - Then run the build:
 
   ```sh
@@ -53,9 +52,8 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
 
 ## Before publishing
 
-1. **Prices.** The "Priced live" tiles and the endpoints table on the ecosystem page are a
-   snapshot read off the live node's `GET /ilp`. Reread it and update the dates if a price
-   changed.
+1. **Prices.** The "Priced live" cards on the apps page are a snapshot read off the live
+   node's `GET /ilp`. Reread it and update the dates if a price changed.
 2. **Release tags.** The version named in `src/docs/install.html` is toon_cli's latest
    release (`gh release list -R toon-protocol/toon_cli`); the Docker tag in
    `src/docs/run-a-node.html` is the connector's (`gh release list -R toon-protocol/connector`).
@@ -72,7 +70,7 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
 
    ```sh
    python3 build.py
-   grep -ho 'href="https\?://[^"]*"' index.html docs/*.html apps/*.html agents/*.html ecosystem/*.html | sed 's/href="//;s/"$//' | sort -u \
+   grep -ho 'href="https\?://[^"]*"' index.html docs/*.html apps/*.html agents/*.html | sed 's/href="//;s/"$//' | sort -u \
      | while read u; do printf '%s %s\n' "$(curl -s -o /dev/null -w '%{http_code}' -L "$u")" "$u"; done | grep -v '^200'
    ```
 6. **One script.** `grep -rl '<script' --include='*.html' . | grep -v ^./src` must print
