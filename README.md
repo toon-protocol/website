@@ -131,6 +131,9 @@ changes a list, update it there by hand.
   is allowed there. The landing page must carry the `.demo-proof` block: it links the demo README and
   the settlement transaction, and says "devnet". "onion" stays off the marketing pages, which have no exclamation mark outside code.
   The docs sidebar has no banned phrase.
+- **Social tags.** `head()` in `build.py` writes the card's Open Graph and Twitter tags, plus `og:url`, on every built
+  page. Every page but the landing page must carry `og:title` equal to its `<title>`, `og:description`, `twitter:card`,
+  and the card as `og:image` and `twitter:image`, an absolute `toon.ar.io` URL of a file in the repo.
 - **Chrome.** Every page links the 16px favicon as files, the light one by default and the dark
   one for a dark scheme. Its header mark is the two-bar mark with no wire and no colours of its
   own, so the page's theme sets its light and dark variant. It has exactly one status chip that

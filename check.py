@@ -470,6 +470,9 @@ class Resources(HTMLParser):
         self.scripts = 0
         self.icons = []  # (href, media) of each <link rel="icon">
         self.in_header = False
+        self.in_title = False
+        self.title = ""
+        self.social = {}  # og:/twitter: meta tags, name -> content
         self.header_mark = None  # the classes of the shapes in the header's mark, once it has one
         self.in_mark = False
         self.chips = []  # the text of each status chip
@@ -478,8 +481,12 @@ class Resources(HTMLParser):
     def handle_data(self, data):
         if self.chip_depth:
             self.chips[-1] += data
+        if self.in_title:
+            self.title += data
 
     def handle_endtag(self, tag):
+        if tag == "title":
+            self.in_title = False
         if self.chip_depth and tag not in VOID:
             self.chip_depth -= 1
         if tag == "header":
@@ -490,6 +497,12 @@ class Resources(HTMLParser):
     def handle_starttag(self, tag, attrs):
         a = {k: v for k, v in attrs if v is not None}
         classes = a.get("class", "").split()
+        if tag == "title":
+            self.in_title = True
+        elif tag == "meta" and "content" in a:
+            key = a.get("property", a.get("name", ""))
+            if key.startswith(("og:", "twitter:")):
+                self.social.setdefault(key, a["content"])
         if self.chip_depth and tag not in VOID:
             self.chip_depth += 1
         elif "status-chip" in classes:
@@ -533,6 +546,24 @@ def rule_hosts(page):
         for ref in CSS_URL.findall(inline_style(page)):
             if urlparse(ref).netloc:
                 yield rule, ref
+
+
+def rule_social(page):
+    """Every built page carries the card's tags. The landing page is hand-written and its og:title differs from its title on purpose."""
+    if page == LANDING:
+        return
+    rule = "carries the social tags: og:title equal to the title, and the card as og:image"
+    r = resources(page)
+    for key in ("og:title", "og:description", "og:image", "twitter:card", "twitter:image"):
+        if not r.social.get(key):
+            yield rule, f"missing {key}"
+    if r.social.get("og:title") and r.social["og:title"] != r.title:
+        yield rule, f"og:title {r.social['og:title']!r} is not the title {r.title!r}"
+    image = r.social.get("og:image")
+    if image:
+        prefix = "https://toon.ar.io/"
+        if not image.startswith(prefix) or not (ROOT / unquote(urlparse(image).path.lstrip("/"))).is_file():
+            yield rule, f"og:image {image} is not an absolute toon.ar.io URL of a file in the repo"
 
 
 def rule_favicon(page):
@@ -600,7 +631,7 @@ def rule_manifest():
             yield MANIFEST, "manifest lists every page and referenced asset", target + " (from " + page + ")"
 
 
-PAGE_RULES = [rule_links, rule_fragments, rule_never_say, rule_landing_copy, rule_demo_proof, rule_marketing_headings, rule_marketing_words, rule_sidebar, rule_hosts, rule_scripts, rule_favicon, rule_header_mark, rule_status_chip]  # each yields (rule, offending text)
+PAGE_RULES = [rule_links, rule_fragments, rule_never_say, rule_landing_copy, rule_demo_proof, rule_marketing_headings, rule_marketing_words, rule_sidebar, rule_hosts, rule_social, rule_scripts, rule_favicon, rule_header_mark, rule_status_chip]  # each yields (rule, offending text)
 SITE_RULES = [rule_manifest, rule_fonts, rule_retired, rule_contrast]  # each yields (page, rule, offending text)
 
 
