@@ -430,8 +430,16 @@ class Resources(HTMLParser):
         self.in_header = False
         self.header_mark = None  # the classes of the shapes in the header's mark, once it has one
         self.in_mark = False
+        self.chips = []  # the text of each status chip
+        self.chip_depth = 0
+
+    def handle_data(self, data):
+        if self.chip_depth:
+            self.chips[-1] += data
 
     def handle_endtag(self, tag):
+        if self.chip_depth:
+            self.chip_depth -= 1
         if tag == "header":
             self.in_header = False
         elif tag == "svg":
@@ -440,6 +448,11 @@ class Resources(HTMLParser):
     def handle_starttag(self, tag, attrs):
         a = {k: v for k, v in attrs if v is not None}
         classes = a.get("class", "").split()
+        if self.chip_depth and tag not in ("br", "img", "input", "meta", "link", "hr"):
+            self.chip_depth += 1
+        elif "status-chip" in classes:
+            self.chips.append("")
+            self.chip_depth = 1
         if tag == "header" and ({"site-header", "docs-header"} & set(classes)):
             self.in_header = True
         elif tag == "svg" and self.in_header and "mark" in classes and self.header_mark is None:
@@ -507,6 +520,17 @@ def rule_header_mark(page):
         yield rule, "the header mark paints its own colours, so the page's theme can't set its light and dark variants"
 
 
+def rule_status_chip(page):
+    rule = "carries exactly one status chip, and it says Live and Next"
+    chips = resources(page).chips
+    if len(chips) != 1:
+        yield rule, f"{len(chips)} status chip(s)"
+        return
+    for word in ("Live", "Next"):
+        if word not in chips[0]:
+            yield rule, f'the chip does not say "{word}": {chips[0].strip()}'
+
+
 def rule_scripts(page):
     n = resources(page).scripts
     want = 1 if page == LANDING else (None if page.startswith("docs/") else 0)
@@ -533,7 +557,7 @@ def rule_manifest():
             yield MANIFEST, "manifest lists every page and referenced asset", target + " (from " + page + ")"
 
 
-PAGE_RULES = [rule_links, rule_fragments, rule_never_say, rule_landing_copy, rule_marketing_words, rule_sidebar, rule_hosts, rule_scripts, rule_favicon, rule_header_mark]  # each yields (rule, offending text)
+PAGE_RULES = [rule_links, rule_fragments, rule_never_say, rule_landing_copy, rule_marketing_words, rule_sidebar, rule_hosts, rule_scripts, rule_favicon, rule_header_mark, rule_status_chip]  # each yields (rule, offending text)
 SITE_RULES = [rule_manifest, rule_fonts, rule_retired, rule_contrast]  # each yields (page, rule, offending text)
 
 
