@@ -78,8 +78,6 @@ class Page(HTMLParser):
                 self.ids.add(v)
 
     def handle_endtag(self, tag):
-        if re.fullmatch(r"h[1-6]", tag):
-            self.open_heading = None
         self.in_style = False
 
     def handle_data(self, data):
@@ -217,7 +215,7 @@ VOID = ("meta", "link", "br", "img", "path", "rect", "circle", "input", "hr")  #
 
 
 class Copy(HTMLParser):
-    """What a reader and a link preview see: text outside code, the head's tags, the h1 and the sidebar."""
+    """What a reader and a link preview see: text outside code, the head's tags, the h1, every heading and the sidebar."""
 
     def __init__(self):
         super().__init__()
@@ -226,7 +224,7 @@ class Copy(HTMLParser):
         self.meta = {}  # name or property -> content
         self.title = ""
         self.h1 = ""
-        self.headings = []  # (tag, text) for every h1-h6, outside code
+        self.headings = []  # [tag, text] for every h1-h6, text outside code
         self.sidebar = []
         self.open_heading = None  # index into headings while inside one
         self.stack = []
@@ -262,7 +260,7 @@ class Copy(HTMLParser):
             self.text.append(data)
             if "h1" in tags:
                 self.h1 += data
-            if self.headings and self.open_heading is not None:
+            if self.open_heading is not None:
                 self.headings[self.open_heading][1] += data
             if any(t == "nav" and "sidebar" in c.split() for t, c in self.stack):
                 self.sidebar.append(data)

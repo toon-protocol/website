@@ -125,8 +125,10 @@ changes a list, update it there by hand.
 
 - **Copy.** The landing h1 is "Your machine. Paid per request." and the supporting statement is
   present. The retired taglines, the "never say" phrases and "Get paid." as a sentence of its
-  own appear on no page (title and meta tags included) except the proof page's receipts. "hidden service" stays out of every heading (h1 to h6) on the landing, apps and agents pages and out of the landing title and social titles (the docs may use it in headings); "open port" is
-  allowed there. The landing page must carry the `.demo-proof` block: it links the demo README and
+  own appear on no page (title and meta tags included) except the proof page's receipts.
+  "hidden service" stays out of every heading (h1 to h6) on the landing, apps and agents pages
+  and out of the landing title and social titles (the docs may use it in headings); "open port"
+  is allowed there. The landing page must carry the `.demo-proof` block: it links the demo README and
   the settlement transaction, and says "devnet". "onion" stays off the marketing pages, which have no exclamation mark outside code.
   The docs sidebar has no banned phrase.
 - **Chrome.** Every page links the 16px favicon as files, the light one by default and the dark
