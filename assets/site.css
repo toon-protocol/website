@@ -734,3 +734,24 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
   color:var(--ink-faint); font:0.7rem/1 var(--mono); }
 .docsearch .hint span { display:flex; align-items:center; gap:0.3rem; }
 @media (max-width:640px) { dialog.docsearch { margin-top:1rem; } .docsearch .panel { max-height:calc(100vh - 2rem); } .docsearch .hint { display:none; } }
+
+/* ===== landing body: route diagram, section heads, demo proof ===== */
+#route .sub, #run .sub, #paid .sub, #agents .sub { color:var(--ink-dim); max-width:46rem; }
+#route, #run, #paid, #agents, #pay-section { padding:3.5rem 0; }
+.route { margin:2rem 0 0; }
+.route-scroll { overflow-x:auto; border:1px solid var(--line-strong); background:var(--bg-raised); padding:1rem; }
+.route-scroll:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
+.route svg { display:block; width:100%; min-width:640px; height:auto; font:500 15px/1 var(--mono); }
+.route .wires rect { fill:var(--wire); }
+.route .blocks rect { fill:var(--ink); }
+.route .slivers rect { fill:var(--gold); }
+.route .inside text { fill:var(--bg); font-family:var(--mono); font-size:14px; }
+.route .labels text { fill:var(--ink); font-family:var(--mono); font-size:15px; font-weight:500; text-anchor:middle; }
+.route .labels text.tok { fill:var(--ink-dim); font-size:13px; font-weight:400; }
+.route .labels text.chg { fill:var(--ink); font-weight:500; }
+.route .packet .a { fill:var(--ink); } .route .packet .b { fill:var(--gold); } .route .packet .hole { fill:var(--bg-raised); }
+.route figcaption { margin:0.8rem 0 0; color:var(--ink-dim); font-size:0.9rem; max-width:46rem; }
+.tapewrap { margin-top:2rem; }
+.demo-proof { margin-top:1.5rem; padding:1rem 1.2rem; border:1px solid var(--line-strong); border-left:4px solid var(--gold); background:var(--bg-raised); }
+.demo-proof p { margin:0; }
+@media (max-width:900px) { .twocol > div { min-width:0; } }

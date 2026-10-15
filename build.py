@@ -402,6 +402,30 @@ def build_page(slug, body):
             + "\n</div>\n</body>\n</html>\n")
 
 
+# The home-router demo slot on the landing page: (the demo's URL, a one-line caption). Empty:
+# nothing renders. Set both, and a proof block appears in the reachability section.
+# The headline and the title do not change.
+DEMO = ("", "")
+
+
+def sync_demo():
+    """Write the demo proof block between the <!-- demo --> markers of index.html, or nothing."""
+    page = ROOT / "index.html"
+    html_text = page.read_text()
+    start_tag, end_tag = "<!-- demo -->", "<!-- /demo -->"
+    start = html_text.index(start_tag) + len(start_tag)
+    end = html_text.index(end_tag, start)
+    link, caption = DEMO
+    if bool(link) != bool(caption):
+        raise SystemExit("build.py: DEMO needs both its link and its caption, or neither")
+    block = ""
+    if link:
+        block = ('<div class="demo-proof"><p>' + html.escape(caption) + ' <a href="' + html.escape(link, quote=True)
+                 + '">See the demo →</a></p></div>\n')
+    page.write_text(html_text[:start] + "\n" + block + html_text[end:])
+    print("demo slot:", "set" if block else "empty")
+
+
 def sync_landing_chrome():
     """Write the header and footer into index.html between their markers, so the landing
     page carries the same chrome as every generated page."""
@@ -431,6 +455,7 @@ def inline_stylesheet():
 
 def main():
     sync_landing_chrome()
+    sync_demo()
     inline_stylesheet()
     (ROOT / "docs").mkdir(exist_ok=True)
     records = []

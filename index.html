@@ -761,6 +761,27 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
   color:var(--ink-faint); font:0.7rem/1 var(--mono); }
 .docsearch .hint span { display:flex; align-items:center; gap:0.3rem; }
 @media (max-width:640px) { dialog.docsearch { margin-top:1rem; } .docsearch .panel { max-height:calc(100vh - 2rem); } .docsearch .hint { display:none; } }
+
+/* ===== landing body: route diagram, section heads, demo proof ===== */
+#route .sub, #run .sub, #paid .sub, #agents .sub { color:var(--ink-dim); max-width:46rem; }
+#route, #run, #paid, #agents, #pay-section { padding:3.5rem 0; }
+.route { margin:2rem 0 0; }
+.route-scroll { overflow-x:auto; border:1px solid var(--line-strong); background:var(--bg-raised); padding:1rem; }
+.route-scroll:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
+.route svg { display:block; width:100%; min-width:640px; height:auto; font:500 15px/1 var(--mono); }
+.route .wires rect { fill:var(--wire); }
+.route .blocks rect { fill:var(--ink); }
+.route .slivers rect { fill:var(--gold); }
+.route .inside text { fill:var(--bg); font-family:var(--mono); font-size:14px; }
+.route .labels text { fill:var(--ink); font-family:var(--mono); font-size:15px; font-weight:500; text-anchor:middle; }
+.route .labels text.tok { fill:var(--ink-dim); font-size:13px; font-weight:400; }
+.route .labels text.chg { fill:var(--ink); font-weight:500; }
+.route .packet .a { fill:var(--ink); } .route .packet .b { fill:var(--gold); } .route .packet .hole { fill:var(--bg-raised); }
+.route figcaption { margin:0.8rem 0 0; color:var(--ink-dim); font-size:0.9rem; max-width:46rem; }
+.tapewrap { margin-top:2rem; }
+.demo-proof { margin-top:1.5rem; padding:1rem 1.2rem; border:1px solid var(--line-strong); border-left:4px solid var(--gold); background:var(--bg-raised); }
+.demo-proof p { margin:0; }
+@media (max-width:900px) { .twocol > div { min-width:0; } }
 </style>
 </head>
 <body>
@@ -812,9 +833,66 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
   </div>
 </section>
 
-<!-- ============ 2 · WHAT YOU DO ============ -->
+<!-- ============ 2 · THE ROUTE ============ -->
+<section id="route">
+  <div class="wrap">
+    <p class="eyebrow">How a request travels</p>
+    <h2>One packet, paid hop by hop.</h2>
+    <p class="sub">Whoever pays sends one packet. Each connector on the way keeps its hop fee and passes the rest on. The last connector hands your app a plain HTTP request.</p>
+    <figure class="route">
+      <div class="route-scroll" tabindex="0" role="group" aria-label="Route diagram, scrolls sideways on a narrow screen">
+      <svg viewBox="0 0 960 300" role="img" aria-labelledby="route-t route-d" xmlns="http://www.w3.org/2000/svg">
+        <title id="route-t">One paid packet crossing two connectors to an app</title>
+        <desc id="route-d">An example route, left to right. Whoever pays sends a packet that carries a price of 2,000 units of USDC on Base. Hop one: the first connector keeps a hop fee of 100 and passes on 1,900 units of USDC on Base. Hop two: the second connector keeps a hop fee of 100, converts the token, and passes on 1,800 units of USDC on Solana. The app on the operator's machine receives a plain HTTP request that has been paid for. The numbers are an example, and each operator sets the real price. Paid hops run on mainnet today; the token change runs on devnet.</desc>
+        <g class="wires">
+          <rect x="150" y="149" width="150" height="2"/>
+          <rect x="420" y="149" width="150" height="2"/>
+          <rect x="690" y="149" width="110" height="2"/>
+        </g>
+        <g class="blocks">
+          <rect x="30" y="110" width="120" height="80"/>
+          <rect x="300" y="110" width="120" height="80"/>
+          <rect x="570" y="110" width="120" height="80"/>
+          <rect x="800" y="110" width="130" height="80"/>
+        </g>
+        <g class="slivers">
+          <rect x="336" y="190" width="48" height="12"/>
+          <rect x="606" y="190" width="48" height="12"/>
+        </g>
+        <g class="inside">
+          <text x="90" y="145" text-anchor="middle">Whoever</text><text x="90" y="165" text-anchor="middle">pays</text>
+          <text x="360" y="145" text-anchor="middle">Connector</text><text x="360" y="165" text-anchor="middle">one</text>
+          <text x="630" y="145" text-anchor="middle">Connector</text><text x="630" y="165" text-anchor="middle">two</text>
+          <text x="865" y="145" text-anchor="middle">Your app</text><text x="865" y="165" text-anchor="middle">on your machine</text>
+        </g>
+        <g class="packet" transform="translate(190 94)">
+          <rect class="a" x="0" y="0" width="22" height="48"/><rect class="hole" x="5" y="6" width="8" height="8"/>
+          <rect class="b" x="26" y="0" width="22" height="48"/>
+        </g>
+        <g class="labels">
+          <text x="190" y="72">Price 2,000</text><text x="190" y="90" class="tok">USDC on Base</text>
+          <text x="460" y="72">1,900</text><text x="460" y="90" class="tok">USDC on Base</text>
+          <text x="700" y="72">1,800</text><text x="700" y="90" class="tok chg">USDC on Solana</text>
+          <text x="360" y="224">Hop fee 100</text>
+          <text x="630" y="224">Hop fee 100</text>
+          <text x="630" y="244" class="tok chg">Token changes here</text>
+          <text x="865" y="224">Plain HTTP, already paid</text>
+        </g>
+        <g class="packet small" transform="translate(460 118)"><rect class="a" x="0" y="0" width="12" height="28"/><rect class="b" x="15" y="0" width="12" height="28"/></g>
+        <g class="packet small" transform="translate(720 118)"><rect class="a" x="0" y="0" width="12" height="28"/><rect class="b" x="15" y="0" width="12" height="28"/></g>
+      </svg>
+      </div>
+      <figcaption>An example route with made-up numbers. The packet is drawn as the TOON mark and carries its price; the Gold slivers are the fees each connector keeps. You set the real price, and TOON adds no fee of its own. Paid hops like these run on mainnet today; the token change runs on devnet.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 3 · WHAT YOU DO ============ -->
 <section id="run">
   <div class="wrap">
+    <p class="eyebrow">Six commands</p>
+    <h2>From install to a paid app.</h2>
+    <p class="sub">Output below is what <code>toon</code> 0.2.0 printed, the release named on the <a href="docs/install.html">install page</a>. Trimmed lines are marked with an ellipsis, and the wallet in them was thrown away.</p>
     <ol class="rows">
       <li>
         <span class="n">01</span>
@@ -825,64 +903,123 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
         <div class="ev">
           <div class="hd"><span>The shell</span><button type="button" aria-label="Copy install command">copy</button></div>
           <span class="l">curl -fsSL https://toon.ar.io/install.sh | sh</span>
+          <span class="o">Installed toon 0.2.0 (connector 7d0582e29c07…, relay ghcr.io/toon-protocol/relay:rust-sha-1b02f2e@sha256:3eea8d94…) at ~/.local/bin/toon</span>
         </div>
       </li>
       <li>
         <span class="n">02</span>
         <div>
-          <h3>Create and fund it</h3>
-          <p><code>init</code> makes the wallet and a relay reachable as a hidden service; the mnemonic is shown once. The faucet sends test tokens, not ETH.</p>
+          <h3>Create a wallet and a first app</h3>
+          <p><code>toon init</code> makes the wallet and a relay that is reachable as a hidden service: an <code>.anyone</code> address on the Anyone network, which needs no open port and no public address. The mnemonic is shown once.</p>
         </div>
         <div class="ev">
-          <div class="hd"><span>Devnet</span><i>test tokens from the faucet</i></div>
+          <div class="hd"><span>toon 0.2.0 · devnet</span></div>
           <span class="l">toon init --accept-anyone-terms</span>
-          <span class="l">toon wallet fund</span>
+          <span class="o">Wallet created at ~/.toon/agent-node/keystore.json.
+Your mnemonic. It is shown this once and no command shows it again; write it down now:
+  …
+…
+TOON app created: relay. Fund its settlement keys, then run `toon up` to start it.
+relay is a hidden service. Its … endpoint is jf66qlxvjvyd…c5id.anyone: the connector answers on port 80, and the relay's read port on port 7100.
+…
+Run `toon wallet fund` to fund them from the devnet faucet.</span>
         </div>
       </li>
       <li>
         <span class="n">03</span>
         <div>
-          <h3>Start it</h3>
-          <p><code>up</code> writes a <code>systemd --user</code> unit, so the node outlives this terminal. <code>status</code> shows what is running and at which address.</p>
+          <h3>Fund it</h3>
+          <p>On devnet the faucet sends test tokens, not ETH. On mainnet you send USDC to the printed address.</p>
         </div>
         <div class="ev">
-          <div class="hd"><span>What status printed</span></div>
-          <span class="l">toon up</span>
-          <span class="l">toon status</span>
-          <span class="o">Supervisor: running.</span>
-          <span class="o">TOON app relay (ILP address g.toon.fb0e007c71750599): connector running on 127.0.0.1:25599.</span>
+          <div class="hd"><span>toon 0.2.0 · devnet</span><i>test tokens from the faucet</i></div>
+          <span class="l">toon wallet fund</span>
+          <span class="o">Asked the devnet faucet for:
+  0x173780d7…52d9 (evm): asked
+Every settlement key holds what `toon up` needs. Run `toon up`.
+The gas a deposit needs is not held: 0x173780d7…52d9 (evm): 0.001 ETH for gas. The devnet faucet sends no ETH: Base Sepolia ETH comes from a public Base Sepolia faucet, which you give the EVM address named here.</span>
         </div>
       </li>
       <li>
         <span class="n">04</span>
         <div>
-          <h3>Join the network</h3>
-          <p>Until now the node reaches nobody. <code>join</code> peers your connector toward the network's hub and opens the channel that pays for the hop. From here it can pay anything on the network; packets reach it over the peering the hub's operator makes toward you. The faucet sends no ETH: depositing into a channel, which joining a network does, costs gas, so send a little Base Sepolia ETH from a public faucet to the address <code>toon wallet show</code> lists. About 0.001 ETH is enough; <a href="docs/money.html#funding">Money</a> has the details.</p>
+          <h3>Start it</h3>
+          <p><code>toon up</code> writes a <code>systemd --user</code> unit, so the node outlives this terminal. <code>toon status</code> shows what is running and at which address.</p>
         </div>
         <div class="ev">
-          <div class="hd"><span>Devnet</span><i>a deposit of faucet tokens, plus Base Sepolia ETH for gas</i></div>
-          <span class="l">toon join devnet --deposit 1000000 --yes</span>
+          <div class="hd"><span>toon 0.2.0</span></div>
+          <span class="l">toon up</span>
+          <span class="l">toon status</span>
         </div>
       </li>
       <li>
         <span class="n">05</span>
         <div>
+          <h3>Join the network</h3>
+          <p>Until now the node reaches nobody. <code>toon join</code> peers your connector toward the network's hub and opens the channel that pays for the hop. From here it can pay anything on the network. The faucet sends no ETH: depositing into a channel, which joining a network does, costs gas, so send a little Base Sepolia ETH from a public faucet to the address <code>toon wallet show</code> lists. About 0.001 ETH is enough; <a href="docs/money.html#funding">Money</a> has the details.</p>
+        </div>
+        <div class="ev">
+          <div class="hd"><span>toon 0.2.0 · devnet</span><i>a deposit of faucet tokens, plus Base Sepolia ETH for gas</i></div>
+          <span class="l">toon join devnet --deposit 1000000 --yes</span>
+        </div>
+      </li>
+      <li>
+        <span class="n">06</span>
+        <div>
           <h3>Put your app behind it</h3>
           <p>Any HTTP service in a container image, at the price you choose. From then on every request that reaches it has been paid for.</p>
         </div>
         <div class="ev">
-          <div class="hd"><span>Your app, priced</span><i>in units of the token you settle in</i></div>
+          <div class="hd"><span>toon 0.2.0</span><i>the price is in units of the token you settle in</i></div>
           <span class="l">toon add echo --to relay --image echo-app --price 2 --yes</span>
           <span class="l">toon route list</span>
         </div>
       </li>
-      <li class="linked"><a class="cap" href="docs/spaceturtle.html">
-        <span class="n">06</span>
-        <div>
-          <h3>Or let an agent run it <b class="arw">→</b></h3>
-          <p>Every command takes <code>--json</code>, and every command that pays states its amount and needs <code>--yes</code>. An agent drives the same surface you do. spaceturtle is one that does.</p>
-        </div>
-        <div class="ev tape" aria-hidden="true"><div class="hd"><span>What an agent types</span><i>--json on every command</i></div><div class="line"><b>$</b><span class="lines">
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 4 · WHAT THE APP SEES ============ -->
+<section id="paid">
+  <div class="wrap">
+    <div class="twocol">
+      <div>
+        <p class="eyebrow">What your app sees</p>
+        <h2>It never handles a payment.</h2>
+        <p class="sub">The connector sits in front of your app. It refuses an unpaid request and says the price. Once the request is paid, it passes your app plain HTTP. Your app needs no SDK, no wallet and no billing code.</p>
+        <p>You set the price. There is no protocol fee: the only fees on a route are the hop fees that each connector chooses to charge.</p>
+        <p>There is no company you sign up with; anyone can run a connector. TOON builds on <a href="https://interledger.org">Interledger</a>, the open protocol that routes value in packets.</p>
+      </div>
+      <div>
+        <p class="eyebrow">Where it is reachable</p>
+        <h3>Reachable with no open port</h3>
+        <p>A new TOON app is reachable as a hidden service, at an <code>.anyone</code> address, with no open port and no public address. A hidden service is reached through the Anyone network, so it hides where your app is, though not who it pays: payments are on a public chain.</p>
+        <p><a href="docs/hidden-services.html">How hidden services work →</a></p>
+<!-- demo -->
+<!-- /demo -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5 · THE AGENT PATH ============ -->
+<section id="agents">
+  <div class="wrap">
+    <div class="twocol">
+      <div>
+        <p class="eyebrow">Run it from an agent</p>
+        <h2>The same commands, as JSON.</h2>
+        <p class="sub">Every <code>toon</code> command is non-interactive and accepts <code>--json</code>, and prints one JSON document. Every command that pays states its amount and needs <code>--yes</code>. An agent drives the same surface you do.</p>
+        <p><a href="docs/spaceturtle.html">spaceturtle</a> is an agent that does: it starts a node, funds a wallet, and adds your app on request. <a href="docs/agent-keys.html">Agent keys →</a></p>
+      </div>
+      <div class="ev">
+        <div class="hd"><span>toon 0.2.0 · devnet</span><i>one document, an error too</i></div>
+        <span class="l">toon join devnet --deposit 1000000 --json</span>
+        <span class="o">{"error":{"code":"unfunded","message":"The settlement key of relay has no gas for a transaction, so nothing was sent. It needs: 0x173780d7…52d9 (evm): 0.001 ETH for gas. …"}}</span>
+      </div>
+    </div>
+    <div class="tapewrap">
+      <div class="ev tape" aria-hidden="true"><div class="hd"><span>What an agent types</span><i>--json on every command</i></div><div class="line"><b>$</b><span class="lines">
             <span style="--n:31;--i:0">toon init --accept-anyone-terms</span>
             <span style="--n:16;--i:1">toon wallet fund</span>
             <span style="--n:7;--i:2">toon up</span>
@@ -892,14 +1029,19 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
             <span style="--n:22;--i:6">toon route list --json</span>
             <span style="--n:52;--i:7">toon event publish --kind 1 --content "hello" --json</span>
         </span></div></div>
-      </a></li>
-    </ol>
+    </div>
+  </div>
+</section>
 
+<!-- ============ 6 · THE DEVELOPER WHO PAYS ============ -->
+<section id="pay-section">
+  <div class="wrap">
     <div class="twocol pay" id="pay">
       <div>
         <p class="eyebrow">To pay one</p>
-        <h3>One channel reaches every app</h3>
-        <p>The client opens one channel toward the node it peers with. Every signed request after that reaches any app on the network, hop by hop, each hop keeping its fee. A refusal comes back as a value, not an exception. <a href="docs/pay-a-node.html">Pay a node →</a></p>
+        <h3>One channel, then paid requests</h3>
+        <p>Reads are free. Writes are paid. The client opens one channel toward the node it peers with, and every signed request after that reaches any app on the network, hop by hop, each hop keeping its fee. A refusal comes back as a value, not an exception.</p>
+        <p>ILP routes, x402 settles. <a href="docs/pay-a-node.html">Pay a node →</a></p>
       </div>
       <div class="ev">
         <div class="hd"><span>TypeScript</span><i>npm install @toon-protocol/client</i></div>
@@ -911,7 +1053,6 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
 answer.fulfilled ? answer.text() : answer.code        <span class="c">// a refusal is a value</span></pre>
       </div>
     </div>
-
     <div class="cta">
       <a class="button primary" href="docs/first-agent-node.html">Read the operator guide</a>
       <a class="button ghost" href="docs/pay-a-node.html">Pay a node</a>
@@ -927,7 +1068,7 @@ answer.fulfilled ? answer.text() : answer.code        <span class="c">// a refus
     <h2>A hidden service, paid per request.</h2>
     <p>Host what you build on your own machine, set a price, and get paid for every request. <strong>The app knows nothing about payment.</strong></p>
     <div class="cmd"><code>curl -fsSL https://toon.ar.io/install.sh | sh</code><button type="button" aria-label="Copy install command">copy</button></div>
-    <p class="meta">No cloud · no domain · no open port &nbsp;—&nbsp; <a href="docs/first-agent-node.html">your first agent node →</a></p>
+    <p class="meta">No cloud · no domain · no open port. <a href="docs/first-agent-node.html">Your first agent node →</a></p>
     <div class="cta">
       <a class="button primary" href="docs/first-agent-node.html">Run a node</a>
       <a class="button ghost" href="docs/pay-a-node.html">Pay a node</a>
