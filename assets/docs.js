@@ -26,16 +26,54 @@
   }
 
   // The theme: dark, light, or auto (the system), kept in localStorage when it can be.
+  // A button opens a menu of the three; arrows move, Enter or a click picks, Escape closes.
   var theme = document.querySelector(".docs-header .theme");
   if (theme) {
-    var select = theme.querySelector("select");
-    select.value = root.dataset.theme || "auto";
-    theme.hidden = false;
-    select.addEventListener("change", function () {
-      var value = select.value;
+    var button = theme.querySelector(".theme-btn"), list = theme.querySelector(".theme-menu");
+    var options = Array.prototype.slice.call(list.querySelectorAll("li"));
+    var show = function (value) {
+      options.forEach(function (li) {
+        var on = li.getAttribute("data-value") === value;
+        li.setAttribute("aria-selected", on ? "true" : "false");
+        if (on) {
+          button.querySelector(".icon").innerHTML = li.querySelector("svg").outerHTML;
+          button.querySelector(".label").textContent = li.textContent;
+          button.setAttribute("aria-label", "Theme: " + li.textContent);
+        }
+      });
+    };
+    var openMenu = function (open) {
+      list.hidden = !open;
+      button.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) (list.querySelector('[aria-selected="true"]') || options[0]).focus();
+    };
+    var pick = function (value) {
       if (value === "auto") delete root.dataset.theme; else root.dataset.theme = value;
       try { if (value === "auto") localStorage.removeItem("toon-theme"); else localStorage.setItem("toon-theme", value); } catch (e) {}
+      show(value);
+      openMenu(false);
+      button.focus();
+    };
+    show(root.dataset.theme || "auto");
+    theme.hidden = false;
+    button.addEventListener("click", function () { openMenu(list.hidden); });
+    list.addEventListener("click", function (ev) {
+      var li = ev.target.closest("li");
+      if (li) pick(li.getAttribute("data-value"));
     });
+    list.addEventListener("keydown", function (ev) {
+      var i = options.indexOf(document.activeElement);
+      if (ev.key === "ArrowDown" || ev.key === "ArrowUp") {
+        ev.preventDefault();
+        options[(i + (ev.key === "ArrowDown" ? 1 : options.length - 1)) % options.length].focus();
+      } else if (ev.key === "Enter" || ev.key === " ") {
+        ev.preventDefault();
+        if (i !== -1) pick(options[i].getAttribute("data-value"));
+      } else if (ev.key === "Escape") {
+        ev.stopPropagation(); openMenu(false); button.focus();
+      } else if (ev.key === "Tab") openMenu(false);
+    });
+    document.addEventListener("click", function (ev) { if (!list.hidden && !theme.contains(ev.target)) openMenu(false); });
   }
 
   // "On this page": the heading the reader is in is the last one above the top of the page.
