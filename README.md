@@ -110,9 +110,10 @@ Preview with any static server, for example `python3 -m http.server 8765`, then 
    scroll, terminals wrap or scroll inside their own panel. With the system theme dark, the
    landing, apps and agents pages stay Paper, the docs turn Night, and the mark shows in both.
    Check the favicon in a light and a dark browser.
-9. **The home-router demo.** `DEMO` in `build.py` holds the demo's link and a one-line caption.
-   While it is empty the landing page shows nothing in its place. Setting it does not move
-   "no open port" into the headline.
+9. **The home-router demo.** `DEMO` in `build.py` holds the demo's excerpt lines (copied verbatim
+   from the recording), its devnet label and its links. Empty, the landing page shows nothing in
+   its place and `check.py` fails. A later run, or a mainnet run, changes only `DEMO`. Wherever the
+   hero says "no open port" it links the demo and does not imply mainnet.
 
 ## What the gate checks
 
@@ -124,8 +125,9 @@ changes a list, update it there by hand.
 
 - **Copy.** The landing h1 is "Your machine. Paid per request." and the supporting statement is
   present. The retired taglines, the "never say" phrases and "Get paid." as a sentence of its
-  own appear on no page (title and meta tags included) except the proof page's receipts. "open port" and "hidden service" stay out of the landing h1, title and social
-  titles. "onion" stays off the marketing pages, which have no exclamation mark outside code.
+  own appear on no page (title and meta tags included) except the proof page's receipts. "hidden service" stays out of the landing h1, title and social titles; "open port" is
+  allowed there. The landing page must carry the `.demo-proof` block: it links the demo README and
+  the settlement transaction, and says "devnet". "onion" stays off the marketing pages, which have no exclamation mark outside code.
   The docs sidebar has no banned phrase.
 - **Chrome.** Every page links the 16px favicon as files, the light one by default and the dark
   one for a dark scheme. Its header mark is the two-bar mark with no wire and no colours of its

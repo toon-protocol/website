@@ -788,5 +788,6 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
 .route figcaption { margin:0.8rem 0 0; color:var(--ink-dim); font-size:0.9rem; max-width:46rem; }
 .tapewrap { margin-top:2rem; }
 .demo-proof { margin-top:1.5rem; padding:1rem 1.2rem; border:1px solid var(--line-strong); border-left:4px solid var(--gold); background:var(--bg-raised); }
+.demo-proof pre { margin:0 0 0.8rem; }
 .demo-proof p { margin:0; }
 @media (max-width:900px) { .twocol > div { min-width:0; } }
