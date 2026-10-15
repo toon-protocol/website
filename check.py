@@ -470,9 +470,6 @@ class Resources(HTMLParser):
         self.scripts = 0
         self.icons = []  # (href, media) of each <link rel="icon">
         self.in_header = False
-        self.in_title = False
-        self.title = ""
-        self.social = {}  # og:/twitter: meta tags, name -> content
         self.header_mark = None  # the classes of the shapes in the header's mark, once it has one
         self.in_mark = False
         self.chips = []  # the text of each status chip
@@ -481,12 +478,8 @@ class Resources(HTMLParser):
     def handle_data(self, data):
         if self.chip_depth:
             self.chips[-1] += data
-        if self.in_title:
-            self.title += data
 
     def handle_endtag(self, tag):
-        if tag == "title":
-            self.in_title = False
         if self.chip_depth and tag not in VOID:
             self.chip_depth -= 1
         if tag == "header":
@@ -497,12 +490,6 @@ class Resources(HTMLParser):
     def handle_starttag(self, tag, attrs):
         a = {k: v for k, v in attrs if v is not None}
         classes = a.get("class", "").split()
-        if tag == "title":
-            self.in_title = True
-        elif tag == "meta" and "content" in a:
-            key = a.get("property", a.get("name", ""))
-            if key.startswith(("og:", "twitter:")):
-                self.social.setdefault(key, a["content"])
         if self.chip_depth and tag not in VOID:
             self.chip_depth += 1
         elif "status-chip" in classes:
@@ -552,17 +539,16 @@ def rule_social(page):
     """Every built page carries the card's tags. The landing page is hand-written and its og:title differs from its title on purpose."""
     if page == LANDING:
         return
-    rule = "carries the social tags: og:title equal to the title, and the card as og:image"
-    r = resources(page)
+    rule = "carries the social tags: og:title equal to the title, og:description, twitter:card, and the card as og:image and twitter:image"
+    c = copy(page)
     for key in ("og:title", "og:description", "og:image", "twitter:card", "twitter:image"):
-        if not r.social.get(key):
+        if not c.meta.get(key):
             yield rule, f"missing {key}"
-    if r.social.get("og:title") and r.social["og:title"] != r.title:
-        yield rule, f"og:title {r.social['og:title']!r} is not the title {r.title!r}"
-    image = r.social.get("og:image")
+    if c.meta.get("og:title") and c.meta["og:title"] != c.title:
+        yield rule, f"og:title {c.meta['og:title']!r} is not the title {c.title!r}"
+    image = c.meta.get("og:image")
     if image:
-        prefix = "https://toon.ar.io/"
-        if not image.startswith(prefix) or not (ROOT / unquote(urlparse(image).path.lstrip("/"))).is_file():
+        if not image.startswith("https://toon.ar.io/") or not (ROOT / unquote(urlparse(image).path.lstrip("/"))).is_file():
             yield rule, f"og:image {image} is not an absolute toon.ar.io URL of a file in the repo"
 
 
