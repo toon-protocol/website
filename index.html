@@ -766,7 +766,6 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
 /* ===== landing body: route diagram, section heads, demo proof ===== */
 #route .sub, #run .sub, #paid .sub, #agents .sub { color:var(--ink-dim); max-width:46rem; }
 #route, #run, #paid, #agents, #pay-section { padding:3.5rem 0; }
-#run { padding-top:3.5rem; }
 .route { margin:2rem 0 0; }
 .route-scroll { overflow-x:auto; border:1px solid var(--line-strong); background:var(--bg-raised); padding:1rem; }
 .route-scroll:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
@@ -777,7 +776,7 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
 .route .inside text { fill:var(--bg); font-family:var(--mono); font-size:14px; }
 .route .labels text { fill:var(--ink); font-family:var(--mono); font-size:15px; font-weight:500; text-anchor:middle; }
 .route .labels text.tok { fill:var(--ink-dim); font-size:13px; font-weight:400; }
-.route .labels text.chg { fill:var(--accent); font-weight:500; }
+.route .labels text.chg { fill:var(--ink); font-weight:500; }
 .route .packet .a { fill:var(--ink); } .route .packet .b { fill:var(--gold); } .route .packet .hole { fill:var(--bg-raised); }
 .route figcaption { margin:0.8rem 0 0; color:var(--ink-dim); font-size:0.9rem; max-width:46rem; }
 .tapewrap { margin-top:2rem; }
@@ -846,7 +845,7 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
       <div class="route-scroll" tabindex="0" role="group" aria-label="Route diagram, scrolls sideways on a narrow screen">
       <svg viewBox="0 0 960 300" role="img" aria-labelledby="route-t route-d" xmlns="http://www.w3.org/2000/svg">
         <title id="route-t">One paid packet crossing two connectors to an app</title>
-        <desc id="route-d">An example route, left to right. Whoever pays sends a packet that carries a price of 2,000 units of USDC on Base. Hop one: the first connector keeps a hop fee of 100 and passes on 1,900 units of USDC on Base. Hop two: the second connector keeps a hop fee of 100, converts the token, and passes on 1,800 units of USDC on Solana. The app on the operator's machine receives a plain HTTP request that has been paid for. The numbers are an example, and each operator sets the real price.</desc>
+        <desc id="route-d">An example route, left to right. Whoever pays sends a packet that carries a price of 2,000 units of USDC on Base. Hop one: the first connector keeps a hop fee of 100 and passes on 1,900 units of USDC on Base. Hop two: the second connector keeps a hop fee of 100, converts the token, and passes on 1,800 units of USDC on Solana. The app on the operator's machine receives a plain HTTP request that has been paid for. The numbers are an example, and each operator sets the real price. Paid hops run on mainnet today; the token change runs on devnet.</desc>
         <g class="wires">
           <rect x="150" y="149" width="150" height="2"/>
           <rect x="420" y="149" width="150" height="2"/>
@@ -885,7 +884,7 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
         <g class="packet small" transform="translate(720 118)"><rect class="a" x="0" y="0" width="12" height="28"/><rect class="b" x="15" y="0" width="12" height="28"/></g>
       </svg>
       </div>
-      <figcaption>An example route with made-up numbers. The packet is drawn as the TOON mark and carries its price; the Gold slivers are the fees each connector keeps. You set the real price, and TOON adds no fee of its own.</figcaption>
+      <figcaption>An example route with made-up numbers. The packet is drawn as the TOON mark and carries its price; the Gold slivers are the fees each connector keeps. You set the real price, and TOON adds no fee of its own. Paid hops like these run on mainnet today; the token change runs on devnet.</figcaption>
     </figure>
   </div>
 </section>
@@ -895,7 +894,7 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
   <div class="wrap">
     <p class="eyebrow">Six commands</p>
     <h2>From install to a paid app.</h2>
-    <p class="sub">Output below is what <code>toon</code> 0.2.0 printed, the release named on the <a href="docs/install.html">install page</a>. Lines marked … were trimmed, and the wallet in them was thrown away.</p>
+    <p class="sub">Output below is what <code>toon</code> 0.2.0 printed, the release named on the <a href="docs/install.html">install page</a>. Trimmed lines are marked with an ellipsis, and the wallet in them was thrown away.</p>
     <ol class="rows">
       <li>
         <span class="n">01</span>
@@ -913,7 +912,7 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
         <span class="n">02</span>
         <div>
           <h3>Create a wallet and a first app</h3>
-          <p><code>toon init</code> makes the wallet and a relay that is reachable as a hidden service. The mnemonic is shown once.</p>
+          <p><code>toon init</code> makes the wallet and a relay that is reachable as a hidden service: an <code>.anyone</code> address on the Anyone network, which needs no open port and no public address. The mnemonic is shown once.</p>
         </div>
         <div class="ev">
           <div class="hd"><span>toon 0.2.0 · devnet</span></div>
@@ -995,7 +994,7 @@ The gas a deposit needs is not held: 0x173780d7…52d9 (evm): 0.001 ETH for gas.
       </div>
       <div>
         <p class="eyebrow">Where it is reachable</p>
-        <h3>A hidden service, with no open port</h3>
+        <h3>Reachable with no open port</h3>
         <p>A new TOON app is reachable as a hidden service, at an <code>.anyone</code> address, with no open port and no public address. A hidden service is reached through the Anyone network, so it hides where your app is, though not who it pays: payments are on a public chain.</p>
         <p><a href="docs/hidden-services.html">How hidden services work →</a></p>
 <!-- demo -->

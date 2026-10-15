@@ -395,11 +395,10 @@ def build_page(slug, body):
             + "\n</div>\n</body>\n</html>\n")
 
 
-# The home-router demo slot on the landing page. Both empty: nothing renders. Set DEMO_LINK to the
-# demo's URL and DEMO_CAPTION to one line, and a proof block appears in the reachability section.
+# The home-router demo slot on the landing page: (the demo's URL, a one-line caption). Empty:
+# nothing renders. Set both, and a proof block appears in the reachability section.
 # The headline and the title do not change.
-DEMO_LINK = ""
-DEMO_CAPTION = ""
+DEMO = ("", "")
 
 
 def sync_demo():
@@ -409,9 +408,12 @@ def sync_demo():
     start_tag, end_tag = "<!-- demo -->", "<!-- /demo -->"
     start = html_text.index(start_tag) + len(start_tag)
     end = html_text.index(end_tag, start)
+    link, caption = DEMO
+    if bool(link) != bool(caption):
+        raise SystemExit("build.py: DEMO needs both its link and its caption, or neither")
     block = ""
-    if DEMO_LINK and DEMO_CAPTION:
-        block = ('<div class="demo-proof"><p>' + html.escape(DEMO_CAPTION) + ' <a href="' + html.escape(DEMO_LINK, quote=True)
+    if link:
+        block = ('<div class="demo-proof"><p>' + html.escape(caption) + ' <a href="' + html.escape(link, quote=True)
                  + '">See the demo →</a></p></div>\n')
     page.write_text(html_text[:start] + "\n" + block + html_text[end:])
     print("demo slot:", "set" if block else "empty")

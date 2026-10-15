@@ -740,7 +740,6 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
 /* ===== landing body: route diagram, section heads, demo proof ===== */
 #route .sub, #run .sub, #paid .sub, #agents .sub { color:var(--ink-dim); max-width:46rem; }
 #route, #run, #paid, #agents, #pay-section { padding:3.5rem 0; }
-#run { padding-top:3.5rem; }
 .route { margin:2rem 0 0; }
 .route-scroll { overflow-x:auto; border:1px solid var(--line-strong); background:var(--bg-raised); padding:1rem; }
 .route-scroll:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
@@ -751,7 +750,7 @@ dialog.docsearch::backdrop { background:rgba(20,22,26,.55); backdrop-filter:blur
 .route .inside text { fill:var(--bg); font-family:var(--mono); font-size:14px; }
 .route .labels text { fill:var(--ink); font-family:var(--mono); font-size:15px; font-weight:500; text-anchor:middle; }
 .route .labels text.tok { fill:var(--ink-dim); font-size:13px; font-weight:400; }
-.route .labels text.chg { fill:var(--accent); font-weight:500; }
+.route .labels text.chg { fill:var(--ink); font-weight:500; }
 .route .packet .a { fill:var(--ink); } .route .packet .b { fill:var(--gold); } .route .packet .hole { fill:var(--bg-raised); }
 .route figcaption { margin:0.8rem 0 0; color:var(--ink-dim); font-size:0.9rem; max-width:46rem; }
 .tapewrap { margin-top:2rem; }
