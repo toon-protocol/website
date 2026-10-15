@@ -76,10 +76,20 @@ FLAT = [(slug, title, summary, section) for section, pages in NAV for slug, titl
 
 MARK = """<svg class="mark" viewBox="0 0 1024 1024" width="28" height="28" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g class="c"><rect x="112" y="484" width="56" height="56"/><rect x="168" y="499" width="120" height="26"/><rect x="736" y="499" width="120" height="26"/><rect x="856" y="484" width="56" height="56"/></g><rect class="a" x="288" y="252" width="212" height="536"/><rect class="hole" x="324" y="292" width="64" height="64"/><rect class="b" x="524" y="252" width="212" height="536"/></svg>"""
 
-FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' "
-           "fill='%23f3efe6'/%3E%3Crect x='2' y='7' width='3' height='2' fill='%236b6f76'/%3E%3Crect x='11' y='7' width='3' "
-           "height='2' fill='%236b6f76'/%3E%3Crect x='5' y='4' width='3' height='8' fill='%232b2f36'/%3E%3Crect x='9' y='4' "
-           "width='3' height='8' fill='%23c9a24a'/%3E%3C/svg%3E")
+# The two-bar mark for 24 to 48px (assets/icon/toon-icon-small.svg), inline so the page's tokens theme it:
+# an Ink header bar with a Paper square on Paper, a Paper bar with a Night square on Night.
+SMALL_MARK = """<svg class="mark" viewBox="0 0 48 48" width="36" height="36" aria-hidden="true" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"><rect class="a" x="10" y="8" width="12" height="32"/><rect class="hole" x="12" y="10" width="4" height="4"/><rect class="b" x="26" y="8" width="12" height="32"/></svg>"""
+
+# The interim lockup: TOON in Plex Sans Condensed Bold, Protocol in Plex Mono in Wire, after the mark.
+BRAND_NAME = '<span class="name">TOON<small>Protocol</small></span>'
+
+
+def favicons(root):
+    """The 16px pixel mark as files, the light one for a light browser and the dark one for a dark browser."""
+    return "".join(f'<link rel="icon" type="image/svg+xml" href="{root}assets/icon/{name}.svg" media="(prefers-color-scheme: {scheme})">\n'
+                   for name, scheme in (("toon-icon-16", "light"), ("toon-icon-16-dark", "dark")))
+
+
 
 
 # toon_cli's GitHub stars, shown beside the GitHub icon once they pass the threshold.
@@ -105,6 +115,7 @@ def social():
     return "\n      ".join(out)
 
 
+
 def header(root, active):
     """The header of every page. On the landing page (root == "") the brand and the button
     point at anchors in the page itself."""
@@ -113,7 +124,7 @@ def header(root, active):
     home = root == ""
     return f"""<header class="site-header">
   <div class="wrap">
-    <a class="brand" href="{'#top' if home else root + 'index.html'}" aria-label="TOON Protocol, home">{MARK}<span class="name">TOON<small>Protocol</small></span></a>
+    <a class="brand" href="{'#top' if home else root + 'index.html'}" aria-label="TOON Protocol, home">{SMALL_MARK}{BRAND_NAME}</a>
     <nav aria-label="Primary">
       <a href="{root}docs/index.html"{cls('docs')}>Docs</a>
       <a href="{root}apps/index.html"{cls('apps')}>Apps</a>
@@ -128,7 +139,7 @@ def header(root, active):
 def footer(root):
     return f"""<footer class="site-foot">
   <div class="wrap">
-    <a class="brand" href="{root}index.html" aria-label="TOON Protocol, home">{MARK}</a>
+    <a class="brand" href="{root}index.html" aria-label="TOON Protocol, home">{SMALL_MARK}</a>
     <nav aria-label="Footer">
       <a href="{root}docs/index.html">docs</a>
       <a href="{root}apps/index.html">apps</a>
@@ -156,8 +167,7 @@ def head(title, description, root, docs=False):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(description, quote=True)}">
-<link rel="icon" href="{FAVICON}">
-{THEME_SCRIPT + chr(10) if docs else ""}<link rel="stylesheet" href="{root}assets/site.css">
+{favicons(root)}{THEME_SCRIPT + chr(10) if docs else ""}<link rel="stylesheet" href="{root}assets/site.css">
 </head>
 <body{' class="docs-body"' if docs else ""}>
 """
@@ -276,7 +286,7 @@ def docs_header(with_menu):
             + MENU + '</button>\n') if with_menu else ""
     return f"""<header class="docs-header">
 {menu}  <div class="left">
-    <a class="brand" href="../index.html" aria-label="TOON Protocol, home">{MARK}<span class="name">TOON<small>Protocol</small></span></a>
+    <a class="brand" href="../index.html" aria-label="TOON Protocol, home">{SMALL_MARK}{BRAND_NAME}</a>
     <nav aria-label="Primary">
       <a href="index.html" class="active">Docs</a>
       <a href="../apps/index.html">Apps</a>

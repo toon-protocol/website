@@ -279,9 +279,28 @@ class Resources(HTMLParser):
         super().__init__()
         self.loads = []  # (tag, attr, value)
         self.scripts = 0
+        self.icons = []  # (href, media) of each <link rel="icon">
+        self.in_header = False
+        self.header_mark = None  # the classes of the shapes in the header's mark, once it has one
+        self.in_mark = False
+
+    def handle_endtag(self, tag):
+        if tag == "header":
+            self.in_header = False
+        elif tag == "svg":
+            self.in_mark = False
 
     def handle_starttag(self, tag, attrs):
         a = {k: v for k, v in attrs if v is not None}
+        classes = a.get("class", "").split()
+        if tag == "header" and ({"site-header", "docs-header"} & set(classes)):
+            self.in_header = True
+        elif tag == "svg" and self.in_header and "mark" in classes and self.header_mark is None:
+            self.in_mark, self.header_mark = True, set()
+        elif tag in ("rect", "g") and self.in_mark:
+            self.header_mark |= set(classes)
+        if tag == "link" and a.get("rel") == "icon":
+            self.icons.append((a.get("href", ""), a.get("media", "")))
         if tag == "script":
             self.scripts += 1
         if tag == "link" and "href" in a:
@@ -312,6 +331,31 @@ def rule_hosts(page):
                 yield rule, ref
 
 
+def rule_favicon(page):
+    rule = "links the 16px favicon in its light and its dark variant, as files"
+    want = {"(prefers-color-scheme: light)": "toon-icon-16.svg", "(prefers-color-scheme: dark)": "toon-icon-16-dark.svg"}
+    icons = resources(page).icons
+    for href, _ in icons:
+        if href.startswith("data:"):
+            yield rule, "a data-URI favicon"
+    for media, name in want.items():
+        if not any(m == media and href.endswith("/" + name if "/" in href else href == name) for href, m in icons):
+            yield rule, f"no <link rel=\"icon\" media=\"{media}\"> for {name}"
+
+
+def rule_header_mark(page):
+    rule = "the header mark is the two-bar mark: a header bar, its square and a value bar, with no wire"
+    got = resources(page).header_mark
+    if got is None:
+        yield rule, "no svg.mark in the header"
+        return
+    for part in ("a", "hole", "b"):
+        if part not in got:
+            yield rule, f"the header mark has no .{part} shape"
+    if "c" in got:
+        yield rule, "the header mark draws the wire, which is gone at this size"
+
+
 def rule_scripts(page):
     n = resources(page).scripts
     want = 1 if page == LANDING else (None if page.startswith("docs/") else 0)
@@ -338,7 +382,7 @@ def rule_manifest():
             yield MANIFEST, "manifest lists every page and referenced asset", target + " (from " + page + ")"
 
 
-PAGE_RULES = [rule_links, rule_fragments, rule_hosts, rule_scripts]  # each yields (rule, offending text)
+PAGE_RULES = [rule_links, rule_fragments, rule_hosts, rule_scripts, rule_favicon, rule_header_mark]  # each yields (rule, offending text)
 SITE_RULES = [rule_manifest, rule_fonts, rule_retired, rule_contrast]  # each yields (page, rule, offending text)
 
 
