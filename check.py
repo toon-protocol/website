@@ -194,8 +194,15 @@ NEVER_SAY = [
 ]
 # .brand/messaging.md, 07 Things not to say, Competitor-adjacent language: "Get paid." as a sentence.
 NEVER_SAY_SENTENCE = ["Get paid."]
-# .brand/messaging.md, 07 Things not to say: "No open port" and "Hidden service" in headlines.
-HEADLINE_BANNED = ["open port", "hidden service"]
+# .brand/messaging.md, 07 Things not to say: "Hidden service" in headlines. "No open port" is allowed
+# when it links the demo and is not shown as if on mainnet; DEMO_PROOF below holds the demo.
+HEADLINE_BANNED = ["hidden service"]
+# The landing page's demo proof (the .demo-proof block), from .brand/messaging.md, 02 Value proposition
+# (Proof) and 07 Things not to say: it links the demo README and a settlement transaction, and says
+# where it ran. The transaction is matched by shape, so a re-run changes only DEMO in build.py.
+DEMO_PROOF_LINKS = [("the demo README", re.escape("https://github.com/toon-protocol/echo-merchant/tree/main/demo/behind-nat")),
+                    ("a settlement transaction", r"https://(?:sepolia\.)?basescan\.org/tx/0x[0-9a-f]{64}")]
+DEMO_PROOF_WORD = "devnet"
 # .brand/messaging.md, 07 Things not to say: never "onion". Marketing pages only: the docs keep
 # "onion endpoint", the term toon_cli/CONTEXT.md defines.
 MARKETING_BANNED_WORDS = ["onion"]
@@ -293,7 +300,21 @@ def rule_landing_copy(page):
     for where, text in heads.items():
         for p in HEADLINE_BANNED:
             if p in text.lower():
-                yield "no open port or hidden service in the headline or titles", f'"{p}" in {where}'
+                yield "no hidden service in the headline or titles", f'"{p}" in {where}'
+
+
+def rule_demo_proof(page):
+    if page != LANDING:
+        return
+    m = re.search(r'<div class="demo-proof"[^>]*>(.*?)</div>', (ROOT / page).read_text(encoding="utf-8"), re.S)
+    if not m:
+        yield "landing page carries the demo proof", "no .demo-proof block"
+        return
+    for name, pattern in DEMO_PROOF_LINKS:
+        if not re.search(f'href="{pattern}"', m.group(1)):
+            yield "landing page carries the demo proof", f"the .demo-proof block does not link {name}"
+    if DEMO_PROOF_WORD not in m.group(1).lower():
+        yield "landing page carries the demo proof", f'the .demo-proof block does not say "{DEMO_PROOF_WORD}"'
 
 
 def rule_marketing_words(page):
@@ -561,7 +582,7 @@ def rule_manifest():
             yield MANIFEST, "manifest lists every page and referenced asset", target + " (from " + page + ")"
 
 
-PAGE_RULES = [rule_links, rule_fragments, rule_never_say, rule_landing_copy, rule_marketing_words, rule_sidebar, rule_hosts, rule_scripts, rule_favicon, rule_header_mark, rule_status_chip]  # each yields (rule, offending text)
+PAGE_RULES = [rule_links, rule_fragments, rule_never_say, rule_landing_copy, rule_demo_proof, rule_marketing_words, rule_sidebar, rule_hosts, rule_scripts, rule_favicon, rule_header_mark, rule_status_chip]  # each yields (rule, offending text)
 SITE_RULES = [rule_manifest, rule_fonts, rule_retired, rule_contrast]  # each yields (page, rule, offending text)
 
 

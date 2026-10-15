@@ -419,10 +419,28 @@ def build_page(slug, body):
             + "\n</div>\n</body>\n</html>\n")
 
 
-# The home-router demo slot on the landing page: (the demo's URL, a one-line caption). Empty:
-# nothing renders. Set both, and a proof block appears in the reachability section.
-# The headline and the title do not change.
-DEMO = ("", "")
+# The behind-NAT demo on the landing page, shown in the reachability section. One source for the
+# block: the excerpt lines (copied verbatim from the recording, home IP masked as in the recording;
+# a line starting with "#" renders as a comment), the label that says where it ran, and the links
+# as (text, url). Empty ({}): nothing renders. The headline and the title do not change.
+DEMO = {
+    "lines": [
+        "# Payer: pay the app behind NAT through the devnet relay, at its public https address",
+        "(the payer runs no anon daemon. The relay carries the packet over the Anyone overlay to the provider.)",
+        "FULFILL 200  paid 3 to the hub",
+        "",
+        "# Payer: scan the home's public address (masked here) from the Linode",
+        "linode-payer# nmap -n -Pn -T4 --top-ports 1000 <home-ip>",
+        "All 1000 scanned ports on <home-ip> are in ignored states.",
+        "Not shown: 1000 filtered tcp ports (no-response)",
+    ],
+    "label": "Shown on devnet, with test USDC, through one relay the project operates.",
+    "links": [
+        ("Demo README", "https://github.com/toon-protocol/echo-merchant/tree/main/demo/behind-nat"),
+        ("Recording", "https://github.com/toon-protocol/echo-merchant/blob/main/demo/behind-nat/recording/behind-nat.cast"),
+        ("Settlement transaction", "https://sepolia.basescan.org/tx/0x4b7f7860e3485d438008c7abcc77286f80a18aba3645395adc66ff72b54ff21a"),
+    ],
+}
 
 
 def sync_demo():
@@ -432,13 +450,12 @@ def sync_demo():
     start_tag, end_tag = "<!-- demo -->", "<!-- /demo -->"
     start = html_text.index(start_tag) + len(start_tag)
     end = html_text.index(end_tag, start)
-    link, caption = DEMO
-    if bool(link) != bool(caption):
-        raise SystemExit("build.py: DEMO needs both its link and its caption, or neither")
     block = ""
-    if link:
-        block = ('<div class="demo-proof"><p>' + html.escape(caption) + ' <a href="' + html.escape(link, quote=True)
-                 + '">See the demo →</a></p></div>\n')
+    if DEMO:
+        lines = "\n".join('<span class="c">' + html.escape(line, quote=False) + "</span>" if line.startswith("#") else html.escape(line, quote=False)
+                          for line in DEMO["lines"])
+        links = " · ".join('<a href="' + html.escape(url, quote=True) + '">' + html.escape(text, quote=False) + "</a>" for text, url in DEMO["links"])
+        block = ('<div class="demo-proof">\n<pre>' + lines + "</pre>\n<p>" + html.escape(DEMO["label"], quote=False) + " " + links + "</p>\n</div>\n")
     page.write_text(html_text[:start] + "\n" + block + html_text[end:])
     print("demo slot:", "set" if block else "empty")
 
