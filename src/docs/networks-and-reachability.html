@@ -9,19 +9,19 @@ toon init --network mainnet --accept-anyone-terms</pre>
 <div class="tablewrap"><table>
 <thead><tr><th>Network</th><th>Chain</th><th>Faucet</th><th>Network to join</th></tr></thead>
 <tbody>
-<tr><td><code>devnet</code></td><td>Base Sepolia, a test token</td><td><code>toon wallet fund</code> sends the token, no ETH</td><td>The devnet's hub and relay</td></tr>
-<tr><td><code>sandbox</code></td><td>The local chain of the <code>infra</code> sandbox</td><td>None: fund from the sandbox's tooling</td><td>Its hub, which you name</td></tr>
+<tr><td><code>devnet</code></td><td>Base Sepolia, a test token</td><td><code>toon wallet fund</code> sends the token, no ETH</td><td>The devnet's connector and relay, run by the project</td></tr>
+<tr><td><code>sandbox</code></td><td>The local chain of the <code>infra</code> sandbox</td><td>None: fund from the sandbox's tooling</td><td>Its connector, which you name</td></tr>
 <tr><td><code>mainnet</code></td><td>Real funds</td><td>None</td><td>Drew's node (ILP address <code>g.drew</code>, relay <code>g.drew.relay</code>); name another with <code>--connector-url</code> and <code>--relay-url</code> at <code>init</code></td></tr>
 </tbody></table></div>
 
 <p><code>toon join &lt;network&gt;</code> only joins the network <code>init</code> was given, and is refused with <code>join_refused</code>, spending nothing, when this agent node records no connector for it. It forwards <code>g.toon</code> and every other address the network's connector publishes in its self-description (the mainnet node's <code>g.drew.*</code>) over the new peering.</p>
 
-<p>An agent node initialised with <code>--solana</code> settles on two chains, as may the network's hub. Then <code>toon join &lt;network&gt; --deposit &lt;n&gt; --yes</code> is refused (<code>peer_failed</code>, nothing spent) until you name one: add <code>--chain evm</code> or <code>--chain solana</code>. No chain is chosen for you.</p>
+<p>An agent node initialised with <code>--solana</code> settles on two chains, as may the network's connector. Then <code>toon join &lt;network&gt; --deposit &lt;n&gt; --yes</code> is refused (<code>peer_failed</code>, nothing spent) until you name one: add <code>--chain evm</code> or <code>--chain solana</code>. No chain is chosen for you.</p>
 
-<p><strong>Sandbox.</strong> It allows plaintext <code>http://</code> peers by itself. A hidden agent node cannot reach <code>localhost</code>, so name the hub at its onion endpoint:</p>
+<p><strong>Sandbox.</strong> It allows plaintext <code>http://</code> peers by itself. A hidden agent node cannot reach <code>localhost</code>, so name its connector at its onion endpoint:</p>
 
 <pre>toon init --network sandbox --accept-anyone-terms \
-  --connector-url http://&lt;hub&gt;.anyone:3200/ilp --relay-url ws://&lt;hub&gt;.anyone:7100</pre>
+  --connector-url http://&lt;connector&gt;.anyone:3200/ilp --relay-url ws://&lt;connector&gt;.anyone:7100</pre>
 
 <p><a href="https://github.com/toon-protocol/toon_cli/blob/main/docs/end-to-end.md"><code>docs/end-to-end.md</code></a> runs a whole agent node against the sandbox.</p>
 

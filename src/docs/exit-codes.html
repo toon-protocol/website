@@ -95,7 +95,7 @@
 
 <p><code>mainnet</code>'s profile names a connector, <code>https://connector.mainnet.toonprotocol.dev/ilp</code>, and a relay, <code>wss://relay.mainnet.toonprotocol.dev</code>, run by one operator (ADR 0009); <code>--connector-url</code> and <code>--relay-url</code> at <code>init</code> name others.</p>
 
-<p><code>sandbox</code> allows plaintext peers by itself, since every endpoint of the sandbox is a plain <code>http://</code> one, and its hub is <code>http://localhost:3200/ilp</code>. A hidden agent node cannot reach <code>localhost</code>, so <code>init --network sandbox</code> without <code>--clearnet</code> and without <code>--connector-url</code> records no connector, says so, and <code>toon join sandbox</code> fails with <code>join_refused</code> until <code>init</code> names the hub: <code>--connector-url http://&lt;hub&gt;.anyone:3200/ilp</code> (and <code>--relay-url ws://&lt;hub&gt;.anyone:7100</code>), or <code>--clearnet</code>.</p>
+<p><code>sandbox</code> allows plaintext peers by itself, since every endpoint of the sandbox is a plain <code>http://</code> one, and its connector is <code>http://localhost:3200/ilp</code>. A hidden agent node cannot reach <code>localhost</code>, so <code>init --network sandbox</code> without <code>--clearnet</code> and without <code>--connector-url</code> records no connector, says so, and <code>toon join sandbox</code> fails with <code>join_refused</code> until <code>init</code> names that connector: <code>--connector-url http://&lt;connector&gt;.anyone:3200/ilp</code> (and <code>--relay-url ws://&lt;connector&gt;.anyone:7100</code>), or <code>--clearnet</code>.</p>
 
 <h2>Hidden service and clearnet</h2>
 
