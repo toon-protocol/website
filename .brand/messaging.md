@@ -1,4 +1,4 @@
-<!-- Copied verbatim from toon-protocol/brand: messaging.md at commit 49e5970fee2b15a4e187c316f3ef9bc34514d435. Edit it there, then copy it again. -->
+<!-- Copied verbatim from toon-protocol/brand: messaging.md at commit 49e5970fee2b15a4e187c316f3ef9bc34514d435 (branch brand/positioning-messaging-voice, ahead of brand's main, which still says pre-launch on devnet). Edit it there, then copy it again. -->
 
 # Brand Messaging: TOON Protocol
 

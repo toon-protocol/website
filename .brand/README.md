@@ -15,5 +15,10 @@ The brand's SVGs are in `assets/icon/` and the IBM Plex fonts, with their OFL li
 in `assets/fonts/`. The fonts are the latin-subset woff2 files from the `@fontsource/ibm-plex-sans`,
 `@fontsource/ibm-plex-sans-condensed` and `@fontsource/ibm-plex-mono` packages, version 5.3.0.
 
-To refresh, copy the files again from a newer brand commit and update the comment at the top
-of each.
+The copies link to `positioning.md`, `context.md` and `competitors.md`, which are not copied;
+those links don't resolve here.
+
+The source commit is on the brand branch `brand/positioning-messaging-voice`, which carries
+the stage correction (live mainnet on Base and Solana, devnet for testing) that the brand's
+`main` doesn't have yet. To refresh, copy the files again from a newer brand commit that keeps
+that correction, and update the comment at the top of each.
