@@ -78,6 +78,8 @@ class Page(HTMLParser):
                 self.ids.add(v)
 
     def handle_endtag(self, tag):
+        if re.fullmatch(r"h[1-6]", tag):
+            self.open_heading = None
         self.in_style = False
 
     def handle_data(self, data):
@@ -224,7 +226,9 @@ class Copy(HTMLParser):
         self.meta = {}  # name or property -> content
         self.title = ""
         self.h1 = ""
+        self.headings = []  # (tag, text) for every h1-h6, outside code
         self.sidebar = []
+        self.open_heading = None  # index into headings while inside one
         self.stack = []
 
     def handle_starttag(self, tag, attrs):
@@ -233,10 +237,15 @@ class Copy(HTMLParser):
             k = a.get("name") or a.get("property")
             if k:
                 self.meta[k] = a.get("content") or ""
+        if re.fullmatch(r"h[1-6]", tag):
+            self.headings.append([tag, ""])
+            self.open_heading = len(self.headings) - 1
         if tag not in VOID:
             self.stack.append((tag, a.get("class") or ""))
 
     def handle_endtag(self, tag):
+        if re.fullmatch(r"h[1-6]", tag):
+            self.open_heading = None
         if any(t == tag for t, _ in self.stack):
             while self.stack.pop()[0] != tag:
                 pass
@@ -253,6 +262,8 @@ class Copy(HTMLParser):
             self.text.append(data)
             if "h1" in tags:
                 self.h1 += data
+            if self.headings and self.open_heading is not None:
+                self.headings[self.open_heading][1] += data
             if any(t == "nav" and "sidebar" in c.split() for t, c in self.stack):
                 self.sidebar.append(data)
 
@@ -296,11 +307,11 @@ def rule_landing_copy(page):
         yield "landing h1 is the tagline", squash(c.h1)
     if SUPPORTING not in squash(" ".join(c.text)):
         yield "landing page has the supporting statement", SUPPORTING
-    heads = {"h1": c.h1, "title": c.title, "og:title": c.meta.get("og:title", ""), "twitter:title": c.meta.get("twitter:title", "")}
+    heads = {"title": c.title, "og:title": c.meta.get("og:title", ""), "twitter:title": c.meta.get("twitter:title", "")}
     for where, text in heads.items():
         for p in HEADLINE_BANNED:
             if p in text.lower():
-                yield "no hidden service in the headline or titles", f'"{p}" in {where}'
+                yield "no hidden service in the titles", f'"{p}" in {where}'
 
 
 def rule_demo_proof(page):
@@ -315,6 +326,15 @@ def rule_demo_proof(page):
             yield "landing page carries the demo proof", f"the .demo-proof block does not link {name}"
     if DEMO_PROOF_WORD not in m.group(1).lower():
         yield "landing page carries the demo proof", f'the .demo-proof block does not say "{DEMO_PROOF_WORD}"'
+
+
+def rule_marketing_headings(page):
+    if page not in MARKETING:
+        return
+    for tag, text in copy(page).headings:
+        for p in HEADLINE_BANNED:
+            if p in squash(text).lower():
+                yield "no hidden service in any marketing heading", f'"{p}" in {tag}: {squash(text)}'
 
 
 def rule_marketing_words(page):
@@ -582,7 +602,7 @@ def rule_manifest():
             yield MANIFEST, "manifest lists every page and referenced asset", target + " (from " + page + ")"
 
 
-PAGE_RULES = [rule_links, rule_fragments, rule_never_say, rule_landing_copy, rule_demo_proof, rule_marketing_words, rule_sidebar, rule_hosts, rule_scripts, rule_favicon, rule_header_mark, rule_status_chip]  # each yields (rule, offending text)
+PAGE_RULES = [rule_links, rule_fragments, rule_never_say, rule_landing_copy, rule_demo_proof, rule_marketing_headings, rule_marketing_words, rule_sidebar, rule_hosts, rule_scripts, rule_favicon, rule_header_mark, rule_status_chip]  # each yields (rule, offending text)
 SITE_RULES = [rule_manifest, rule_fonts, rule_retired, rule_contrast]  # each yields (page, rule, offending text)
 
 
