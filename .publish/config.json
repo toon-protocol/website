@@ -1,0 +1,29 @@
+{
+  "connector": "https://proxy.store.toonprotocol.dev",
+  "routes": {
+    "store": "g.toon.store",
+    "gasQuote": "g.toon.gas.quote",
+    "gasExecute": "g.toon.gas"
+  },
+  "settlement": {
+    "network": "eip155:8453",
+    "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "rpcUrl": "https://mainnet.base.org"
+  },
+  "deposit": "1000000",
+  "wallet": {
+    "baseKeyLabel": "toon-ci/evm/v1",
+    "solanaAddress": "AXobAqdzsxhhEb85aduWBChkSrEjGmswJjozXHKfRKDj",
+    "baseAddress": "0xC4Cd8ad303C68fDC50f0DE16Bb2D42dC1A145c39"
+  },
+  "arns": {
+    "name": "toon",
+    "ant": "H5VJzteoQ1t2sZ1VgWvE1XDbyMKY9Qk4eZY6EBcKx8mn",
+    "network": "mainnet",
+    "ttlSeconds": 900
+  },
+  "site": "https://toon.ar.io",
+  "publishIndex": "publish-index.json",
+  "previewGateway": "https://turbo-gateway.com",
+  "maxSpendPerRun": "300000"
+}
