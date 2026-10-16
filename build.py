@@ -68,7 +68,8 @@ NAV = [
         ("spaceturtle", "spaceturtle", "An agent running a node from your machine, with the money kept away from it."),
     ]),
     ("Reference", [
-        ("devnet", "Devnet reference", "Every devnet address, route and price, and the faucet that funds you."),
+        ("devnet", "Devnet reference", "The devnet connector, relay, routes and prices, and the faucet that funds you."),
+        ("mainnet", "Mainnet reference", "The mainnet connector, relay and payee, and every route and price, on Base."),
         ("protocol", "Protocol and specs", "The packet, the greeting and the self-description, and where the specs live."),
         ("exit-codes", "Exit codes", "Every exit code and error code toon can return, and the rules behind each command's output."),
         ("proof", "Proof", "The landing page is not on a web server: every revision, its Arweave transaction and the receipts of the write that bought it."),

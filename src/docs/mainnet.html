@@ -1,0 +1,40 @@
+<p>Every address, endpoint and price for the public TOON mainnet, in one place. <strong>This is real money.</strong> Mainnet settles in USDC on Base only. There is no faucet: a payer funds its own wallet with USDC.</p>
+
+<h2>The live values come from the node</h2>
+
+<p>Ask the node, not this page:</p>
+
+<pre>curl -s https://toonprotocol.xyz/ilp | jq</pre>
+
+<p>When the tables below and the node disagree, the node is right.</p>
+
+<h2>The connector</h2>
+
+<p>One connector fronts every app on mainnet, and the relay is its neighbour. A channel opened at the connector pays for every route below.</p>
+
+<div class="tablewrap"><table>
+<tbody>
+<tr><td><strong>Connector (HTTP)</strong></td><td><code>https://toonprotocol.xyz/ilp</code></td></tr>
+<tr><td><strong>Connector (BTP)</strong></td><td><code>wss://toonprotocol.xyz/ilp/btp</code></td></tr>
+<tr><td><strong>Relay</strong></td><td><code>wss://relay.toonprotocol.xyz</code></td></tr>
+<tr><td><strong>Settlement</strong></td><td>Base mainnet <code>eip155:8453</code>, USDC <code>0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913</code></td></tr>
+<tr><td><strong>Payee / voucher signer</strong></td><td><code>0x845dabc91ddc7e032de637ae03a76ef8630c56bb</code></td></tr>
+</tbody></table></div>
+
+<p>The ILP addresses are the same on mainnet and on the <a href="devnet.html">devnet</a>. Only the connector URL and the settlement chain tell the two apart, and that is how a peer avoids paying on the wrong chain. Prices are in the settlement token's base units: 1 = 0.000001 USDC.</p>
+
+<h2>Routes and prices</h2>
+
+<p>As <code>GET /ilp</code> listed them on 2026-10-16.</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>App</th><th>ILP address</th><th>Price per packet</th></tr></thead>
+<tbody>
+<tr><td><strong>Relay</strong></td><td><code>g.toon.relay</code> (BTP only)</td><td>1</td></tr>
+<tr><td><strong>Relay (ephemeral)</strong></td><td><code>g.toon.relay.ephemeral</code></td><td>0</td></tr>
+<tr><td><strong>Store</strong></td><td><code>g.toon.store</code></td><td>32 <strong>+ 64 per KiB</strong></td></tr>
+<tr><td><strong>Gas station</strong></td><td><code>g.toon.gas</code></td><td>3000</td></tr>
+<tr><td><strong>Gas quote</strong></td><td><code>g.toon.gas.quote</code></td><td>100</td></tr>
+</tbody></table></div>
+
+<p class="source">Written from the connector's <code>GET /ilp</code> and the relay's NIP-11 document. The prices are the project's, not a guarantee: read them off the node before you pay.</p>

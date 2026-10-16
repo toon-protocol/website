@@ -96,6 +96,7 @@
     <details class="group" open>
       <summary>Reference<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
       <a href="devnet.html">Devnet reference</a>
+      <a href="mainnet.html">Mainnet reference</a>
       <a href="protocol.html">Protocol and specs</a>
       <a href="exit-codes.html">Exit codes</a>
       <a href="proof.html">Proof</a>
@@ -183,7 +184,7 @@ key_file = <span class="s">"/app/data/settlement-solana.key"</span></pre></div>
 <tr><td><strong>Funding the key</strong></td><td>Base Sepolia ETH for gas; devnet USDC from the <a href="https://faucet.devnet.toonprotocol.dev">faucet</a></td><td>devnet SOL (<code>solana airdrop</code>); mock USDC from the same faucet</td></tr>
 </tbody></table></div>
 
-<p>There is no Solana <em>testnet</em> deployment: <code>payment-channels</code> is on devnet and mainnet-beta, nowhere else. Mainnet exists on both chains and the live node at toon.ar.io settles there. Because the contract and program are the same address everywhere, the one thing that has to match the network is the <strong>token</strong>: on mainnet, point <code>token_address</code> at Base mainnet's USDC or Solana mainnet-beta's, never the devnet one. The x402 Foundation lists <code>x402BatchSettlement</code> at one address on Base, Arbitrum, Polygon, Optimism, Avalanche, Celo, Linea, Unichain, Monad and World Chain; the node will serve on any of them where the code is present.</p>
+<p>There is no Solana <em>testnet</em> deployment: <code>payment-channels</code> is on devnet and mainnet-beta, nowhere else. The public mainnet connector settles on Base only. Because the contract and program are the same address everywhere, the one thing that has to match the network is the <strong>token</strong>: on mainnet, point <code>token_address</code> at Base mainnet's USDC or Solana mainnet-beta's, never the devnet one. The x402 Foundation lists <code>x402BatchSettlement</code> at one address on Base, Arbitrum, Polygon, Optimism, Avalanche, Celo, Linea, Unichain, Monad and World Chain; the node will serve on any of them where the code is present.</p>
 
 <h2 id="how-a-channel-is-admitted"><a class="anchor" href="#how-a-channel-is-admitted">How a channel is admitted</a></h2>
 
@@ -307,7 +308,7 @@ key_file = <span class="s">"/app/data/settlement-solana.key"</span></pre></div>
     <a href="#before-you-rely-on-it" class="h2">Before you rely on it</a>
   </aside>
 </div>
-<dialog class="docsearch" aria-label="Search the docs" data-index="search/" data-pages="index agent-node concepts compared faq install first-agent-node networks-and-reachability money agent-keys peering adding-an-app creating-a-toon-app relay operations backup-and-restore run-a-node put-your-app-behind-it get-paid peering-by-hand operator-surface hidden-services pay-a-node channels cli errors spaceturtle devnet protocol exit-codes proof">
+<dialog class="docsearch" aria-label="Search the docs" data-index="search/" data-pages="index agent-node concepts compared faq install first-agent-node networks-and-reachability money agent-keys peering adding-an-app creating-a-toon-app relay operations backup-and-restore run-a-node put-your-app-behind-it get-paid peering-by-hand operator-surface hidden-services pay-a-node channels cli errors spaceturtle devnet mainnet protocol exit-codes proof">
   <div class="panel">
     <form method="dialog" role="search">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
