@@ -1,0 +1,20 @@
+{
+  "name": "toon-ar-io-publish",
+  "private": true,
+  "type": "module",
+  "description": "Publishes toon.ar.io through TOON: the files as paid writes to the store, the ArNS record through the gas station. Its own manifest, like .sandcastle/; the repository root has no package.json.",
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "test": "node --test",
+    "plan": "node publish.mjs plan",
+    "upload": "node publish.mjs upload",
+    "publish": "node publish.mjs publish"
+  },
+  "dependencies": {
+    "@ar.io/sdk": "4.5.2",
+    "@solana-program/compute-budget": "0.15.0",
+    "@solana/kit": "6.10.0",
+    "@toon-protocol/client": "5.0.2",
+    "viem": "2.57.7"
+  }
+}

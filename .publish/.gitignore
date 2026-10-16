@@ -1,0 +1,4 @@
+node_modules/
+# The watermark is rebuilt each run from the chain and the connector; only the binding is kept.
+channel/channels.json
+out/

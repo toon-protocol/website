@@ -1,0 +1,90 @@
+# Publish toon.ar.io through TOON, by hand: Actions → publish → Run workflow.
+#
+#   plan     what would be uploaded and what it would cost. Spends nothing.
+#   upload   uploads the changed files and a new manifest, paid to the mainnet connector.
+#            `toon` is left alone; the run prints a preview URL of the manifest.
+#   publish  upload, then point the ArNS name `toon` at the new manifest (the controller signs,
+#            the gas station pays the fee and broadcasts), then check toon.ar.io serves it.
+#
+# The gate (ci.yml's `gate` job) runs first. upload and publish run only from main.
+# The one secret is WALLET; .publish/wallet.mjs and .agents/adr/0001 say how the Base key that
+# pays the channel is derived from it. CI never opens or tops up the channel: that is done on a
+# maintainer's machine with `--open-channel`, and the binding it writes is committed.
+
+name: publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'plan spends nothing; upload pays for the files; publish also points toon at them'
+        type: choice
+        options: [plan, upload, publish]
+        default: plan
+
+# Two publishes must never pay on the same channel at once.
+concurrency:
+  group: publish-toon-ar-io
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      MODE: ${{ inputs.mode }}
+    steps:
+      - name: upload and publish run only from main
+        if: inputs.mode != 'plan' && github.ref != 'refs/heads/main'
+        run: |
+          echo "::error::$MODE runs only from main, not ${GITHUB_REF}."
+          exit 1
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: 'npm'
+          cache-dependency-path: .publish/package-lock.json
+
+      # --ignore-scripts: no dependency runs code at install time on a runner that holds WALLET.
+      - run: npm ci --prefix .publish --ignore-scripts
+      - run: npm test --prefix .publish
+
+      - name: ${{ inputs.mode }}
+        env:
+          WALLET: ${{ secrets.WALLET }}
+        run: node .publish/publish.mjs "$MODE"
+
+      - name: toon.ar.io serves the new manifest
+        if: inputs.mode == 'publish'
+        run: |
+          manifest="$(node -p "require('./.publish/out/receipt.json').manifest")"
+          # A gateway may keep the old answer for the record's TTL (900 s), so wait up to 20 minutes.
+          for i in $(seq 1 80); do
+            resolved="$(curl -sI https://toon.ar.io | tr -d '\r' | awk -F': ' 'tolower($1)=="x-arns-resolved-id"{print $2}')"
+            [ "$resolved" = "$manifest" ] && break
+            echo "toon.ar.io still resolves to ${resolved:-nothing}; waiting for $manifest"
+            sleep 15
+          done
+          [ "$resolved" = "$manifest" ] || { echo "::error::toon.ar.io resolves to $resolved, not $manifest"; exit 1; }
+          first="$(curl -fsSL https://toon.ar.io/install.sh | head -1)"
+          [ "$first" = "#!/bin/sh" ] || { echo "::error::install.sh starts with '$first', not '#!/bin/sh'"; exit 1; }
+          echo "toon.ar.io -> $manifest, and install.sh is served"
+
+      - name: Keep the receipt
+        if: always() && inputs.mode != 'plan'
+        uses: actions/upload-artifact@v4
+        with:
+          name: publish-receipt-${{ github.run_id }}
+          path: .publish/out/receipt.json
+          if-no-files-found: ignore
+          retention-days: 90
