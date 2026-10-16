@@ -196,7 +196,7 @@ write_keys_file   = <span class="s">"/app/data/operator-write-keys"</span></pre>
 
 <p><strong>Releases.</strong> A release builds the image, cuts a dated handle and opens a GitHub Release. It does not deploy: a node repository pins the connector image it runs, by release handle, in its own deploy bundle. Because the binary and a box's mounted TOML are a matched pair in both directions, <strong>adding a required config key is a breaking deploy</strong>: land the config first, then bump the pin.</p>
 
-<p><strong>Devnet and mainnet.</strong> Devnet settles on Base Sepolia and Solana devnet, with test funds from the <a href="https://faucet.devnet.toonprotocol.dev">devnet faucet</a>. The live node that serves toon.ar.io settles on Base mainnet and Solana mainnet-beta. The connector repository's own production tier is a named, empty tier: no fleet machine, no fleet key.</p>
+<p><strong>Devnet and mainnet.</strong> Devnet settles on Base Sepolia and Solana devnet, with test funds from the <a href="https://faucet.devnet.toonprotocol.dev">devnet faucet</a>. Mainnet settles on Base only, through the connector in the <a href="mainnet.html">Mainnet reference</a>. The connector repository's own production tier is a named, empty tier: no fleet machine, no fleet key.</p>
 
 <p class="source">Written from <code>connector/docs/guide/operator-surface.md</code> and <code>operations.md</code>. The rules are numbered in <code>docs/protocol/operator-spec.md</code>.</p>
 
