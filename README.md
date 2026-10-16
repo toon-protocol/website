@@ -176,6 +176,9 @@ mode you pick:
   pays its Solana fee and broadcasts it. The workflow then waits until `toon.ar.io` resolves to
   the new manifest (a gateway may keep the old one for the record's TTL, 900 s) and checks that
   `install.sh` is served.
+- **publish** with the `manifest` input set uploads nothing. It points `toon` at that manifest,
+  one an earlier **upload** printed, after checking that its `publish-index.json` holds exactly
+  this commit's files. Review an upload's preview, then put that same manifest live.
 
 Only files whose sha256 differs from the live `publish-index.json` are uploaded again; the rest
 keep their transaction ids. The manifest lists only files git tracks, so `git add` a new file

@@ -26,8 +26,14 @@ process.on('uncaughtException', (e) => { console.error(`Stopped: ${e.shortMessag
 const args = process.argv.slice(2);
 const mode = args.find((a) => !a.startsWith('--'));
 const openChannel = args.includes('--open-channel');
+const manifestAt = args.indexOf('--manifest');
+const promote = manifestAt === -1 ? undefined : args[manifestAt + 1];
 if (!['plan', 'upload', 'publish'].includes(mode)) {
-  console.error('usage: node .publish/publish.mjs plan|upload|publish [--open-channel]');
+  console.error('usage: node .publish/publish.mjs plan|upload|publish [--open-channel] [--manifest <id>]');
+  process.exit(2);
+}
+if (manifestAt !== -1 && (mode !== 'publish' || !/^[A-Za-z0-9_-]{43}$/.test(promote ?? ''))) {
+  console.error('--manifest <id> goes with publish, and names a 43-character Arweave transaction id.');
   process.exit(2);
 }
 if (openChannel && process.env.CI) {
@@ -88,6 +94,41 @@ const live = await readTerms();
 log(`connector  ${config.connector}: paid to ${live.terms.payTo} in ${live.terms.name} on ${live.terms.network}`);
 
 const template = JSON.parse(readFileSync(join(ROOT, 'manifest.template.json'), 'utf8'));
+// publish --manifest <id>: point the name at a manifest an earlier upload made, after checking that it
+// holds exactly this commit's files. What the preview showed is then what goes live, with no second upload.
+if (promote) {
+  const res = await fetch(`${config.previewGateway}/${promote}/${config.publishIndex}`);
+  const index = res.ok ? await res.json().catch(() => undefined) : undefined;
+  if (index?.version !== 1) throw new Error(`${config.previewGateway}/${promote}/${config.publishIndex} is not a publish index`);
+  const expected = Object.keys(template.paths);
+  const mismatched = expected.filter((path) => index.files[path]?.sha256 !== sha256(readFileSync(join(ROOT, path))));
+  const extra = Object.keys(index.files).filter((path) => !template.paths[path]);
+  if (mismatched.length || extra.length) {
+    throw new Error(`manifest ${promote} does not hold this commit's files: ${[...mismatched, ...extra].slice(0, 5).join(', ')}${mismatched.length + extra.length > 5 ? ', …' : ''}`);
+  }
+  log(`manifest   ${promote}: all ${expected.length} files match this commit`);
+  if (!binding()) throw new Error('no channel binding is committed: the gas station is paid on the channel');
+  mkdirSync(OUT, { recursive: true });
+  mkdirSync(dirname(CHANNEL_STORE), { recursive: true });
+  const receipt = { mode, manifest: promote, started: new Date().toISOString(), commit: process.env.GITHUB_SHA, spent: 0n };
+  const client = await makeClient(config, wallet, CHANNEL_STORE, false);
+  try {
+    const set = await setRecord(client, config, wallet, promote);
+    receipt.spent += set.cost;
+    receipt.record = set;
+    log(`record     ${config.arns.name} -> ${promote}: ${set.signature ?? JSON.stringify(set)} (${usdc(set.cost)}, fee paid by ${set.feePayer})`);
+    const now = await readRecord(config);
+    if (now?.transactionId !== promote) throw new Error(`the ANT's '@' record reads ${now?.transactionId}, not ${promote}`);
+    log(`on chain   '@' = ${now.transactionId}, TTL ${now.ttlSeconds}`);
+  } finally {
+    receipt.finished = new Date().toISOString();
+    writeFileSync(join(OUT, 'receipt.json'), JSON.stringify(receipt, (_, v) => (typeof v === 'bigint' ? v.toString() : v), 2));
+    await client.close();
+    log(`spent      ${usdc(receipt.spent)} (receipt: .publish/out/receipt.json)`);
+  }
+  process.exit(0);
+}
+
 const before = await previousIndex();
 const files = Object.keys(template.paths).map((path) => {
   const bytes = readFileSync(join(ROOT, path));
