@@ -18,6 +18,7 @@ either script the search box and theme picker stay hidden and the pages read the
 
 No dependencies beyond the standard library.
 """
+import hashlib
 import html
 import json
 import re
@@ -202,6 +203,14 @@ def social_tags(title, description, path, og_type):
 """
 
 
+def asset(root, path):
+    """The URL of a stylesheet or script under assets/, versioned by its content. A gateway and a
+    browser may each keep an asset for its max-age (900 s on toon.ar.io); a changed file gets a new
+    URL, so a page never pairs with the copy a cache holds from the publish before."""
+    version = hashlib.sha256((ROOT / path).read_bytes()).hexdigest()[:10]
+    return f"{root}{path}?v={version}"
+
+
 def head(title, description, root, path, docs=False):
     return f"""<!doctype html>
 <html lang="en">
@@ -210,7 +219,7 @@ def head(title, description, root, path, docs=False):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(description, quote=True)}">
-{social_tags(title, description, path, "article" if docs else "website")}{favicons(root)}{THEME_SCRIPT + chr(10) if docs else ""}<link rel="stylesheet" href="{root}assets/site.css">
+{social_tags(title, description, path, "article" if docs else "website")}{favicons(root)}{THEME_SCRIPT + chr(10) if docs else ""}<link rel="stylesheet" href="{asset(root, "assets/site.css")}">
 </head>
 <body{' class="docs-body"' if docs else ""}>
 """
@@ -370,6 +379,12 @@ def toc_links(toc):
     return "\n".join(f'    <a href="#{hid}" class="h{level}">{html.escape(text)}</a>' for level, hid, text in toc)
 
 
+def docs_scripts():
+    """The two scripts every docs page loads, and the end of the page."""
+    return (f'\n<script src="{asset("../", "assets/search.js")}" defer></script>'
+            f'\n<script src="{asset("../", "assets/docs.js")}" defer></script>\n</body>\n</html>\n')
+
+
 # The docs home is a splash, as herdr.dev/docs is: a hero, then the page, with no sidebar.
 HERO_TITLE = "Every request arrives paid."
 HERO_TAGLINE = "TOON is a reverse proxy for your machine: a request reaches your app only after it is paid."
@@ -398,7 +413,7 @@ def build_splash(index, slug, title, summary, body):
 {doc_foot(slug, index)}
 </main>
 """
-            + SEARCH_DIALOG + '\n<script src="../assets/search.js" defer></script>\n<script src="../assets/docs.js" defer></script>\n</body>\n</html>\n')
+            + SEARCH_DIALOG + docs_scripts())
 
 
 def build_doc(index, slug, title, summary, section, body):
@@ -430,7 +445,7 @@ def build_doc(index, slug, title, summary, section, body):
 {toc_html}
 </div>
 """
-            + SEARCH_DIALOG + '\n<script src="../assets/search.js" defer></script>\n<script src="../assets/docs.js" defer></script>\n</body>\n</html>\n')
+            + SEARCH_DIALOG + docs_scripts())
 
 
 PAGES = {
