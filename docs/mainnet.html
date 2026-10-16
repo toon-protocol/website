@@ -110,6 +110,7 @@
     <a href="#the-live-values-come-from-the-node" class="h2">The live values come from the node</a>
     <a href="#the-connector" class="h2">The connector</a>
     <a href="#routes-and-prices" class="h2">Routes and prices</a>
+    <a href="#peer-with-it" class="h2">Peer with it</a>
     </nav></details>
     <div class="titlebar"><p class="section">Reference</p><h1 id="_top">Mainnet reference</h1></div>
     <div class="doc">
@@ -141,17 +142,29 @@
 
 <h2 id="routes-and-prices"><a class="anchor" href="#routes-and-prices">Routes and prices</a></h2>
 
-<p>As <code>GET /ilp</code> listed them on 2026-10-16.</p>
+<p>Seven routes, as <code>GET /ilp</code> listed them on 2026-10-16.</p>
 
 <div class="tablewrap"><table>
-<thead><tr><th>App</th><th>ILP address</th><th>Price per packet</th></tr></thead>
+<thead><tr><th>App</th><th>Route</th><th>Price</th><th>Carriage</th></tr></thead>
 <tbody>
-<tr><td><strong>Relay</strong></td><td><code>g.toon.relay</code> (BTP only)</td><td>1</td></tr>
-<tr><td><strong>Relay (ephemeral)</strong></td><td><code>g.toon.relay.ephemeral</code></td><td>0</td></tr>
-<tr><td><strong>Store</strong></td><td><code>g.toon.store</code></td><td>32 <strong>+ 64 per KiB</strong></td></tr>
-<tr><td><strong>Gas station</strong></td><td><code>g.toon.gas</code></td><td>3000</td></tr>
-<tr><td><strong>Gas quote</strong></td><td><code>g.toon.gas.quote</code></td><td>100</td></tr>
+<tr><td rowspan="4"><strong>Relay</strong></td><td><code>g.toon.relay</code></td><td>1</td><td><strong>BTP only</strong></td></tr>
+<tr><td><code>g.toon.relay.ephemeral</code></td><td>0</td><td>HTTP or BTP</td></tr>
+<tr><td><code>g.toon.relay.store</code></td><td>32 <strong>+ 64 per KiB</strong></td><td>HTTP or BTP</td></tr>
+<tr><td><code>g.toon.relay.gas</code></td><td>3000</td><td>HTTP or BTP</td></tr>
+<tr><td><strong>Store</strong></td><td><code>g.toon.store</code></td><td>32 <strong>+ 64 per KiB</strong></td><td>HTTP or BTP</td></tr>
+<tr><td rowspan="2"><strong>Gas station</strong></td><td><code>g.toon.gas</code></td><td>3000</td><td>HTTP or BTP</td></tr>
+<tr><td><code>g.toon.gas.quote</code></td><td>100</td><td>HTTP or BTP</td></tr>
 </tbody></table></div>
+
+<h2 id="peer-with-it"><a class="anchor" href="#peer-with-it">Peer with it</a></h2>
+
+<p>This is not the <code>toon</code> CLI's mainnet default. <code>toon init --network mainnet</code> names a different node, run by one operator (see <a href="networks-and-reachability.html">Networks and reachability</a>). To peer with the TOON mainnet connector, name it at <code>init</code>:</p>
+
+<pre>toon init --network mainnet --accept-anyone-terms \
+  --connector-url https://toonprotocol.xyz/ilp --relay-url wss://relay.toonprotocol.xyz
+toon join mainnet --deposit &lt;n&gt; --yes</pre>
+
+<p>Fund the agent node's Base address with USDC first: there is no faucet, and <code>toon wallet fund</code> fails with <code>faucet_unavailable</code>.</p>
 
 <p class="source">Written from the connector's <code>GET /ilp</code> and the relay's NIP-11 document. The prices are the project's, not a guarantee: read them off the node before you pay.</p>
 
@@ -167,6 +180,7 @@
     <a href="#the-live-values-come-from-the-node" class="h2">The live values come from the node</a>
     <a href="#the-connector" class="h2">The connector</a>
     <a href="#routes-and-prices" class="h2">Routes and prices</a>
+    <a href="#peer-with-it" class="h2">Peer with it</a>
   </aside>
 </div>
 <dialog class="docsearch" aria-label="Search the docs" data-index="search/" data-pages="index agent-node concepts compared faq install first-agent-node networks-and-reachability money agent-keys peering adding-an-app creating-a-toon-app relay operations backup-and-restore run-a-node put-your-app-behind-it get-paid peering-by-hand operator-surface hidden-services pay-a-node channels cli errors spaceturtle devnet mainnet protocol exit-codes proof">
