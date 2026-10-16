@@ -96,6 +96,7 @@
     <details class="group" open>
       <summary>Reference<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
       <a href="devnet.html">Devnet reference</a>
+      <a href="mainnet.html">Mainnet reference</a>
       <a href="protocol.html" aria-current="page">Protocol and specs</a>
       <a href="exit-codes.html">Exit codes</a>
       <a href="proof.html">Proof</a>
@@ -119,8 +120,8 @@
     <p class="lede">The packet, the greeting and the self-description, and where the specs live.</p>
 <p>The wire is defined by the Rust connector, not by any client. Its committed <strong>wire vectors</strong> are the normative cross-repository contract; the client, the rig and the swap replay them as their own conformance suites. Vectors are normative; prose is not. This page is the map to the specs, with the three things most readers come for: the packet, the greeting, and the self-description.</p>
 
-<pre>curl -s https://proxy.ario.devnet.toonprotocol.dev/ilp | jq        <span class="c"># a node's self-description, free</span>
-npx toon-client price g.toon.store https://proxy.ario.devnet.toonprotocol.dev   <span class="c"># one route's price</span></pre>
+<pre>curl -s https://toonprotocol.dev/ilp | jq        <span class="c"># a node's self-description, free</span>
+npx toon-client price g.toon.store https://toonprotocol.dev   <span class="c"># one route's price</span></pre>
 
 <h2 id="the-packet"><a class="anchor" href="#the-packet">The packet</a></h2>
 
@@ -215,7 +216,7 @@ REJECT   0x0e ‖ code(3) ‖ VarOctetString(triggeredBy)
     </div>
   <div class="doc-foot">
     <p class="doc-meta"><a href="https://github.com/toon-protocol/website/blob/main/src/docs/protocol.html">Edit page</a><span>MIT licensed · No protocol fee · stored on Arweave via a paid TOON write · <a href="proof.html">proof</a></span></p>
-    <nav class="pager" aria-label="Previous and next"><a class="prev" rel="prev" href="devnet.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><span><small>Previous</small>Devnet reference</span></a><a class="next" rel="next" href="exit-codes.html"><span><small>Next</small>Exit codes</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></a></nav>
+    <nav class="pager" aria-label="Previous and next"><a class="prev" rel="prev" href="mainnet.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><span><small>Previous</small>Mainnet reference</span></a><a class="next" rel="next" href="exit-codes.html"><span><small>Next</small>Exit codes</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></a></nav>
   </div>
   </main>
   <aside class="toc" aria-label="On this page">
@@ -230,7 +231,7 @@ REJECT   0x0e ‖ code(3) ‖ VarOctetString(triggeredBy)
     <a href="#the-relay-and-the-nips" class="h2">The relay and the NIPs</a>
   </aside>
 </div>
-<dialog class="docsearch" aria-label="Search the docs" data-index="search/" data-pages="index agent-node concepts compared faq install first-agent-node networks-and-reachability money agent-keys peering adding-an-app creating-a-toon-app relay operations backup-and-restore run-a-node put-your-app-behind-it get-paid peering-by-hand operator-surface hidden-services pay-a-node channels cli errors spaceturtle devnet protocol exit-codes proof">
+<dialog class="docsearch" aria-label="Search the docs" data-index="search/" data-pages="index agent-node concepts compared faq install first-agent-node networks-and-reachability money agent-keys peering adding-an-app creating-a-toon-app relay operations backup-and-restore run-a-node put-your-app-behind-it get-paid peering-by-hand operator-surface hidden-services pay-a-node channels cli errors spaceturtle devnet mainnet protocol exit-codes proof">
   <div class="panel">
     <form method="dialog" role="search">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>

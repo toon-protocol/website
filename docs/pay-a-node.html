@@ -96,6 +96,7 @@
     <details class="group" open>
       <summary>Reference<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
       <a href="devnet.html">Devnet reference</a>
+      <a href="mainnet.html">Mainnet reference</a>
       <a href="protocol.html">Protocol and specs</a>
       <a href="exit-codes.html">Exit codes</a>
       <a href="proof.html">Proof</a>
@@ -131,7 +132,7 @@ npx toon-client claim-state                          <span class="c"># what the 
 
 <p>Pay the <strong>Echo Merchant</strong> first. Its route <code>g.toon.echo</code> sells nothing and answers with a Mirror of what arrived and what it was charged, so you can prove this whole flow before paying a service that matters. Its guide <a href="https://github.com/toon-protocol/echo-merchant/blob/main/docs/guide/paying-with-toon-client.md">Paying with toon-client</a> is the same steps aimed at it, and the <a href="devnet.html#the-echo-merchant">devnet reference</a> says more.</p>
 
-<p>The node used throughout is the devnet store, <code>https://proxy.ario.devnet.toonprotocol.dev</code>, which serves the route <code>g.toon.store</code> at 1000 base units (0.001 USDC) plus 10 per kibibyte. The <a href="devnet.html">devnet reference</a> has the full table.</p>
+<p>The node used throughout is the devnet connector, <code>https://toonprotocol.dev</code>, which serves the route <code>g.toon.store</code> at 1000 base units (0.001 USDC) plus 10 per kibibyte. The <a href="devnet.html">devnet reference</a> has the full table.</p>
 
 <pre>npm install @toon-protocol/client</pre>
 
@@ -150,7 +151,7 @@ npx toon-client identity</pre>
 <pre><span class="k">import</span> { ToonClient } <span class="k">from</span> <span class="s">'@toon-protocol/client'</span>;
 
 <span class="k">const</span> client = <span class="k">await</span> ToonClient.create({
-  connector: <span class="s">'https://proxy.ario.devnet.toonprotocol.dev'</span>,
+  connector: <span class="s">'https://toonprotocol.dev'</span>,
   mnemonic: process.env.TOON_MNEMONIC,
   channelStore: <span class="s">`${process.env.HOME}/.toon/channels.json`</span>,
 });
@@ -278,7 +279,7 @@ console.log(channel.channel.channelId, channel.depositTotal);</pre>
     <a href="#where-to-go-next" class="h2">Where to go next</a>
   </aside>
 </div>
-<dialog class="docsearch" aria-label="Search the docs" data-index="search/" data-pages="index agent-node concepts compared faq install first-agent-node networks-and-reachability money agent-keys peering adding-an-app creating-a-toon-app relay operations backup-and-restore run-a-node put-your-app-behind-it get-paid peering-by-hand operator-surface hidden-services pay-a-node channels cli errors spaceturtle devnet protocol exit-codes proof">
+<dialog class="docsearch" aria-label="Search the docs" data-index="search/" data-pages="index agent-node concepts compared faq install first-agent-node networks-and-reachability money agent-keys peering adding-an-app creating-a-toon-app relay operations backup-and-restore run-a-node put-your-app-behind-it get-paid peering-by-hand operator-surface hidden-services pay-a-node channels cli errors spaceturtle devnet mainnet protocol exit-codes proof">
   <div class="panel">
     <form method="dialog" role="search">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>

@@ -4,33 +4,44 @@
 
 <p>Ask the node, not this page:</p>
 
-<pre>curl -s https://proxy.ario.devnet.toonprotocol.dev/ilp | jq</pre>
+<pre>curl -s https://toonprotocol.dev/ilp | jq</pre>
 
 <p><code>GET /ilp</code> is free and unauthenticated. Its <code>batchSettlements</code> are the x402 channel terms the node is paid under, one per chain, and <code>voucherSigners</code> the keys it expects vouchers from. The tables below are a convenience. When the two disagree, the node is right, and the client never consults a preset in preference to the document a node answers with.</p>
 
-<h2>Nodes</h2>
+<h2>The connector</h2>
 
-<p>Four nodes, seven routes. Each node is the receiver of its own channels, so a channel opened with one buys nothing at the others.</p>
+<p>One connector fronts every app on the devnet, and the relay is its neighbour. A channel opened at the connector pays for every route below.</p>
 
 <div class="tablewrap"><table>
-<thead><tr><th>Node</th><th>Client-edge URL</th><th>Route</th><th>Price</th><th>Carriage</th></tr></thead>
 <tbody>
-<tr><td><strong>Store</strong></td><td><code>https://proxy.ario.devnet.toonprotocol.dev</code></td><td><code>g.toon.store</code></td><td>1000 <strong>+ 10 per KiB</strong></td><td>HTTP or BTP</td></tr>
-<tr><td><strong>Gas station</strong></td><td><code>https://proxy.gas.devnet.toonprotocol.dev</code></td><td><code>g.toon.gas</code></td><td>1000 (0.001 USDC)</td><td>HTTP or BTP</td></tr>
-<tr><td rowspan="4"><strong>Relay</strong></td><td rowspan="4"><code>https://proxy.relay.devnet.toonprotocol.dev</code></td><td><code>g.toon.relay</code></td><td>1 (0.000001 USDC)</td><td><strong>BTP only</strong></td></tr>
-<tr><td><code>g.toon.relay.ephemeral</code></td><td>free</td><td>HTTP or BTP</td></tr>
-<tr><td><code>g.toon.relay.store</code></td><td>1001 <strong>+ 10 per KiB</strong></td><td>HTTP or BTP</td></tr>
-<tr><td><code>g.toon.relay.gas</code></td><td>1001</td><td>HTTP or BTP</td></tr>
-<tr><td><strong><a href="#the-echo-merchant">Echo Merchant</a></strong></td><td><code>https://proxy.echo.devnet.toonprotocol.dev</code></td><td><code>g.toon.echo</code></td><td>1 <strong>+ 1 per KiB</strong></td><td>HTTP or BTP</td></tr>
+<tr><td><strong>Connector (HTTP)</strong></td><td><code>https://toonprotocol.dev/ilp</code></td></tr>
+<tr><td><strong>Connector (BTP)</strong></td><td><code>wss://toonprotocol.dev/ilp/btp</code></td></tr>
+<tr><td><strong>Relay</strong></td><td><code>wss://relay.toonprotocol.dev</code></td></tr>
+<tr><td><strong>Faucet</strong></td><td><code>https://faucet.devnet.toonprotocol.dev</code></td></tr>
+<tr><td><strong>Settlement</strong></td><td>Base Sepolia <code>eip155:84532</code>, USDC <code>0x0c996d7c934c79a6255254875607fe69df25c0e1</code>, payee <code>0x3f43d923a611bcb2d0bfb5d6ee2c3ac3efeaf308</code>; Solana devnet, mint <code>34eSxY7qxQ4GzyhDJ8GpUcTz1WWzruGbJbR8q6TtxfQU</code>, payee <code>GzvGVjq3dnNM79MpWRvYCvVcAgPWzDdYisMwGxHF4u9F</code></td></tr>
 </tbody></table></div>
 
-<p>The last two are <strong>forwarded</strong>: the relay carries the packet to the store or the gas station and charges its own hop on top. Forwarding runs one way. A forwarded route needs one thing a direct one does not: the payload is sealed to the connector that <em>terminates</em> the route, so you name the far node yourself with <code>sealTo</code>. Seal to the relay instead and the packet is undeliverable (<code>F01</code>).</p>
+<p>The ILP addresses are the same on the devnet and on <a href="mainnet.html">mainnet</a>. Only the connector URL and the settlement chain tell the two apart, and that is how a peer avoids paying on the wrong chain. Prices are in the settlement token's base units: 1 = 0.000001 USDC.</p>
 
-<pre><span class="k">const</span> answer = <span class="k">await</span> client.send(
-  <span class="s">'g.toon.relay.gas'</span>,
-  { body: <span class="s">'hello'</span> },
-  { sealTo: <span class="s">'https://proxy.gas.devnet.toonprotocol.dev'</span> }
-);</pre>
+<h2>Routes and prices</h2>
+
+<p>Nine routes, as <code>GET /ilp</code> listed them on 2026-10-16.</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>App</th><th>Route</th><th>Price</th><th>Carriage</th></tr></thead>
+<tbody>
+<tr><td rowspan="4"><strong>Relay</strong></td><td><code>g.toon.relay</code></td><td>1</td><td><strong>BTP only</strong></td></tr>
+<tr><td><code>g.toon.relay.ephemeral</code></td><td>0</td><td>HTTP or BTP</td></tr>
+<tr><td><code>g.toon.relay.store</code></td><td>1000 <strong>+ 10 per KiB</strong></td><td>HTTP or BTP</td></tr>
+<tr><td><code>g.toon.relay.gas</code></td><td>1000</td><td>HTTP or BTP</td></tr>
+<tr><td><strong>Store</strong></td><td><code>g.toon.store</code></td><td>1000 <strong>+ 10 per KiB</strong></td><td>HTTP or BTP</td></tr>
+<tr><td rowspan="2"><strong>Gas station</strong></td><td><code>g.toon.gas</code></td><td>1000</td><td>HTTP or BTP</td></tr>
+<tr><td><code>g.toon.gas.quote</code></td><td>1000</td><td>HTTP or BTP</td></tr>
+<tr><td><strong><a href="#the-echo-merchant">Echo Merchant</a></strong></td><td><code>g.toon.echo</code></td><td>1 <strong>+ 1 per KiB</strong></td><td>HTTP or BTP</td></tr>
+<tr><td><strong>Workload gateway</strong></td><td><code>g.toon.workload-gateway.handover</code></td><td>0</td><td>HTTP or BTP</td></tr>
+</tbody></table></div>
+
+<p>The connector terminates every route itself, so you do not name a far node: a plain <code>client.send('g.toon.relay.gas', { body: 'hello' })</code> to <code>https://toonprotocol.dev</code> reaches it.</p>
 
 <h2>Chains</h2>
 
@@ -51,12 +62,12 @@
 
 <h2>The Echo Merchant</h2>
 
-<p>The <strong>Echo Merchant</strong> is a priced route at <code>g.toon.echo</code>, served at <code>https://proxy.echo.devnet.toonprotocol.dev</code>, that sells nothing, on purpose. It costs 1 base unit plus 1 per KiB, on Base Sepolia or Solana devnet, and it answers each paid packet with a <strong>Mirror</strong>: the request as it arrived and the payment as it arrived, including what it was charged. Pay it first, before a route that sells something real, and a failure is your payer's, not the service's.</p>
+<p>The <strong>Echo Merchant</strong> is a priced route at <code>g.toon.echo</code>, served by the connector at <code>https://toonprotocol.dev</code>, that sells nothing, on purpose. It costs 1 base unit plus 1 per KiB, on Base Sepolia or Solana devnet, and it answers each paid packet with a <strong>Mirror</strong>: the request as it arrived and the payment as it arrived, including what it was charged. Pay it first, before a route that sells something real, and a failure is your payer's, not the service's.</p>
 
 <p>The walkthrough, the <a href="https://github.com/toon-protocol/echo-merchant/blob/main/docs/guide/echo-flow.md">Echo flow</a>, lives in the <a href="https://github.com/toon-protocol/echo-merchant">echo-merchant</a> repository: install, fund, open a channel, pay, read the Mirror and withdraw.</p>
 
 <h2>Mainnet</h2>
 
-<p>The node that serves <a href="../index.html">toon.ar.io</a> settles on Base mainnet and Solana mainnet-beta, in USDC, on the same contract and program at the same addresses. Its prices are on the <a href="../apps/index.html">apps page</a> and at its own <a href="https://connector.167-233-221-236.sslip.io/ilp"><code>GET /ilp</code></a>. There is no mainnet faucet; a mainnet payer funds its own wallet with USDC.</p>
+<p>Mainnet has its own connector, relay and payee, and settles on Base only. See the <a href="mainnet.html">Mainnet reference</a>.</p>
 
 <p class="source">Written from <code>toon-client/docs/devnet.md</code> and <code>connector/docs/guide/get-paid.md</code>, and the Echo Merchant from <code>echo-merchant/README.md</code>. The same values ship as <code>DEVNET</code> in <code>@toon-protocol/client</code>.</p>

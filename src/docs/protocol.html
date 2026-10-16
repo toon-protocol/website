@@ -1,7 +1,7 @@
 <p>The wire is defined by the Rust connector, not by any client. Its committed <strong>wire vectors</strong> are the normative cross-repository contract; the client, the rig and the swap replay them as their own conformance suites. Vectors are normative; prose is not. This page is the map to the specs, with the three things most readers come for: the packet, the greeting, and the self-description.</p>
 
-<pre>curl -s https://proxy.ario.devnet.toonprotocol.dev/ilp | jq        <span class="c"># a node's self-description, free</span>
-npx toon-client price g.toon.store https://proxy.ario.devnet.toonprotocol.dev   <span class="c"># one route's price</span></pre>
+<pre>curl -s https://toonprotocol.dev/ilp | jq        <span class="c"># a node's self-description, free</span>
+npx toon-client price g.toon.store https://toonprotocol.dev   <span class="c"># one route's price</span></pre>
 
 <h2>The packet</h2>
 
