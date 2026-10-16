@@ -9,8 +9,10 @@ src/apps.html and src/agents.html become apps/index.html and agents/index.html. 
 the only thing this script does to it is copy assets/site.css between its <style> markers,
 so the one file stands alone while the stylesheet stays the single source.
 
-It also writes docs/search-index.js, one record per page section, which assets/search.js
-loads when a reader first uses the docs search box. The docs pages also carry
+It also writes the search index, one file per docs page, docs/search/<slug>.js, with one
+record per page section. assets/search.js loads them all when a reader first uses the docs
+search box. One file per page keeps each file under Turbo's 105 KiB free-upload limit, and a
+publish re-uploads only the index files of the pages that changed. The docs pages also carry
 assets/docs.js (phone menu, theme picker, "On this page" highlight, copy buttons); without
 either script the search box and theme picker stay hidden and the pages read the same.
 
@@ -262,7 +264,8 @@ SEARCH_BUTTON = ('<button type="button" class="docsearch-open" aria-haspopup="di
                  + GLASS + '<span>Search</span><kbd aria-hidden="true">/</kbd></button>')
 
 # The search itself, one per page, opened over it by assets/search.js.
-SEARCH_DIALOG = f"""<dialog class="docsearch" aria-label="Search the docs" data-index="search-index.js">
+# data-index is the directory of the index files, data-pages the docs pages in sidebar order.
+SEARCH_DIALOG = f"""<dialog class="docsearch" aria-label="Search the docs" data-index="search/" data-pages="{" ".join(slug for slug, _, _, _ in FLAT)}">
   <div class="panel">
     <form method="dialog" role="search">
       {GLASS}
@@ -521,18 +524,21 @@ def main():
     sync_demo()
     inline_stylesheet()
     (ROOT / "docs").mkdir(exist_ok=True)
-    records = []
+    (ROOT / "docs" / "search").mkdir(exist_ok=True)
+    for old in (ROOT / "docs" / "search").glob("*.js"):
+        old.unlink()
     for i, (slug, title, summary, section) in enumerate(FLAT):
         src = SRC / "docs" / f"{slug}.html"
         out = ROOT / "docs" / f"{slug}.html"
         body = src.read_text()
         out.write_text(build_doc(i, slug, title, summary, section, body))
-        records += search_records(slug, title, add_anchors(body)[0])
         print("wrote", out.relative_to(ROOT))
-    index = ROOT / "docs" / "search-index.js"
-    index.write_text("/* Built by build.py from src/docs: one record per page section. */\n"
-                     "window.TOON_DOCS_INDEX = " + json.dumps(records, separators=(",", ":")) + ";\n")
-    print("wrote", index.relative_to(ROOT), "with", len(records), "sections")
+        records = search_records(slug, title, add_anchors(body)[0])
+        index = ROOT / "docs" / "search" / f"{slug}.js"
+        index.write_text(f"/* Built by build.py from src/docs/{slug}.html: one record per section. */\n"
+                         f"(window.TOON_DOCS_INDEX = window.TOON_DOCS_INDEX || {{}})[{json.dumps(slug)}] = "
+                         + json.dumps(records, separators=(",", ":")) + ";\n")
+        print("wrote", index.relative_to(ROOT), "with", len(records), "sections")
     for slug in PAGES:
         (ROOT / slug).mkdir(exist_ok=True)
         out = ROOT / slug / "index.html"

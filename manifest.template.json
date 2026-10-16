@@ -161,7 +161,97 @@
     "docs/run-a-node.html": {
       "id": "<arweave tx id of this file>"
     },
-    "docs/search-index.js": {
+    "docs/search/adding-an-app.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/agent-keys.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/agent-node.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/backup-and-restore.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/channels.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/cli.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/compared.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/concepts.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/creating-a-toon-app.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/devnet.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/errors.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/exit-codes.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/faq.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/first-agent-node.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/get-paid.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/hidden-services.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/index.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/install.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/money.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/networks-and-reachability.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/operations.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/operator-surface.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/pay-a-node.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/peering-by-hand.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/peering.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/proof.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/protocol.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/put-your-app-behind-it.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/relay.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/run-a-node.js": {
+      "id": "<arweave tx id of this file>"
+    },
+    "docs/search/spaceturtle.js": {
       "id": "<arweave tx id of this file>"
     },
     "docs/spaceturtle.html": {

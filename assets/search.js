@@ -1,7 +1,8 @@
 /* The docs search. A button in the docs header opens a dialog over the page; "/" or
-   Ctrl+K opens it from anywhere. The index (docs/search-index.js, written by
-   build.py) is one record per page section, {u: url, p: page, s: section, t: text}, and is
-   loaded the first time the dialog opens. Without this script the buttons stay hidden. */
+   Ctrl+K opens it from anywhere. The index is one file per docs page, docs/search/<slug>.js,
+   written by build.py: one record per page section, {u: url, p: page, s: section, t: text}.
+   The files are loaded the first time the dialog opens, and searched in sidebar order once
+   all of them have answered. Without this script the buttons stay hidden. */
 (function () {
   var dialog = document.querySelector("dialog.docsearch");
   if (!dialog || !dialog.showModal) return;
@@ -9,18 +10,29 @@
   var index = null, loading = false, active = -1;
   var LIMIT = 10;
 
+  // A file that fails to load leaves its page out of the results rather than the search.
   function load() {
     if (index || loading) return;
     loading = true;
-    var script = document.createElement("script");
-    script.src = dialog.getAttribute("data-index");
-    script.onload = function () {
-      index = (window.TOON_DOCS_INDEX || []).map(function (r) {
-        return { r: r, p: r.p.toLowerCase(), s: r.s.toLowerCase(), t: r.t.toLowerCase() };
+    var dir = dialog.getAttribute("data-index"), slugs = dialog.getAttribute("data-pages").split(" ");
+    var pending = slugs.length;
+    function done() {
+      if (--pending) return;
+      var byPage = window.TOON_DOCS_INDEX || {};
+      index = [];
+      slugs.forEach(function (slug) {
+        (byPage[slug] || []).forEach(function (r) {
+          index.push({ r: r, p: r.p.toLowerCase(), s: r.s.toLowerCase(), t: r.t.toLowerCase() });
+        });
       });
       render();
-    };
-    document.head.appendChild(script);
+    }
+    slugs.forEach(function (slug) {
+      var script = document.createElement("script");
+      script.src = dir + slug + ".js";
+      script.onload = script.onerror = done;
+      document.head.appendChild(script);
+    });
   }
 
   function escape(text) {

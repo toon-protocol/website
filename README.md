@@ -10,7 +10,7 @@ apps/index.html         built from src/apps.html: every app, in the shape of a m
 agents/index.html       built from src/agents.html: every agent that speaks TOON
 install.sh              the installer at https://toon.ar.io/install.sh: a stub that hands over to toon_cli's
 assets/site.css         the one stylesheet, shared by every page
-assets/search.js        the docs search box; docs/search-index.js is its index, built by build.py
+assets/search.js        the docs search box; docs/search/<slug>.js is its index, one file per page, built by build.py
 assets/docs.js          the docs pages' phone menu, theme picker, "On this page" highlight and copy buttons
 assets/fonts/           self-hosted latin subsets of IBM Plex Sans Condensed, Plex Sans and Plex Mono, with their OFL licences
 assets/icon/            the brand's mark as SVG: full, two-bar and 16px, light and dark
@@ -26,7 +26,7 @@ with the search in its middle, the sidebar flush left, "On this page" flush righ
 splash for the docs home.
 
 The site carries three scripts: the copy button on the landing page, the docs search
-(`assets/search.js`), which reads `docs/search-index.js`, an index `build.py` writes from
+(`assets/search.js`), which reads `docs/search/<slug>.js`, an index file per page that `build.py` writes from
 `src/docs/` with one record per page section, and `assets/docs.js`, the docs pages' phone
 menu, theme picker, "On this page" highlight and copy buttons. Without scripts the search
 box and theme picker stay hidden and the sidebar sits above the page on a phone. The site is stored on Arweave and reached through the ArNS name

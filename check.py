@@ -22,6 +22,11 @@ LINK_ATTRS = {"href", "src"}
 # Manifest paths must not start with or contain any of these parts.
 MANIFEST_FORBIDDEN_PARTS = ["src", "__pycache__"]
 MANIFEST = "manifest.template.json"
+# The largest file Turbo uploads for free (upload.ardrive.io/info, freeUploadLimitBytes). Every
+# file the manifest lists stays at or under it, so a publish pays for no single file.
+MAX_FILE_BYTES = 107520
+# The docs search names its index files in attributes, not in href or src.
+SEARCH_DIALOG = re.compile(r'<dialog class="docsearch"[^>]*\bdata-index="([^"]*)"[^>]*\bdata-pages="([^"]*)"')
 # Hosts that count as this site.
 SITE_HOSTS = {"toon.ar.io"}
 # A file reference inside CSS, in a <style> block or a linked stylesheet. url(#id) points at an
@@ -598,6 +603,15 @@ def rule_scripts(page):
         yield "the landing page has exactly one script, the apps and agents pages none", f"{n} <script> element(s)"
 
 
+def search_index_files(page):
+    """The site paths of the index files the docs search on a page loads."""
+    m = SEARCH_DIALOG.search((ROOT / page).read_text(encoding="utf-8"))
+    if not m:
+        return []
+    base = str(Path(page).parent / m.group(1))
+    return [f"{base}/{slug}.js" for slug in m.group(2).split()]
+
+
 def rule_manifest():
     listed = set(json.loads((ROOT / MANIFEST).read_text(encoding="utf-8"))["paths"])
     for p in sorted(listed):
@@ -606,12 +620,18 @@ def rule_manifest():
             yield MANIFEST, "manifest lists nothing under src/, __pycache__/ or a dot-directory", p
         elif not (ROOT / p).is_file():
             yield MANIFEST, "manifest lists only files that exist", p
+        elif (ROOT / p).stat().st_size > MAX_FILE_BYTES:
+            yield MANIFEST, f"every file is at most {MAX_FILE_BYTES} bytes, Turbo's free upload", f"{p} ({(ROOT / p).stat().st_size} bytes)"
     needed = {}
     for page in pages():
         needed.setdefault(page, page)
         for _, target, _ in resolved_refs(page):
             if (ROOT / target).is_file():
                 needed.setdefault(target, page)
+        for target in search_index_files(page):
+            if not (ROOT / target).is_file():
+                yield page, "the search names only index files that exist", target
+            needed.setdefault(target, page)
     for target, page in sorted(needed.items()):
         if target not in listed:
             yield MANIFEST, "manifest lists every page and referenced asset", target + " (from " + page + ")"

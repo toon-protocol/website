@@ -464,6 +464,8 @@ footer .out { margin-left:auto; }
    3:1 against the page in both themes; Gold on Paper would not. */
 body.docs-body :focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
 body.docs-body .theme-menu li:focus-visible { outline-offset:-2px; }
+/* The search field is the only thing to type into while its dialog is open, and the caret shows it has focus. */
+body.docs-body .docsearch input:focus-visible { outline:0; }
 html:has(body.docs-body) { scroll-padding-top:calc(var(--docs-nav-h) + 1.5rem); }
 body.docs-body { background:var(--bg); background-image:none; padding-bottom:0; }
 body.docs-body svg.chev { width:0.85rem; height:0.85rem; flex:none; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
