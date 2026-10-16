@@ -11,7 +11,7 @@ toon init --network mainnet --accept-anyone-terms</pre>
 <tbody>
 <tr><td><code>devnet</code></td><td>Base Sepolia, a test token</td><td><code>toon wallet fund</code> sends the token, no ETH</td><td>The devnet's connector and relay, run by the project</td></tr>
 <tr><td><code>sandbox</code></td><td>The local chain of the <code>infra</code> sandbox</td><td>None: fund from the sandbox's tooling</td><td>Its connector, which you name</td></tr>
-<tr><td><code>mainnet</code></td><td>Real funds</td><td>None</td><td>Drew's node (ILP address <code>g.drew</code>, relay <code>g.drew.relay</code>); name another with <code>--connector-url</code> and <code>--relay-url</code> at <code>init</code></td></tr>
+<tr><td><code>mainnet</code></td><td>Real funds</td><td>None</td><td>Drew's node (ILP address <code>g.drew</code>, relay <code>g.drew.relay</code>); name another with <code>--connector-url</code> and <code>--relay-url</code> at <code>init</code>, such as the TOON mainnet connector in the <a href="mainnet.html">Mainnet reference</a></td></tr>
 </tbody></table></div>
 
 <p><code>toon join &lt;network&gt;</code> only joins the network <code>init</code> was given, and is refused with <code>join_refused</code>, spending nothing, when this agent node records no connector for it. It forwards <code>g.toon</code> and every other address the network's connector publishes in its self-description (the mainnet node's <code>g.drew.*</code>) over the new peering.</p>
