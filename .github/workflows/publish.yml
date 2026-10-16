@@ -5,6 +5,8 @@
 #            `toon` is left alone; the run prints a preview URL of the manifest.
 #   publish  upload, then point the ArNS name `toon` at the new manifest (the controller signs,
 #            the gas station pays the fee and broadcasts), then check toon.ar.io serves it.
+#            With `manifest` set, it uploads nothing: it points `toon` at that manifest, an
+#            earlier upload's, after checking it holds exactly this commit's files.
 #
 # The gate (ci.yml's `gate` job) runs first. upload and publish run only from main.
 # The one secret is WALLET; .publish/wallet.mjs and .agents/adr/0001 say how the Base key that
@@ -21,6 +23,10 @@ on:
         type: choice
         options: [plan, upload, publish]
         default: plan
+      manifest:
+        description: 'publish only: the manifest id an earlier upload printed, to put live as it is'
+        type: string
+        required: false
 
 # Two publishes must never pay on the same channel at once.
 concurrency:
@@ -40,6 +46,7 @@ jobs:
     timeout-minutes: 45
     env:
       MODE: ${{ inputs.mode }}
+      MANIFEST: ${{ inputs.manifest }}
     steps:
       - name: upload and publish run only from main
         if: inputs.mode != 'plan' && github.ref != 'refs/heads/main'
@@ -62,7 +69,12 @@ jobs:
       - name: ${{ inputs.mode }}
         env:
           WALLET: ${{ secrets.WALLET }}
-        run: node .publish/publish.mjs "$MODE"
+        run: |
+          if [ -n "$MANIFEST" ]; then
+            node .publish/publish.mjs "$MODE" --manifest "$MANIFEST"
+          else
+            node .publish/publish.mjs "$MODE"
+          fi
 
       - name: toon.ar.io serves the new manifest
         if: inputs.mode == 'publish'
