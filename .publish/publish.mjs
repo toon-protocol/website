@@ -83,8 +83,10 @@ const writeCost = (store, bytes) => store.price + store.perKib * BigInt(Math.cei
 /** The channel this client holds with the connector, from the committed binding file. */
 function binding() {
   if (!existsSync(BINDING)) return undefined;
-  const entries = Object.entries(JSON.parse(readFileSync(BINDING, 'utf8')).batch ?? {});
-  const [, channel] = entries.find(([k]) => k.startsWith(`${config.connector}|${config.settlement.network}|`)) ?? [];
+  // The client keys each channel `batch|<connector>|<network>|<asset>`, at the top level of the file.
+  const key = `batch|${config.connector}|${config.settlement.network}|${config.settlement.asset}`.toLowerCase();
+  const entries = Object.entries(JSON.parse(readFileSync(BINDING, 'utf8')));
+  const [, channel] = entries.find(([k]) => k.toLowerCase() === key) ?? [];
   return channel && { channelId: channel.channelId, deposit: BigInt(channel.depositTotal), signed: BigInt(channel.lastVoucherAmount ?? 0) };
 }
 
