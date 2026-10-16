@@ -1,0 +1,29 @@
+{
+  "batch|https://proxy.store.toonprotocol.dev|eip155:8453|0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": {
+    "channelId": "0x5b9d8e5b4d021bffaa9581f49b6e86e944b68932e3d596a1ad6715a4849d1bde",
+    "context": {
+      "chainType": "evm",
+      "chainId": 8453,
+      "tokenNetworkAddress": "0x4020074e9dF2ce1deE5A9C1b5c3f541D02a10003",
+      "tokenAddress": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "recipient": "0x845DabC91ddC7E032DE637Ae03a76EF8630C56bB"
+    },
+    "depositTotal": "1000000",
+    "openedAt": "2026-10-16T13:45:09.400Z",
+    "batchSettlement": {
+      "chain": "evm",
+      "network": "eip155:8453",
+      "config": {
+        "payer": "0xC4Cd8ad303C68fDC50f0DE16Bb2D42dC1A145c39",
+        "payerAuthorizer": "0xC4Cd8ad303C68fDC50f0DE16Bb2D42dC1A145c39",
+        "receiver": "0x845DabC91ddC7E032DE637Ae03a76EF8630C56bB",
+        "receiverAuthorizer": "0x845DabC91ddC7E032DE637Ae03a76EF8630C56bB",
+        "token": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "withdrawDelay": 86400,
+        "salt": "0xeec9243d384a9e251533de73099cd786560018f864f06449ea2a5edd2a2e4726"
+      }
+    },
+    "lastVoucher": "{\"blockchain\":\"evm\",\"channelConfig\":{\"payer\":\"0xc4cd8ad303c68fdc50f0de16bb2d42dc1a145c39\",\"payerAuthorizer\":\"0xc4cd8ad303c68fdc50f0de16bb2d42dc1a145c39\",\"receiver\":\"0x845dabc91ddc7e032de637ae03a76ef8630c56bb\",\"receiverAuthorizer\":\"0x845dabc91ddc7e032de637ae03a76ef8630c56bb\",\"salt\":\"0xeec9243d384a9e251533de73099cd786560018f864f06449ea2a5edd2a2e4726\",\"token\":\"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\"withdrawDelay\":86400},\"channelId\":\"0x5b9d8e5b4d021bffaa9581f49b6e86e944b68932e3d596a1ad6715a4849d1bde\",\"maxClaimableAmount\":\"124352\",\"messageId\":\"ab3a47f7-c7d8-448f-a974-c86bbf817aef\",\"scheme\":\"batch-settlement\",\"senderId\":\"0xc4cd8ad303c68fdc50f0de16bb2d42dc1a145c39\",\"signature\":\"0x003bde662f94d8450deba2520b7ac72aa80427e8145cf601af689602105bfbfa5737b45455ac777533aeb70761fb63cf3cd182fdc5b2121b9107ce7a275b79551b\",\"timestamp\":\"2026-10-16T13:45:55.000Z\",\"version\":\"1.0\"}",
+    "lastVoucherAmount": "124352"
+  }
+}
