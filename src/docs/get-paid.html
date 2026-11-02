@@ -1,6 +1,6 @@
-<p>A price makes a route cost something. A <strong>settlement backend</strong> is what lets anyone actually pay it. There are two families of chain, EVM and Solana, and each has networks within it: Base and <a href="#robinhood-chain">Robinhood Chain</a> are EVM networks, Solana has devnet and mainnet-beta. A node may carry a table for any of them; with several, it accepts vouchers on all at once. Every channel is an x402 <code>batch-settlement</code> channel: on EVM that is x402's audited <code>x402BatchSettlement</code> contract, and on Solana the Solana Foundation's <code>payment-channels</code> program. Both are <strong>constants of the binary</strong>, the same address on every network, so there is nothing chain-specific to name beyond your own RPC, token and key.</p>
+<p>A price makes a route cost something. A <strong>settlement backend</strong> is what lets anyone actually pay it. There are 2 families of chain, EVM and Solana, and each has networks within it: Base and <a href="#robinhood-chain">Robinhood Chain</a> are EVM networks, Solana has devnet and mainnet-beta. A node may carry a table for any of them; with several, it accepts vouchers on all at once. Every channel is an x402 <code>batch-settlement</code> channel: on EVM that is x402's audited <code>x402BatchSettlement</code> contract, and on Solana the Solana Foundation's <code>payment-channels</code> program. Both are <strong>constants of the binary</strong>, the same address on every network, so there is nothing chain-specific to name beyond your own RPC, token and key.</p>
 
-<p><strong>The short version:</strong> add the eight-line <a href="#the-settlement-block">settlement block</a> below to <code>connector.toml</code>, give its key a little gas, and restart. <code>connector init</code> writes one for you, on any of six networks (<a href="run-a-node.html">Run a node</a> lists the flags); the block below is the devnet one. The rest of this page is what each line commits you to.</p>
+<p><strong>The short version:</strong> add the eight-line <a href="#the-settlement-block">settlement block</a> below to <code>connector.toml</code>, give its key a little gas, and restart. <code>connector init</code> writes one for you, on any of 6 networks (<a href="run-a-node.html">Run a node</a> lists the flags); the block below is the devnet one. The rest of this page is what each line commits you to.</p>
 
 <h2>The shape</h2>
 
@@ -51,7 +51,7 @@ key_file = <span class="s">"/app/data/settlement-solana.key"</span></pre></div>
 
 <h2>Chains</h2>
 
-<p>The table shows the two families on the networks the public devnet and mainnet use. Robinhood Chain is another EVM network and has <a href="#robinhood-chain">its own section</a>.</p>
+<p>The table shows the 2 families on Base and Solana. Robinhood Chain is another EVM network and has <a href="#robinhood-chain">its own section</a>.</p>
 
 <div class="tablewrap"><table>
 <thead><tr><th></th><th>EVM</th><th>Solana</th></tr></thead>
@@ -99,20 +99,20 @@ key_file = <span class="s">"/app/data/settlement.key"</span></pre></div>
 
 <p><strong>A peering needs the same token at both ends.</strong> Your counterparty needs a table on this token on this network, or opening the channel fails with <code>TokenNotShared</code>.</p>
 
-<p><strong>USDG and USDC are not interchangeable, and the binary will not notice if you treat them so.</strong> A node with <strong>no <code>[[tokens]]</code> forwards between a USDG table and a USDC table at par</strong> without complaint: both have 6 decimals, so the two boot and forward unconverted, whatever a dollar on either side is worth to you. Declaring <code>[[tokens]]</code> for both, and a rate for the pair, is how to prevent it; the rate is demanded only once you declare tokens.</p>
+<p><strong>Without <code>[[tokens]]</code>, the binary will not notice if you treat USDG and USDC as one.</strong> A node with <strong>no <code>[[tokens]]</code> forwards between a USDG table and a USDC table at par</strong> without complaint: both have 6 decimals, so both boot and forward unconverted, whatever a dollar on either side is worth to you. Declaring <code>[[tokens]]</code> for both, and a rate for the pair, is how to prevent it; the rate is demanded only once you declare tokens.</p>
 
 <p><strong>What you are trusting</strong>, as <a href="https://l2beat.com/scaling/projects/robinhood">L2BEAT</a> and <a href="https://docs.robinhood.com/chain/terms-of-service">Robinhood's terms</a> stated it on 2026-11-02. Weigh it when you decide how much to hold here, and re-read both, since these facts change faster than this page:</p>
 
 <ul>
   <li><strong>One sequencer, run by Robinhood.</strong> A voucher is worth what you can land, and landing it goes through that sequencer.</li>
-  <li><strong>Below Stage 0.</strong> L2BEAT rates the chain "not even a Stage 0 project". Only two whitelisted actors can submit fraud proofs.</li>
+  <li><strong>Below Stage 0.</strong> L2BEAT rates the chain "not even a Stage 0 project". Only 2 whitelisted actors can submit fraud proofs.</li>
   <li><strong>Instant upgrades.</strong> A 7-of-8 multisig can upgrade core contracts with no delay, so L2BEAT gives users no exit window. It reaches the chain beneath <code>x402BatchSettlement</code>, not that contract, which is immutable.</li>
   <li><strong>A transaction filter that defeats forced inclusion.</strong> An authorised filterer can register a transaction hash, and that transaction then fails, even when it was force-included from L1, so L2BEAT calls forced inclusion "not a reliable censorship escape hatch".</li>
   <li><strong>Address blocking.</strong> Robinhood reserves the right to restrict or block specific wallet addresses from the chain.</li>
   <li><strong>The issuer.</strong> Paxos can freeze or pause USDG, and the token is upgradeable. Circle can do the same to USDC on Base and Solana, so this risk isn't peculiar to this chain. A freeze of <code>x402BatchSettlement</code>, or a pause of the token, stops payouts on every channel in that token at once.</li>
 </ul>
 
-<div class="callout warn"><strong>Before you set <code>rpc_via_socks_proxy</code> on this table,</strong> read Robinhood's <a href="https://docs.robinhood.com/chain/terms-of-service">terms</a>. They bar using a VPN, proxy or other tool to mask your identity, location or IP address.</div>
+<div class="callout warn"><strong>Before you set <code>rpc_via_socks_proxy</code> on this table,</strong> read Robinhood's <a href="https://docs.robinhood.com/chain/terms-of-service">terms</a>. They bar using a VPN, proxy, or other tool to mask your identity, location, or IP address.</div>
 
 <p><strong>How far this has been run.</strong> x402's contracts here match Base's except for their chain id and domain separator. An unmodified node has booted on both public RPCs and run a whole channel's life in USDG on a local fork of mainnet, not through the live sequencer. Nobody has yet sent a transaction through the live sequencer from this binary, run the shipped image on this chain, or paid from <code>toon-client</code>.</p>
 

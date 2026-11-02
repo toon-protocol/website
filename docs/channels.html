@@ -120,7 +120,7 @@
     <p class="lede">A channel you open without gas, pay from with signatures, and leave with your deposit.</p>
 <p>A <strong>payment channel</strong> is an x402 <code>batch-settlement</code> channel: a deposit this client locks on chain, payable to one connector, that lets it pay that connector many times while touching the chain only to open, top up and leave. It is the only way the client pays.</p>
 
-<pre>npx toon-client channel open --deposit 100000   <span class="c"># once, no gas: 0.10 USDC into a channel</span>
+<pre>npx toon-client channel open --deposit 100000   <span class="c"># once, no gas on Base or Solana: 0.10 USDC into a channel</span>
 npx toon-client channel status                   <span class="c"># deposit, signed so far, available</span></pre>
 
 <ul>
@@ -128,7 +128,7 @@ npx toon-client channel status                   <span class="c"># deposit, sign
   <li><strong>Solana:</strong> the Solana Foundation's <code>payment-channels</code> program.</li>
 </ul>
 
-<p>A channel is one-way, payer to connector. Requests are paid by <strong>vouchers</strong> signed against the channel. A voucher states the channel's <strong>cumulative</strong> total, so each one supersedes the last: losing one costs nothing, and replaying one gains nothing. Signing a voucher costs no gas. Opening a channel costs no native gas either. Leaving a channel does.</p>
+<p>A channel is one-way, payer to connector. Requests are paid by <strong>vouchers</strong> signed against the channel. A voucher states the channel's <strong>cumulative</strong> total, so each one supersedes the last: losing one costs nothing, and replaying one gains nothing. Signing a voucher costs no gas. Opening a channel on Base or Solana costs no native gas either; on Robinhood Chain the payer pays it. Leaving a channel does.</p>
 
 <h2 id="a-route-priced-at-zero-needs-no-channel"><a class="anchor" href="#a-route-priced-at-zero-needs-no-channel">A route priced at zero needs no channel</a></h2>
 
