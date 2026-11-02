@@ -163,7 +163,7 @@
 
 <p><strong>Settlement.</strong> Landing vouchers on chain. On EVM the node <code>claim</code>s every held voucher and <code>settle</code>s to its address every ten minutes, and at once when it sees a payer start a withdrawal. On Solana it <code>settle</code>s open channels every ten minutes. Claims are frequent and free; settlement is rare.</p>
 
-<p><strong>Facilitator.</strong> An x402 service that relays a payer's EVM deposit on chain and pays the gas, so a wallet holding USDC and no ETH can open a channel. The operator names one (<code>facilitator_url</code>) and pays for its gas as a cost of the sale; the node never calls it, the payer does. TOON's own stock facilitator is the <strong>Onboarder</strong>. A facilitator must never be the channel's <code>receiverAuthorizer</code>. Solana needs none: the node itself sponsors the open.</p>
+<p><strong>Facilitator.</strong> An x402 service that relays a payer's EVM deposit on chain and pays the gas, so on Base a wallet holding USDC and no ETH can open a channel. No facilitator serves Robinhood Chain, where a payer needs its own ETH. The operator names one (<code>facilitator_url</code>) and pays for its gas as a cost of the sale; the node never calls it, the payer does. TOON's own stock facilitator is the <strong>Onboarder</strong>. A facilitator must never be the channel's <code>receiverAuthorizer</code>. Solana needs none: the node itself sponsors the open.</p>
 
 <p><strong>Fee.</strong> What a node keeps for carrying one packet over a peering: flat, per packet, never a share of the amount.</p>
 

@@ -116,19 +116,38 @@
     <div class="titlebar"><p class="section">The connector, by hand</p><h1 id="_top">Run a node</h1></div>
     <div class="doc">
     <p class="lede">A node running on your machine and answering GET /ilp, in one command or by hand.</p>
-<p>The connector is one static binary that reads one TOML file. Three ways to get it running: <code>init</code> writes a devnet node for you, Docker runs the one you write, and source is for changing the connector rather than running it.</p>
+<p>The connector is one static binary that reads one TOML file. Three ways to get it running: <code>init</code> writes a node for you, Docker runs the one you write, and source is for changing the connector rather than running it.</p>
 
 <h2 id="the-fastest-start-init"><a class="anchor" href="#the-fastest-start-init">The fastest start: init</a></h2>
 
-<p>One command writes a runnable devnet node into a directory: a config with one priced route, the Base Sepolia settlement block, an operator surface so you can see what you were paid, fresh keys owned by you, and a <code>compose.yml</code> that runs the connector and a payment-oblivious echo app as your own uid. It touches no chain and overwrites nothing.</p>
+<p>One command writes a runnable node into a directory: a config with one priced route, one chain's settlement table, an operator surface so you can see what you were paid, fresh keys owned by you, and a <code>compose.yml</code> that runs the connector and a payment-oblivious echo app as your own uid. It touches no chain and overwrites nothing.</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Flags</th><th>Network</th><th>Token</th><th>Address</th><th>Default RPC</th></tr></thead>
+<tbody>
+<tr><td><code>--devnet</code> or <code>--devnet --chain base</code></td><td>Base Sepolia</td><td>devnet USDC</td><td><code>0x0C996d7c934c79a6255254875607Fe69df25C0E1</code></td><td><code>https://base-sepolia-rpc.publicnode.com</code></td></tr>
+<tr><td><code>--devnet --chain solana</code></td><td>Solana devnet</td><td>mock USDC</td><td><code>34eSxY7qxQ4GzyhDJ8GpUcTz1WWzruGbJbR8q6TtxfQU</code></td><td><code>https://api.devnet.solana.com</code></td></tr>
+<tr><td><code>--devnet --chain robinhood</code></td><td>Robinhood Chain testnet</td><td>USDG</td><td><code>0x7E955252E15c84f5768B83c41a71F9eba181802F</code></td><td><code>https://rpc.testnet.chain.robinhood.com</code></td></tr>
+<tr><td><code>--mainnet --chain base</code></td><td>Base mainnet</td><td>USDC</td><td><code>0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913</code></td><td><code>https://mainnet.base.org</code></td></tr>
+<tr><td><code>--mainnet --chain solana</code></td><td>Solana mainnet-beta</td><td>USDC</td><td><code>EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</code></td><td><code>https://api.mainnet-beta.solana.com</code></td></tr>
+<tr><td><code>--mainnet --chain robinhood</code></td><td>Robinhood Chain mainnet</td><td>USDG</td><td><code>0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168</code></td><td><code>https://rpc.mainnet.chain.robinhood.com</code></td></tr>
+</tbody></table></div>
+
+<p>The first run below uses bare <code>--devnet</code>, which is Base Sepolia:</p>
 
 <div class="codeblock"><div class="bar"><span>The shell</span><span>devnet, free</span></div>
-<pre>IMG=ghcr.io/toon-protocol/connector:rust-main   <span class="c"># or a dated release handle that carries init</span>
+<pre>IMG=ghcr.io/toon-protocol/connector:rust-main   <span class="c"># or a dated release handle that carries init, 2026.11.02.1 or later</span>
 docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/w" -w /w "$IMG" init --devnet --dir node --image "$IMG"
 cd node &amp;&amp; docker compose up -d
 curl -s http://127.0.0.1:3000/ilp | jq .routes</pre></div>
 
-<p><code>init</code> prints what it wrote, the node's settlement address, and the three <code>toon-client</code> commands that pay it. Only <code>--devnet</code> exists: a mainnet node settles real money in a token you choose, and every value in that block is yours to read off the chain (<a href="get-paid.html">Get paid</a>). Flags: <code>--dir</code> (default <code>.</code>), <code>--address</code> (default <code>g.devnet.&lt;six hex digits&gt;</code>, also the route's prefix), <code>--image</code> (what the compose file runs; pin a release handle for a node you keep). A directory that already holds a config is refused by name, because rotating the signer key would change the node's identity under every peer.</p>
+<p><code>init</code> prints what it wrote, the node's settlement address, what that address must hold, and the <code>toon-client</code> commands that pay it.</p>
+
+<p><strong>A mainnet node settles real money</strong>, so <code>--mainnet</code> must name its <code>--chain</code>: nothing picks a chain or a token for you. Its default RPC is public and rate-limited, so name your own with <code>--rpc-url &lt;url&gt;</code>, which works on any row. It starts on loopback like every other scaffold; before you expose it, remove <code>peer_allow_plaintext_endpoints</code> and publish an <code>https://</code> or <code>.anyone</code> endpoint. Before choosing a chain, read what each one asks you to trust (<a href="get-paid.html#robinhood-chain">Robinhood Chain's</a> especially).</p>
+
+<div class="callout warn"><strong>A Solana scaffold needs SOL before its first start.</strong> Its backend sends a transaction when it connects, so an unfunded node exits 1 at boot, and <code>restart: unless-stopped</code> will loop on it. It writes <code>data/settlement-solana.key</code> rather than <code>data/settlement.key</code>, and reports that key's address for you to fund.</div>
+
+<p><code>init</code> writes one chain, because its one route's price is in one token. Add a second table by hand (<a href="get-paid.html">Get paid</a>). XRPL isn't a <code>--chain</code>. The table above is not a gate: a table you write for any EVM chain carrying the x402 contract works the same, and the node checks every value against the chain when it boots. Other flags: <code>--dir</code> (default <code>.</code>), <code>--address</code> (default <code>g.devnet.&lt;six hex digits&gt;</code> on a devnet and <code>g.&lt;six hex digits&gt;</code> on a mainnet, also the route's prefix), <code>--image</code> (what the compose file runs; pin a release handle for a node you keep). A directory that already holds a config is refused by name, because rotating the signer key would change the node's identity under every peer.</p>
 
 <p>The rest of this page explains each file <code>init</code> wrote, so you can change it.</p>
 
@@ -144,8 +163,8 @@ curl -s http://127.0.0.1:3000/ilp | jq .routes</pre></div>
 
 <p>The image runs as uid <code>10001</code>, and it reads the key files you mount. A key you create as yourself with mode <code>600</code> is unreadable to that uid, and the container restarts forever with <code>failed to read signer key_file … Permission denied</code>. So hand the key to that uid when you make it, and do the same for every settlement key later:</p>
 
-<div class="codeblock"><div class="bar"><span>The shell</span><span>connector 2026.09.29.1</span></div>
-<pre>docker pull ghcr.io/toon-protocol/connector:rust-2026.09.29.1
+<div class="codeblock"><div class="bar"><span>The shell</span><span>connector 2026.11.02.1</span></div>
+<pre>docker pull ghcr.io/toon-protocol/connector:rust-2026.11.02.1
 mkdir -p node/config node/data &amp;&amp; cd node
 openssl rand -hex 32 &gt; data/signer.key
 chmod 600 data/signer.key &amp;&amp; sudo chown 10001 data/signer.key   <span class="c"># the image reads it as uid 10001</span></pre></div>
@@ -157,7 +176,7 @@ chmod 600 data/signer.key &amp;&amp; sudo chown 10001 data/signer.key   <span cl
 <div class="codeblock"><div class="bar"><span>compose.yml</span></div>
 <pre>services:
   connector:
-    image: ghcr.io/toon-protocol/connector:rust-2026.09.29.1
+    image: ghcr.io/toon-protocol/connector:rust-2026.11.02.1
     command: ['/app/config/connector.toml']
     volumes:
       - ./config/connector.toml:/app/config/connector.toml:ro
