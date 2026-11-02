@@ -110,6 +110,7 @@
     <a href="#the-shape" class="h2">The shape</a>
     <a href="#the-settlement-block" class="h2">The settlement block</a>
     <a href="#chains" class="h2">Chains</a>
+    <a href="#robinhood-chain" class="h2">Robinhood Chain</a>
     <a href="#how-a-channel-is-admitted" class="h2">How a channel is admitted</a>
     <a href="#how-you-get-paid" class="h2">How you get paid</a>
     <a href="#who-pays-gas-and-why" class="h2">Who pays gas, and why</a>
@@ -121,9 +122,9 @@
     <div class="titlebar"><p class="section">The connector, by hand</p><h1 id="_top">Take payment from anyone</h1></div>
     <div class="doc">
     <p class="lede">A node anyone on Base or Solana can open a channel to and pay, with no gas.</p>
-<p>A price makes a route cost something. A <strong>settlement backend</strong> is what lets anyone actually pay it. There are two chains, and a node may carry either table or both; with both, it accepts vouchers on both at once. Every channel is an x402 <code>batch-settlement</code> channel: on EVM that is x402's audited <code>x402BatchSettlement</code> contract, and on Solana the Solana Foundation's <code>payment-channels</code> program. Both are <strong>constants of the binary</strong>, the same address on every network, so there is nothing chain-specific to name beyond your own RPC, token and key.</p>
+<p>A price makes a route cost something. A <strong>settlement backend</strong> is what lets anyone actually pay it. There are 2 families of chain, EVM and Solana, and each has networks within it: Base and <a href="#robinhood-chain">Robinhood Chain</a> are EVM networks, Solana has devnet and mainnet-beta. A node may carry a table for any of them; with several, it accepts vouchers on all at once. Every channel is an x402 <code>batch-settlement</code> channel: on EVM that is x402's audited <code>x402BatchSettlement</code> contract, and on Solana the Solana Foundation's <code>payment-channels</code> program. Both are <strong>constants of the binary</strong>, the same address on every network, so there is nothing chain-specific to name beyond your own RPC, token and key.</p>
 
-<p><strong>The short version:</strong> add the eight-line <a href="#the-settlement-block">settlement block</a> below to <code>connector.toml</code>, give its key a little gas, and restart. <code>connector init --devnet</code> writes it for you. The rest of this page is what each line commits you to.</p>
+<p><strong>The short version:</strong> add the eight-line <a href="#the-settlement-block">settlement block</a> below to <code>connector.toml</code>, give its key a little gas, and restart. <code>connector init</code> writes one for you, on any of 6 networks (<a href="run-a-node.html">Run a node</a> lists the flags); the block below is the devnet one. The rest of this page is what each line commits you to.</p>
 
 <h2 id="the-shape"><a class="anchor" href="#the-shape">The shape</a></h2>
 
@@ -174,6 +175,8 @@ key_file = <span class="s">"/app/data/settlement-solana.key"</span></pre></div>
 
 <h2 id="chains"><a class="anchor" href="#chains">Chains</a></h2>
 
+<p>The table shows the 2 families on Base and Solana. Robinhood Chain is another EVM network and has <a href="#robinhood-chain">its own section</a>.</p>
+
 <div class="tablewrap"><table>
 <thead><tr><th></th><th>EVM</th><th>Solana</th></tr></thead>
 <tbody>
@@ -185,6 +188,57 @@ key_file = <span class="s">"/app/data/settlement-solana.key"</span></pre></div>
 </tbody></table></div>
 
 <p>There is no Solana <em>testnet</em> deployment: <code>payment-channels</code> is on devnet and mainnet-beta, nowhere else. The public mainnet connector settles on Base only. Because the contract and program are the same address everywhere, the one thing that has to match the network is the <strong>token</strong>: on mainnet, point <code>token_address</code> at Base mainnet's USDC or Solana mainnet-beta's, never the devnet one. The x402 Foundation lists <code>x402BatchSettlement</code> at one address on Base, Arbitrum, Polygon, Optimism, Avalanche, Celo, Linea, Unichain, Monad and World Chain; the node will serve on any of them where the code is present.</p>
+
+<h2 id="robinhood-chain"><a class="anchor" href="#robinhood-chain">Robinhood Chain</a></h2>
+
+<p>Robinhood Chain is an Arbitrum Nitro L2 on Ethereum, and an EVM table like any other. <code>connector init --devnet --chain robinhood</code> and <code>--mainnet --chain robinhood</code> write these values, or you can write them by hand:</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th></th><th>Testnet</th><th>Mainnet</th></tr></thead>
+<tbody>
+<tr><td><strong>Chain id</strong></td><td><code>46630</code></td><td><code>4663</code></td></tr>
+<tr><td><strong>RPC</strong></td><td><code>https://rpc.testnet.chain.robinhood.com</code></td><td><code>https://rpc.mainnet.chain.robinhood.com</code></td></tr>
+<tr><td><strong>Token</strong></td><td>USDG <code>0x7E955252E15c84f5768B83c41a71F9eba181802F</code></td><td>USDG <code>0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168</code></td></tr>
+<tr><td><strong>Decimals</strong></td><td><code>6</code></td><td><code>6</code></td></tr>
+<tr><td><strong>EIP-712 domain</strong></td><td><code>Global Dollar</code> / <code>1</code></td><td><code>Global Dollar</code> / <code>1</code></td></tr>
+<tr><td><strong>Funding the key</strong></td><td>ETH for gas: <a href="https://blog.arbitrum.io/robinhood-chain-testnet/">Arbitrum's launch post</a> names <a href="https://faucet.testnet.chain.robinhood.com">Robinhood's faucet</a>. USDG: <a href="https://faucet.paxos.com">Paxos's faucet</a></td><td>ETH for gas, and USDG. Both are yours to bring; nothing here funds a mainnet node</td></tr>
+</tbody></table></div>
+
+<div class="codeblock"><div class="bar"><span>connector.toml</span><span>Robinhood Chain mainnet</span></div>
+<pre>[settlement.eip155.4663]
+rpc_url               = <span class="s">"https://rpc.mainnet.chain.robinhood.com"</span>  <span class="c"># public and rate-limited: use a provider's</span>
+token_address         = <span class="s">"0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168"</span>
+decimals              = <span class="g">6</span>
+asset_eip712_name     = <span class="s">"Global Dollar"</span>
+asset_eip712_version  = <span class="s">"1"</span>
+
+[settlement.eip155.4663.key]
+key_file = <span class="s">"/app/data/settlement.key"</span></pre></div>
+
+<p>This page does not state either faucet's limits: Robinhood's refused an automated read when this was written, so its current terms are unconfirmed, and Arbitrum's post is from the testnet's launch. Check both before you rely on them.</p>
+
+<div class="callout warn"><strong>No TOON faucet or facilitator serves Robinhood Chain.</strong> A payer needs its own ETH to open a channel. <code>toon-client faucet</code> serves only Base Sepolia and Solana devnet, and <code>toon-client</code>'s EVM presets name only <code>84532</code>, so paying on Robinhood Chain has not been run.</div>
+
+<p><strong>USDG is not USDC.</strong> There is no Circle USDC on this chain. Its dollar is Paxos's USDG, so copy these values rather than Base's: boot refuses Base's domain on this token, by name. USDG's domain is one you can't look up by asking: its <code>version()</code> call reverts, so you must copy it. The version is known only because <code>"Global Dollar"</code> and <code>"1"</code> hash to its <code>DOMAIN_SEPARATOR()</code>. Prices count USDG's base units, so <code>price = 1000</code> is 0.001 USDG.</p>
+
+<p><strong>A peering needs the same token at both ends.</strong> Your counterparty needs a table on this token on this network, or opening the channel fails with <code>TokenNotShared</code>.</p>
+
+<p><strong>Without <code>[[tokens]]</code>, the binary will not notice if you treat USDG and USDC as one.</strong> A node with <strong>no <code>[[tokens]]</code> forwards between a USDG table and a USDC table at par</strong> without complaint: both have 6 decimals, so both boot and forward unconverted, whatever a dollar on either side is worth to you. Declaring <code>[[tokens]]</code> for both, and a rate for the pair, is how to prevent it; the rate is demanded only once you declare tokens.</p>
+
+<p><strong>What you are trusting</strong>, as <a href="https://l2beat.com/scaling/projects/robinhood">L2BEAT</a> and <a href="https://docs.robinhood.com/chain/terms-of-service">Robinhood's terms</a> stated it on 2026-11-02. Weigh it when you decide how much to hold here, and re-read both, since these facts change faster than this page:</p>
+
+<ul>
+  <li><strong>One sequencer, run by Robinhood.</strong> A voucher is worth what you can land, and landing it goes through that sequencer.</li>
+  <li><strong>Below Stage 0.</strong> L2BEAT rates the chain "not even a Stage 0 project". Only 2 whitelisted actors can submit fraud proofs.</li>
+  <li><strong>Instant upgrades.</strong> A 7-of-8 multisig can upgrade core contracts with no delay, so L2BEAT gives users no exit window. It reaches the chain beneath <code>x402BatchSettlement</code>, not that contract, which is immutable.</li>
+  <li><strong>A transaction filter that defeats forced inclusion.</strong> An authorised filterer can register a transaction hash, and that transaction then fails, even when it was force-included from L1, so L2BEAT calls forced inclusion "not a reliable censorship escape hatch".</li>
+  <li><strong>Address blocking.</strong> Robinhood reserves the right to restrict or block specific wallet addresses from the chain.</li>
+  <li><strong>The issuer.</strong> Paxos can freeze or pause USDG, and the token is upgradeable. Circle can do the same to USDC on Base and Solana, so this risk isn't peculiar to this chain. A freeze of <code>x402BatchSettlement</code>, or a pause of the token, stops payouts on every channel in that token at once.</li>
+</ul>
+
+<div class="callout warn"><strong>Before you set <code>rpc_via_socks_proxy</code> on this table,</strong> read Robinhood's <a href="https://docs.robinhood.com/chain/terms-of-service">terms</a>. They bar using a VPN, proxy, or other tool to mask your identity, location, or IP address.</div>
+
+<p><strong>How far this has been run.</strong> x402's contracts here match Base's except for their chain id and domain separator. An unmodified node has booted on both public RPCs and run a whole channel's life in USDG on a local fork of mainnet, not through the live sequencer. Nobody has yet sent a transaction through the live sequencer from this binary, run the shipped image on this chain, or paid from <code>toon-client</code>.</p>
 
 <h2 id="how-a-channel-is-admitted"><a class="anchor" href="#how-a-channel-is-admitted">How a channel is admitted</a></h2>
 
@@ -299,6 +353,7 @@ key_file = <span class="s">"/app/data/settlement-solana.key"</span></pre></div>
     <a href="#the-shape" class="h2">The shape</a>
     <a href="#the-settlement-block" class="h2">The settlement block</a>
     <a href="#chains" class="h2">Chains</a>
+    <a href="#robinhood-chain" class="h2">Robinhood Chain</a>
     <a href="#how-a-channel-is-admitted" class="h2">How a channel is admitted</a>
     <a href="#how-you-get-paid" class="h2">How you get paid</a>
     <a href="#who-pays-gas-and-why" class="h2">Who pays gas, and why</a>
